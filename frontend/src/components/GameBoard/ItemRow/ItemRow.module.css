@@ -1,0 +1,6 @@
+.itemRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    max-height: 100px;
+}
