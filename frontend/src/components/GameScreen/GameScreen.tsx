@@ -38,15 +38,17 @@ function generateGameState(xOffset: number, yOffset: number) {
 function generateItemRows(gameState: any) {
     let result = [];
     for(let i = 0; i < ROWS; i++) {
-        result.push(<ItemRow key={i} rowNumber={i} itemValues={gameState[i]}/>)
+        result.push(<ItemRow key={i} itemValues={gameState[i]}/>)
     }
     return result;
 }
+
 
 export default function GameScreen() {
     const [xOffset, yOffset] = calculateCenterGroupPosition()
     const [gameState, setGameState] = useState<number[][]>(generateGameState(xOffset, yOffset))
     const itemRows = generateItemRows(gameState)
+    console.log("updated")
 
     return (
         <>
