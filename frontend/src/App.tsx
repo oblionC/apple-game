@@ -1,13 +1,14 @@
-import { GameScreen } from './components/GameScreen'
 import './App.css'
-import { useEffect } from 'react'
-import { GAMEBOARD_HEIGHT, GAMEBOARD_WIDTH } from './components/GameScreen/constants'
+import { HomePage } from './components/pages/HomePage'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {
   return (
-    <>
-      <GameScreen width={GAMEBOARD_WIDTH} height={GAMEBOARD_HEIGHT}/>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
