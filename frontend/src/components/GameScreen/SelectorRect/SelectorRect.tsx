@@ -10,16 +10,15 @@ function quickSort(arr: number[], length = arr.length - 1, start = 0): number[] 
     const left = [ ];  // left handside array
     const right = [ ]; // right handside array
 
-   while (start < length) {  // comparing and pushing
+    while (start < length) {  
         if (arr[start] < pivot){
-          left.push(arr[start])
+            left.push(arr[start])
         }
         else {
-          right.push(arr[start])
+            right.push(arr[start])
         }
-       start++ //  incrementing start value
+        start++ //  incrementing start value
     }
-            // calling quick sort recursively
     return [...quickSort(left), pivot, ...quickSort(right)];
 }
 
@@ -73,7 +72,7 @@ interface selectorRect {
     height: number;
 }
 
-export default function SelectorRect( {gameState, setGameState}: {gameState: any, setGameState: Function}) {
+export default function SelectorRect( { gameState, setGameState}: {gameState: any, setGameState: Function}) {
     const [mouseIsDown, setMouseIsDown] = useState<boolean>(false)
     const [selectorRectInfo, setSelectorRectInfo] = useState<selectorRect>({
         x: 0,
@@ -143,6 +142,7 @@ export default function SelectorRect( {gameState, setGameState}: {gameState: any
                     })
                 }}
                 onMouseUp={() => {
+                    console.log(`mouseup: ${Date.now()}`)
                     setMouseIsDown(false)
                     setGameState(gameState.map((itemRows: any) => {
                         return itemRows.map((item: any) => {

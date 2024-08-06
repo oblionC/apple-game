@@ -44,7 +44,7 @@ function generateItemRows(gameState: any) {
 }
 
 
-export default function GameScreen() {
+export default function GameScreen({ width, height }: { width: number, height: number }) {
     const [xOffset, yOffset] = calculateCenterGroupPosition()
     const [gameState, setGameState] = useState<number[][]>(generateGameState(xOffset, yOffset))
     const itemRows = generateItemRows(gameState)
@@ -54,8 +54,8 @@ export default function GameScreen() {
         <>
             <Stage 
             className='gameBoard' 
-            width={GAMEBOARD_WIDTH}
-            height={GAMEBOARD_HEIGHT}
+            width={width}
+            height={height}
             >
                <Layer>
                     <Group x={xOffset} y={yOffset}>
