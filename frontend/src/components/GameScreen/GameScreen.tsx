@@ -7,8 +7,8 @@ import { SelectorRect } from './SelectorRect';
 function calculateCenterGroupPosition(width: number, height: number, itemGap: number) {
     let groupWidth = COLS * itemGap;
     let groupHeight = ROWS * itemGap;
-    let xOffset = (width/2 - groupWidth/2) / 2;
-    let yOffset = (height/2 - groupHeight/2) / 1.3;
+    let xOffset = (width - groupWidth) / 2;
+    let yOffset = (height - groupHeight) / 2;
     return [xOffset, yOffset];
 }
 
@@ -45,18 +45,15 @@ function generateItemRows(gameState: any, itemSize: number) {
 
 
 export default function GameScreen({ width, height }: { width: number, height: number }) {
-    const canvasRef = useRef<any>()
-    console.log(canvasRef)
     const itemSize = width * ITEM_SIZE_MULTIPLIER
     const itemGap = width * ITEM_GAP_MULTIPLIER
-    const [xOffset, yOffset] = calculateCenterGroupPosition(width, height, itemSize)
+    const [xOffset, yOffset] = calculateCenterGroupPosition(width, height, itemGap)
     const [gameState, setGameState] = useState<number[][]>(generateGameState(xOffset, yOffset, itemSize, itemGap))
     const itemRows = generateItemRows(gameState, itemSize)
 
     return (
         <>
             <Stage 
-            ref={canvasRef}
             className='gameBoard' 
             width={width}
             height={height}
