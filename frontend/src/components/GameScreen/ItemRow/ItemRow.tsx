@@ -1,11 +1,10 @@
 import { Item } from '../Item'
-import { ITEM_GAP } from '../constants'
 
-export default function ItemRow({ itemValues }: { itemValues: any } ) {
+export default function ItemRow({ itemValues, itemSize }: { itemValues: any, itemSize: number } ) {
     return(
         <>
             {itemValues.map((item: any) => {
-                return <Item itemInfo={item} />
+                return <Item itemInfo={item} itemSize={itemSize} />
             })}
         </>
     )

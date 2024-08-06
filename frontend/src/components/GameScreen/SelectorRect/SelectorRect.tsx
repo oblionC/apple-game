@@ -1,5 +1,4 @@
 import { Layer, Rect } from "react-konva"
-import { GAMEBOARD_WIDTH, GAMEBOARD_HEIGHT } from "../constants"
 import { useState } from "react"
 
 function quickSort(arr: number[], length = arr.length - 1, start = 0): number[] {
@@ -72,7 +71,7 @@ interface selectorRect {
     height: number;
 }
 
-export default function SelectorRect( { gameState, setGameState}: {gameState: any, setGameState: Function}) {
+export default function SelectorRect( { width, height, gameState, setGameState}: {width: number, height: number, gameState: any, setGameState: Function}) {
     const [mouseIsDown, setMouseIsDown] = useState<boolean>(false)
     const [selectorRectInfo, setSelectorRectInfo] = useState<selectorRect>({
         x: 0,
@@ -96,13 +95,13 @@ export default function SelectorRect( { gameState, setGameState}: {gameState: an
             <Rect
                 x={0}
                 y={0}
-                width={GAMEBOARD_WIDTH}
-                height={GAMEBOARD_HEIGHT}
+                width={width}
+                height={height}
                 onMouseDown={(e) => {
                     setMouseIsDown(true)
                     setSelectorRectInfo({
-                        x: e.evt.clientX,
-                        y: e.evt.clientY,
+                        x: e.evt.offsetX,
+                        y: e.evt.offsetY,
                         width: 0,
                         height: 0,
                     })
@@ -137,8 +136,8 @@ export default function SelectorRect( { gameState, setGameState}: {gameState: an
                     setSelectedSum(sum)
                     setSelectorRectInfo({
                         ...selectorRectInfo,
-                        width: e.evt.clientX - selectorRectInfo.x,
-                        height: e.evt.clientY - selectorRectInfo.y,
+                        width: e.evt.offsetX - selectorRectInfo.x,
+                        height: e.evt.offsetY - selectorRectInfo.y,
                     })
                 }}
                 onMouseUp={() => {

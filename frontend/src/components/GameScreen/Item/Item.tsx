@@ -1,18 +1,17 @@
 import { Rect, Text} from 'react-konva'
-import { ITEM_SIZE } from '../constants'
 
-function ActiveItem({ itemInfo }: {itemInfo: any}) {
+function ActiveItem({ itemInfo, itemSize }: {itemInfo: any, itemSize: number}) {
     return(
         <>
-            <Rect x={itemInfo.x} y={itemInfo.y} width={ITEM_SIZE} height={ITEM_SIZE} fill={itemInfo.selected ? 'blue': 'grey'} />
-            <Text text={`${itemInfo.value}`} x={itemInfo.x} y={itemInfo.y} width={ITEM_SIZE} height={ITEM_SIZE} verticalAlign='middle' align='center' fontSize={20} />
+            <Rect x={itemInfo.x} y={itemInfo.y} width={itemSize} height={itemSize} fill={itemInfo.selected ? 'blue': 'grey'} />
+            <Text text={`${itemInfo.value}`} x={itemInfo.x} y={itemInfo.y} width={itemSize} height={itemSize} verticalAlign='middle' align='center' fontSize={20} />
         </>
     )
 }
 
-export default function Item({ itemInfo }: { itemInfo: any }) {
+export default function Item({ itemInfo, itemSize }: { itemInfo: any, itemSize: number }) {
     if(itemInfo === undefined) return <></>
     return(
-        <ActiveItem itemInfo={itemInfo} />
+        <ActiveItem itemInfo={itemInfo} itemSize={itemSize} />
     )
 }
