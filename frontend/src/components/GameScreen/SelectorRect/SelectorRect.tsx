@@ -142,12 +142,11 @@ export default function SelectorRect( { gameState, setGameState}: {gameState: an
                     })
                 }}
                 onMouseUp={() => {
-                    console.log(`mouseup: ${Date.now()}`)
                     setMouseIsDown(false)
                     setGameState(gameState.map((itemRows: any) => {
                         return itemRows.map((item: any) => {
                             if(!item) return item
-                            if(selectedSum === 10 && item.selected) return undefined
+                            if(selectedSum === 10 && selectedItems.includes(item.id)) return undefined
                             return {
                                 ...item,
                                 selected: false
@@ -161,6 +160,7 @@ export default function SelectorRect( { gameState, setGameState}: {gameState: an
                     })
                 }}
                 onMouseOut={() => {
+                    if(!mouseIsDown) return 
                     setMouseIsDown(false)
                     setGameState(gameState.map((itemRows: any) => {
                         return itemRows.map((item: any) => {
