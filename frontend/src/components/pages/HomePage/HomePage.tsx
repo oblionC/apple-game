@@ -6,8 +6,13 @@ export default function HomePage() {
         <>
             <div className="w-screen h-screen flex flex-row">
                 <Sidebar /> 
-                <div className="w-full flex-grow">
-                    <GameScreen width={1100} height={window.innerHeight} /> 
+                <div className="bg-app-secondary w-full flex grow">
+                    <div className="grow">
+                        Gamescreen
+                    </div>
+                    <div className="grow">
+                        Timer and score
+                    </div>
                 </div>
             </div>
         </>

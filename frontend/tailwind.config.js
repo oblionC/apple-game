@@ -7,10 +7,10 @@ export default {
   theme: {
     extend: {
       colors: {
-          "app-purple": "#542E71",
-          "app-red": "#FB3640",
-          "app-yellow": "#FDCA40",
-          "app-indigo": "#A799B7"
+          "app-primary": "#2D3250",
+          "app-secondary": "#424769",
+          "app-tertiary": "#7077A1",
+          "app-quaternary": "#F6B17A"
       }
     },
   },
