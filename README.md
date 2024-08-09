@@ -1,6 +1,13 @@
 # Apple game
 Multiplayer game based on https://en.gamesaien.com/game/fruit_box/
 
+Technologies used in the project so far:
+- Frontend
+    - React.js
+    - konva.js (for drawing the game)
+    - tailwindcss
+
+
 To-do list:
 - [ ] Timer and score counter
 - [ ] Landing page
@@ -8,3 +15,4 @@ To-do list:
 - [ ] User page with statistics (highscores for gamemodes, clear rate, etc)
 - [ ] Real time multiplayer (sockets)
 - [ ] Game modes (time trouble, zen mode)
+
