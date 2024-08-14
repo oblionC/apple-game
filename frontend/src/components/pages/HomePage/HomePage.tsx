@@ -1,6 +1,7 @@
 import { GameScreen } from "../../GameScreen"
 import { useEffect, useRef, useState } from "react";
 import { Sidebar } from "../../Sidebar"
+import Timer from "../../Timer/Timer";
 
 export default function HomePage() {
     const gameScreenRef = useRef<any>();
@@ -19,7 +20,7 @@ export default function HomePage() {
                         <GameScreen width={width} height={height} />
                     </div>
                     <div className="grow">
-                        Timer and score
+                        <Timer />
                     </div>
                 </div>
             </div>
