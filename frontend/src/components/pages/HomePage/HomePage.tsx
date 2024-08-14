@@ -19,7 +19,7 @@ export default function HomePage() {
                     <div ref={gameScreenRef} className="w-3/5">
                         <GameScreen width={width} height={height} />
                     </div>
-                    <div className="grow">
+                    <div className="grow flex flex-col justify-center items-center">
                         <Timer />
                     </div>
                 </div>

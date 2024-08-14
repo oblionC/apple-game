@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react"
 
 export default function Timer() {
-    const [time, setTime] = useState(100)
+    const [time, setTime] = useState(10)
     const timer = useRef<number>()
     const stopTimer = () => {
         clearInterval(timer.current)
@@ -10,20 +10,22 @@ export default function Timer() {
     const startTimer = () => {
         if(timer.current) return;
         timer.current = setInterval(() => {
-            setTime(time => time - 1);
+            setTime((time) => {
+                if(time === 0) {
+                    stopTimer();
+                    return 0; 
+                }
+                return time - 1
+            });
         }, 1000) 
     }
     useEffect(() => {
         startTimer()
-        setInterval(() => {
-            console.log(typeof(timer.current))
-            console.log(timer.current)
-        }, 1000)
     }, []) 
 
     return(
         <>
-            <div className="bg-app-tertiary">
+            <div className="bg-app-tertiary w-3/5">
                 {time}
             </div>
             <button onClick={stopTimer}>stop</button>
