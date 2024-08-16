@@ -1,26 +1,34 @@
 import { useEffect, useState, useRef } from "react"
 
-export default function Timer() {
-    const [time, setTime] = useState(10)
+const startTimer = (timer: any, setTime: Function, setTimeIsUp: Function) => {
+    if(timer.current) return;
+    let timeUp = false;
+    timer.current = setInterval(() => {
+        setTime((t: number) => {
+            if(t <= 1) {
+                timeUp = true;
+                return 0; 
+            }
+            return t - 1
+        });
+        if(timeUp) {
+            setTimeIsUp(true)
+            stopTimer(timer)
+        } 
+    }, 1000) 
+}
+
+const stopTimer = (timer: any) => {
+    clearInterval(timer.current)
+    timer.current = 0
+}
+
+export default function Timer({ setTimeIsUp }: { setTimeIsUp: Function }) {
+    const [time, setTime] = useState<number>()
     const timer = useRef<number>()
-    const stopTimer = () => {
-        clearInterval(timer.current)
-        timer.current = 0
-    }
-    const startTimer = () => {
-        if(timer.current) return;
-        timer.current = setInterval(() => {
-            setTime((time) => {
-                if(time === 0) {
-                    stopTimer();
-                    return 0; 
-                }
-                return time - 1
-            });
-        }, 1000) 
-    }
     useEffect(() => {
-        startTimer()
+        setTime(3)
+        startTimer(timer, setTime, setTimeIsUp)
     }, []) 
 
     return(
@@ -28,8 +36,6 @@ export default function Timer() {
             <div className="bg-app-tertiary w-3/5">
                 {time}
             </div>
-            <button onClick={stopTimer}>stop</button>
-            <button onClick={startTimer}>start</button>
         </>
     )
 }

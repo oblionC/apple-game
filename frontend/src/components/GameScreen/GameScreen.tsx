@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Group, Layer, Stage } from 'react-konva';
+import { Group, Layer, Rect, Stage } from 'react-konva';
 import { ItemRow } from './ItemRow';
 import { ROWS, COLS, ITEM_SIZE_MULTIPLIER, ITEM_GAP_MULTIPLIER} from './constants';
 import { SelectorRect } from './SelectorRect';
@@ -44,13 +44,21 @@ function generateItemRows(gameState: any, itemSize: number) {
     return result;
 }
 
+function UnplayableOverlay({ width, height }: { width: number, height: number}) {
+    return (
+        <Layer>
+           <Rect x={0} y={0} width={width} height={height} /> 
+        </Layer>
+    )
+}
 
-export default function GameScreen({ width, height }: { width: number, height: number }) {
+export default function GameScreen({ width, height, allowPlay }: { width: number, height: number, allowPlay: boolean }) {
     const itemSize = width * ITEM_SIZE_MULTIPLIER
     const itemGap = width * ITEM_GAP_MULTIPLIER
     const [xOffset, yOffset] = calculateCenterGroupPosition(width, height, itemGap)
     const [gameState, setGameState] = useState<number[][]>()
     const itemRows = generateItemRows(gameState, itemSize)
+
     useEffect(() => {
         setGameState(generateGameState(xOffset, yOffset, itemSize, itemGap))
     }, [width])
@@ -68,6 +76,7 @@ export default function GameScreen({ width, height }: { width: number, height: n
                     </Group>
                 </Layer>
                 <SelectorRect width={width} height={height} gameState={gameState} setGameState={setGameState} />
+                {!allowPlay && <UnplayableOverlay width={width} height={height} />}
             </Stage>
         </>
     );
