@@ -15,4 +15,5 @@ To-do list:
 - [ ] User page with statistics (highscores for gamemodes, clear rate, etc)
 - [ ] Real time multiplayer (sockets)
 - [ ] Game modes (time trouble, zen mode)
+- [ ] Animations and effects
 
