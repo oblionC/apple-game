@@ -9,10 +9,14 @@ Technologies used in the project so far:
 
 
 To-do list:
-- [ ] Timer and score counter
+- [x] Timer and score counter
 - [ ] Landing page
 - [ ] Google/Github signup using passport js
 - [ ] User page with statistics (highscores for gamemodes, clear rate, etc)
 - [ ] Real time multiplayer (sockets)
 - [ ] Game modes (time trouble, zen mode)
+- [ ] Animations and effects
+- [ ] Highscore tracking
+- [ ] Row and column customization
+- [ ] Music
 
