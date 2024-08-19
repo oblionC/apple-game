@@ -9,7 +9,7 @@ Technologies used in the project so far:
 
 
 To-do list:
-- [ x ] Timer and score counter
+- [x] Timer and score counter
 - [ ] Landing page
 - [ ] Google/Github signup using passport js
 - [ ] User page with statistics (highscores for gamemodes, clear rate, etc)
