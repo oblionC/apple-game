@@ -6,3 +6,4 @@ export const ROWS = 15;
 export const COLS = 15;
 export const ITEM_SIZE_MULTIPLIER = 0.042;
 export const ITEM_GAP_MULTIPLIER = 0.05;
+export const TIME_DURATION = 60;

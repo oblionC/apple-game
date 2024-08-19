@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react"
+import { TIME_DURATION } from "../GameScreen/constants";
 
 const startTimer = (timer: any, setTime: Function, setTimeIsUp: Function) => {
     if(timer.current) return;
@@ -27,15 +28,14 @@ export default function Timer({ setTimeIsUp }: { setTimeIsUp: Function }) {
     const [time, setTime] = useState<number>()
     const timer = useRef<number>()
     useEffect(() => {
-        setTime(3)
+        setTime(TIME_DURATION)
         startTimer(timer, setTime, setTimeIsUp)
-    }, []) 
-
+    }, [])
     return(
-        <>
-            <div className="bg-app-tertiary w-3/5">
+        <div className="text-9xl bg-app-tertiary w-3/5 p-5 flex items-center justify-center">
+            <div className="align-middle">
                 {time}
             </div>
-        </>
+        </div>
     )
 }

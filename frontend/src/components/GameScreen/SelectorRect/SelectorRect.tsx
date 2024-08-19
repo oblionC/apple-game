@@ -1,5 +1,6 @@
 import { Layer, Rect } from "react-konva"
 import { useState } from "react"
+import ScoreHandler from "./ScoreHandler/ScoreHandler";
 
 function quickSort(arr: number[], length = arr.length - 1, start = 0): number[] {
 
@@ -71,7 +72,7 @@ interface selectorRect {
     height: number;
 }
 
-export default function SelectorRect( { width, height, gameState, setGameState}: {width: number, height: number, gameState: any, setGameState: Function}) {
+export default function SelectorRect( { width, height, gameState, setGameState, setScore}: {width: number, height: number, gameState: any, setGameState: Function, setScore: Function}) {
     const [mouseIsDown, setMouseIsDown] = useState<boolean>(false)
     const [selectorRectInfo, setSelectorRectInfo] = useState<selectorRect>({
         x: 0,
@@ -81,6 +82,7 @@ export default function SelectorRect( { width, height, gameState, setGameState}:
     })
     const [selectedSum, setSelectedSum] = useState<number>(0)
     const [selectedItems, setSelectedItems] = useState<number[]>([])
+    const scoreHandler = new ScoreHandler(setScore)
     
     return (
         <Layer>
@@ -152,6 +154,9 @@ export default function SelectorRect( { width, height, gameState, setGameState}:
                             }
                         })
                     }))
+                    if(selectedSum === 10) {
+                        scoreHandler.addScore(selectedItems)
+                    }
                     setSelectorRectInfo({
                         ...selectorRectInfo,
                         width: 0,
