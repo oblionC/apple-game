@@ -1,10 +1,9 @@
 import { GameScreen } from "../../GameScreen"
 import { useEffect, useRef, useState } from "react";
-import { Sidebar } from "../../Sidebar"
 import { Timer } from "../../Timer";
 import Score from "../../Score/Score";
 
-export default function HomePage() {
+export default function PlayPage() {
     const gameScreenRef = useRef<any>();
     const [width, setWidth] = useState<number>(0)
     const [height, setHeight] = useState<number>(0)
