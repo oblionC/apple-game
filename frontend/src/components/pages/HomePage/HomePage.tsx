@@ -17,17 +17,12 @@ export default function HomePage() {
     }, [])
     return (
         <>
-            <div className="w-screen h-screen flex flex-row">
-                <Sidebar /> 
-                <div className="bg-app-secondary w-full flex grow">
-                    <div ref={gameScreenRef} className="w-3/5">
-                        <GameScreen width={width} height={height} setScore={setScore} allowPlay={!timeIsUp} />
-                    </div>
-                    <div className="grow flex flex-col items-center justify-evenly">
-                        <Timer setTimeIsUp={setTimeIsUp} />
-                        <Score score={score} />
-                    </div>
-                </div>
+            <div ref={gameScreenRef} className="w-3/5">
+                <GameScreen width={width} height={height} setScore={setScore} allowPlay={!timeIsUp} />
+            </div>
+            <div className="grow flex flex-col items-center justify-evenly">
+                <Timer setTimeIsUp={setTimeIsUp} />
+                <Score score={score} />
             </div>
         </>
     )
