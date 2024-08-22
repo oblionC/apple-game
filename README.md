@@ -22,9 +22,9 @@ To-do list:
 
 To run the project locallly:
 - Install NodeJS
-- For fronntend:
-      - cd frontend/
-      - npm i
-      - npm run dev
+- For frontend:
+    - cd frontend/
+    - npm i
+    - npm run dev
 
 
