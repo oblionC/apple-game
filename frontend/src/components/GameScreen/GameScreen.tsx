@@ -52,7 +52,7 @@ function UnplayableOverlay({ width, height }: { width: number, height: number}) 
     )
 }
 
-export default function GameScreen({ width, height, setScore, allowPlay }: { width: number, height: number, setScore: Function, allowPlay: boolean }) {
+export default function GameScreen({ width, height, setScore, allowPlay }: { width: number, height: number, setScore: Function | undefined, allowPlay: boolean }) {
     const itemSize = width * ITEM_SIZE_MULTIPLIER
     const itemGap = width * ITEM_GAP_MULTIPLIER
     const [xOffset, yOffset] = calculateCenterGroupPosition(width, height, itemGap)
