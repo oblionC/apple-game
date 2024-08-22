@@ -20,3 +20,11 @@ To-do list:
 - [ ] Row and column customization
 - [ ] Music
 
+To run the project locallly:
+- Install NodeJS
+- For fronntend:
+      - cd frontend/
+      - npm i
+      - npm run dev
+
+
