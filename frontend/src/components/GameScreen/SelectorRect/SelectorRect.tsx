@@ -72,7 +72,7 @@ interface selectorRect {
     height: number;
 }
 
-export default function SelectorRect( { width, height, gameState, setGameState, setScore}: {width: number, height: number, gameState: any, setGameState: Function, setScore: Function}) {
+export default function SelectorRect( { width, height, gameState, setGameState, setScore}: {width: number, height: number, gameState: any, setGameState: Function, setScore: Function | undefined}) {
     const [mouseIsDown, setMouseIsDown] = useState<boolean>(false)
     const [selectorRectInfo, setSelectorRectInfo] = useState<selectorRect>({
         x: 0,

@@ -23,7 +23,7 @@ export default function LandingPage() {
                                 <div className="text-[70px]">
                                     Put your pattern recognition to the test!
                                 </div>
-                                <button className="border-solid border-black bg-app-quaternary rounded-3xl text-[50px] p-4" onClick={() => navigate("play")}>Play Now!</button>
+                                <button className="border-solid border-black bg-app-quaternary rounded-3xl text-[50px] p-4" onClick={() => navigate("play", {state: {rows: 4, cols: 4}})}>Play Now!</button>
                             </div>
                         </div>
                     </div>
