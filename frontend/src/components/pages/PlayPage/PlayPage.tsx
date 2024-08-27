@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Timer } from "../../Timer";
 import Score from "../../Score/Score";
 import { useLocation } from "react-router-dom";
+import { GameConfig } from "./GameConfig";
 
 export default function PlayPage() {
     const {state} = useLocation()
@@ -23,8 +24,13 @@ export default function PlayPage() {
                 <GameScreen width={width} height={height} setScore={setScore} allowPlay={!timeIsUp} rows={rows} cols={cols} />
             </div>
             <div className="grow flex flex-col items-center justify-evenly">
-                <Timer setTimeIsUp={setTimeIsUp} />
-                <Score score={score} />
+                <div className="w-3/4 h-[800px] flex flex-col items-center bg-app-primary">
+                    <div className="w-full flex flex-row">
+                        <button className="flex-grow">Game</button>
+                        <button className="flex-grow">Scores</button>
+                    </div>
+                <GameConfig setTimeIsUp={setTimeIsUp} score={score} /> 
+                </div>
             </div>
         </>
     )

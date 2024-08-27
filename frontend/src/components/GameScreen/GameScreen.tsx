@@ -54,10 +54,10 @@ function UnplayableOverlay({ width, height }: { width: number, height: number}) 
 
 export default function GameScreen({ width, height, setScore, allowPlay, rows, cols }: { width: number, height: number, setScore: Function | undefined, allowPlay: boolean, rows: number | undefined, cols: number | undefined }) {
     if(rows === undefined) {
-        rows = 10;
+        rows = 15;
     }
     if(cols === undefined) {
-        cols = 10;
+        cols = 15;
     }
     const itemSize = width * ITEM_SIZE_MULTIPLIER
     const itemGap = width * ITEM_GAP_MULTIPLIER

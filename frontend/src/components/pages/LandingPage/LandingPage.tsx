@@ -17,13 +17,13 @@ export default function LandingPage() {
             <div className="w-full overflow-y-scroll">
                 <div ref={firstSectionRef} className="h-[700px] justify-center bg-app-tertiary">
                     <div className={`container mx-auto h-full flex flex-row`}> 
-                        <GameScreen width={gameScreenHeight} height={gameScreenHeight} setScore={undefined} allowPlay={false} />
+                        <GameScreen width={gameScreenHeight} height={gameScreenHeight} setScore={undefined} allowPlay={false} rows={15} cols={15} />
                         <div className="w-full flex flex-col justify-center">
                             <div>
                                 <div className="text-[70px]">
                                     Put your pattern recognition to the test!
                                 </div>
-                                <button className="border-solid border-black bg-app-quaternary rounded-3xl text-[50px] p-4" onClick={() => navigate("play", {state: {rows: 4, cols: 4}})}>Play Now!</button>
+                                <button className="border-solid border-black bg-app-quaternary rounded-3xl text-[50px] p-4" onClick={() => navigate("play", {state: {rows: 15, cols: 15}})}>Play Now!</button>
                             </div>
                         </div>
                     </div>
