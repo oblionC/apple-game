@@ -8,8 +8,8 @@ export default function Sidebar() {
                 <img src={logo} alt="logo" />
             </div>
             <div className="mt-auto mb-0">
-                <Button text="Sign Up" />
-                <Button text="Log In" />
+                <Button intent="primary" size="medium">Sign Up</Button>
+                <Button intent="primary" size="medium">Log In</Button>
             </div>
         </div>
     )

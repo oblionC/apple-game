@@ -52,13 +52,15 @@ function UnplayableOverlay({ width, height }: { width: number, height: number}) 
     )
 }
 
-export default function GameScreen({ width, height, setScore, allowPlay, rows, cols }: { width: number, height: number, setScore: Function | undefined, allowPlay: boolean, rows: number | undefined, cols: number | undefined }) {
+export default function GameScreen({ width, height, setScore, allowPlay, rows, cols, gameScreenRef }: { width: number, height: number, setScore: Function | undefined, allowPlay: boolean, rows: number | undefined, cols: number | undefined, gameScreenRef: any}) {
     if(rows === undefined) {
         rows = 15;
     }
     if(cols === undefined) {
         cols = 15;
     }
+    const [stageWidth, setStageWidth] = useState(width)
+    const [stageHeight, setStageHeight] = useState(height)
     const itemSize = width * ITEM_SIZE_MULTIPLIER
     const itemGap = width * ITEM_GAP_MULTIPLIER
     const [xOffset, yOffset] = calculateCenterGroupPosition(width, height, rows, cols, itemGap)
@@ -66,22 +68,29 @@ export default function GameScreen({ width, height, setScore, allowPlay, rows, c
     const itemRows = generateItemRows(gameState, itemSize, rows)
 
     useEffect(() => {
+        setStageWidth(width)
+        setStageHeight(height)
         setGameState(generateGameState(xOffset, yOffset, itemSize, itemGap, rows, cols))
+        function handleResize() {
+            setStageWidth(gameScreenRef.current.clientWidth)
+            setStageHeight(gameScreenRef.current.clientHeight)
+        }
+        window.addEventListener("resize", handleResize)
     }, [width])
 
     return (
         <>
             <Stage 
             className='gameBoard' 
-            width={width}
-            height={height}
+            width={stageWidth}
+            height={stageHeight}
             >
                <Layer>
                     <Group x={xOffset} y={yOffset}>
                         {itemRows}
                     </Group>
                 </Layer>
-                <SelectorRect width={width} height={height} gameState={gameState} setGameState={setGameState} setScore={setScore} />
+                <SelectorRect width={stageWidth} height={stageHeight} gameState={gameState} setGameState={setGameState} setScore={setScore} />
                 {!allowPlay && <UnplayableOverlay width={width} height={height} />}
             </Stage>
         </>
