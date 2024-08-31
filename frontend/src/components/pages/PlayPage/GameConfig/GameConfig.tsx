@@ -4,6 +4,12 @@ import { Button } from "../../../Button"
 import { SlArrowDown } from "react-icons/sl";
 import { useState } from "react";
 
+const DURATION_OPTIONS = [30, 60, 90]
+const ROWS_OPTIONS = [8, 12, 15]
+const COLS_OPTIONS = [8, 12, 15]
+const TIMER_UNIT = "seconds"
+const ROWS_UNIT = "rows"
+const COLS_UNIT = "cols"
 
 function ScoreAndTimerTab({ setTimeIsUp, score }: {setTimeIsUp: Function, score: number}) {
     return (
@@ -16,43 +22,70 @@ function ScoreAndTimerTab({ setTimeIsUp, score }: {setTimeIsUp: Function, score:
     ) 
 }
 
-const DURATION_OPTIONS = [30, 60, 90]
 
-function DurationOptionButton({duration, setTimerDuration}: {duration: number, setTimerDuration: Function}) {
+function OptionButton({value, setValue, unit}: {value: number, setValue: Function, unit: string}) {
     return(
-            <Button intent="secondary" size="full" value={duration} onClick={(e) => {setTimerDuration(e.target.value)}}>{duration}s</Button>
+            <Button intent="secondary" size="full" value={value} onClick={(e) => {setValue(e.target.value)}}>{value} {unit}</Button>
     )
 }
 
-function TimerDropdown({setTimerDuration}: {setTimerDuration: Function}) {
+function Dropdown({ children }: { children: React.ReactNode }) {
     return(
         <div className="grid w-9/12 grid-cols-3 gap-x-2 gap-y-2 justify-center items-center mt-2">
-            {DURATION_OPTIONS.map((duration) => {
-                return <DurationOptionButton duration={duration} setTimerDuration={setTimerDuration}/>
-            })}
+            { children }
         </div>
     )
 }
 
+function TimerDropdown({setValue, unit}: {setValue: Function, unit: string}) {
+    return(
+        <Dropdown>
+            {DURATION_OPTIONS.map((duration) => {
+                return <OptionButton value={duration} setValue={setValue} unit={unit} />
+            })}
+        </Dropdown>
+    )
+}
+
+function RowsDropdown( { setValue, unit }: {setValue: Function, unit: string}) {
+    return(
+        <Dropdown>
+            {ROWS_OPTIONS.map((row) => {
+                return <OptionButton value={row} setValue={setValue} unit={unit} />
+            })}
+        </Dropdown>
+    )
+}
+
+function DropdownButton({ value, unit, children }: { value: number, unit: string, children: React.ReactNode }) {
+    const [dropdownIsActive, setDropdownIsActive] = useState<boolean>(false)
+    return(
+        <div className="w-full flex flex-col justify-center items-center my-2">
+            <Button className="flex flex-row items-center justify-between" intent="secondary" size="medium" onClick={() => {setDropdownIsActive(x => !x)}}>
+                {value} {unit}
+                <SlArrowDown />
+            </Button>
+            {dropdownIsActive && children}
+        </div> 
+    )
+}
+
 export default function GameConfig({ setTimeIsUp, score }: {setTimeIsUp: Function, score: number}) {
-    const [timerDuration, setTimerDuration] = useState<number>(0)
-    const [timerDropdownIsActive, setTimerDropdownIsActive] = useState<boolean>(true)
+    const [timerDuration, setTimerDuration] = useState<number>(DURATION_OPTIONS[0])
+    const [rows, setRows] = useState<number>(ROWS_OPTIONS[0])
+    const [cols, setCols] = useState<number>(COLS_OPTIONS[0])
 
     return(
         <div className="w-full flex flex-col items-center">
-            <div className="w-full flex flex-col justify-center items-center my-2">
-                <Button className="flex flex-row items-center justify-between" intent="secondary" size="medium" onClick={() => {setTimerDropdownIsActive(x => !x)}}>
-                    {timerDuration}s
-                    <SlArrowDown />
-                </Button>
-                {timerDropdownIsActive && <TimerDropdown setTimerDuration={setTimerDuration}/>}
-            </div> 
-            <div className="w-full my-2">
-                <Button intent="secondary" size="medium">Set Rows</Button>
-            </div>
-            <div className="w-full my-2">
-                <Button intent="secondary" size="medium">Set Columns</Button>
-            </div>
+            <DropdownButton value={timerDuration} unit={TIMER_UNIT}>
+                <TimerDropdown setValue={setTimerDuration} unit={TIMER_UNIT} />
+            </DropdownButton>
+            <DropdownButton value={rows} unit={ROWS_UNIT}>
+                <RowsDropdown setValue={setRows} unit={ROWS_UNIT}/>
+            </DropdownButton>
+            <DropdownButton value={cols} unit="columns">
+                <RowsDropdown setValue={setCols}/>
+            </DropdownButton>
         </div>
         // <ScoreAndTimerTab setTimeIsUp={setTimeIsUp} score={score} />
     )
