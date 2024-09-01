@@ -1,16 +1,18 @@
 import { GameScreen } from "../../GameScreen"
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { GameConfig } from "./GameConfig";
+import { GameTab } from "./GameTab";
 
 
 export default function PlayPage() {
     const {state} = useLocation()
     const { rows, cols } = state
+    const rowsState = useState<number>(15)
+    const colsState = useState<number>(15)
     const gameScreenRef = useRef<any>();
     const [width, setWidth] = useState<number>(0)
     const [height, setHeight] = useState<number>(0)
-    const [timeIsUp, setTimeIsUp] = useState<boolean>(true)
+    const [gameIsActive, setGameIsActive] = useState<boolean>(false)
     const [score, setScore] = useState<number>(0)
     
     useEffect(() => {
@@ -20,7 +22,7 @@ export default function PlayPage() {
     return (
         <>
             <div ref={gameScreenRef} className="w-3/5">
-                <GameScreen width={width} height={height} setScore={setScore} allowPlay={!timeIsUp} rows={rows} cols={cols} gameScreenRef={gameScreenRef} />
+                <GameScreen width={width} height={height} setScore={setScore} allowPlay={gameIsActive} rows={rows} cols={cols} gameScreenRef={gameScreenRef} />
             </div>
             <div className="grow flex flex-col items-center justify-evenly">
                 <div className="w-3/4 h-[800px] flex flex-col items-center bg-app-primary">
@@ -28,7 +30,7 @@ export default function PlayPage() {
                         <button className="flex-grow">Game</button>
                         <button className="flex-grow">Scores</button>
                     </div>
-                    <GameConfig setTimeIsUp={setTimeIsUp} score={score} /> 
+                    <GameTab rowsState={rowsState} colsState={colsState} setGameIsActive={setGameIsActive} score={score} /> 
                 </div>
             </div>
         </>

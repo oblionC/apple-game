@@ -20,6 +20,10 @@ const button = cva(["rounded-lg", "p-1"], {
             medium: [
                 "w-9/12",
             ],
+            large: [
+                "w-9/12",
+                "p-4"
+            ],
             full: [
                 "w-full"
             ]
