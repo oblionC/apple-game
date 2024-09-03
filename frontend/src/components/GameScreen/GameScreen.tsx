@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { Group, Layer, Rect, Stage } from 'react-konva';
 import { ItemRow } from './ItemRow';
 import { ROWS, COLS, ITEM_SIZE_MULTIPLIER, ITEM_GAP_MULTIPLIER} from './constants';
@@ -36,7 +36,10 @@ function generateGameState(xOffset: number, yOffset: number, itemSize: number, i
 }
 
 function generateItemRows(gameState: any, itemSize: number, rows: number) {
-    if(!gameState) return
+    console.log(gameState)
+    if(!gameState) {
+        return
+    }
     let result = [];
     for(let i = 0; i < rows; i++) {
         result.push(<ItemRow key={i} itemValues={gameState[i]} itemSize={itemSize} />)
@@ -63,9 +66,13 @@ export default function GameScreen({ width, height, setScore, allowPlay, rows, c
     const [stageHeight, setStageHeight] = useState(height)
     const itemSize = width * ITEM_SIZE_MULTIPLIER
     const itemGap = width * ITEM_GAP_MULTIPLIER
-    const [xOffset, yOffset] = calculateCenterGroupPosition(width, height, rows, cols, itemGap)
+    const [xOffset, yOffset] = useMemo(() => calculateCenterGroupPosition(width, height, rows, cols, itemGap), [width, height, rows, cols])
     const [gameState, setGameState] = useState<number[][]>()
-    const itemRows = generateItemRows(gameState, itemSize, rows)
+    const itemRows = useMemo(() => generateItemRows(gameState, itemSize, rows), [gameState, rows])
+
+    useEffect(() => {
+        setGameState(generateGameState(xOffset, yOffset, itemSize, itemGap, rows, cols))
+    }, [rows, cols])
 
     useEffect(() => {
         setStageWidth(width)

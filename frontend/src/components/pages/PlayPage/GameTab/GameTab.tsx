@@ -30,11 +30,13 @@ function OptionButton({value, setValue, unit}: {value: number, setValue: Functio
 }
 
 function Dropdown({ list, setValue, unit }: { list: any, setValue: Function, unit: string }) {
+    let count = 0 
     return(
         <div className="grid w-9/12 grid-cols-3 gap-x-2 gap-y-2 justify-center items-center mt-2">
             {
                 list.map((x) => {
-                    return <OptionButton value={x} setValue={setValue} unit={unit} />
+                    count += 1;
+                    return <OptionButton key={count} value={x} setValue={setValue} unit={unit} />
                 })
             }
         </div>

@@ -5,8 +5,6 @@ import { GameTab } from "./GameTab";
 
 
 export default function PlayPage() {
-    const {state} = useLocation()
-    const { rows, cols } = state
     const rowsState = useState<number>(15)
     const colsState = useState<number>(15)
     const gameScreenRef = useRef<any>();
@@ -14,15 +12,19 @@ export default function PlayPage() {
     const [height, setHeight] = useState<number>(0)
     const [gameIsActive, setGameIsActive] = useState<boolean>(false)
     const [score, setScore] = useState<number>(0)
+    useEffect(() => {
+
+    }, [rowsState[0], colsState[0]])
     
     useEffect(() => {
         setWidth(gameScreenRef.current.clientWidth)
         setHeight(gameScreenRef.current.scrollHeight)
     }, [])
+
     return (
         <>
             <div ref={gameScreenRef} className="w-3/5">
-                <GameScreen width={width} height={height} setScore={setScore} allowPlay={gameIsActive} rows={rows} cols={cols} gameScreenRef={gameScreenRef} />
+                <GameScreen width={width} height={height} setScore={setScore} allowPlay={gameIsActive} rows={rowsState[0]} cols={colsState[0]} gameScreenRef={gameScreenRef} />
             </div>
             <div className="grow flex flex-col items-center justify-evenly">
                 <div className="w-3/4 h-[800px] flex flex-col items-center bg-app-primary">
