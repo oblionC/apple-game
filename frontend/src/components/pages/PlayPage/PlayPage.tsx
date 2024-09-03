@@ -12,9 +12,7 @@ export default function PlayPage() {
     const [height, setHeight] = useState<number>(0)
     const [gameIsActive, setGameIsActive] = useState<boolean>(false)
     const [score, setScore] = useState<number>(0)
-    useEffect(() => {
 
-    }, [rowsState[0], colsState[0]])
     
     useEffect(() => {
         setWidth(gameScreenRef.current.clientWidth)
@@ -32,7 +30,7 @@ export default function PlayPage() {
                         <button className="flex-grow">Game</button>
                         <button className="flex-grow">Scores</button>
                     </div>
-                    <GameTab rowsState={rowsState} colsState={colsState} setGameIsActive={setGameIsActive} score={score} /> 
+                    <GameTab rowsState={rowsState} colsState={colsState} gameIsActive={gameIsActive} setGameIsActive={setGameIsActive} score={score} /> 
                 </div>
             </div>
         </>

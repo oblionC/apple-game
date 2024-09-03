@@ -11,11 +11,11 @@ const TIMER_UNIT = "seconds"
 const ROWS_UNIT = "rows"
 const COLS_UNIT = "cols"
 
-function ScoreAndTimerTab({ setTimeIsUp, score }: {setTimeIsUp: Function, score: number}) {
+function ScoreAndTimerTab({ setGameIsActive, score }: {setGameIsActive: Function, score: number}) {
     return (
         <>
             Timer Left:
-            <Timer setTimeIsUp={setTimeIsUp} />
+            <Timer setGameIsActive={setGameIsActive} />
             Score:
             <Score score={score} />
         </>
@@ -34,7 +34,7 @@ function Dropdown({ list, setValue, unit }: { list: any, setValue: Function, uni
     return(
         <div className="grid w-9/12 grid-cols-3 gap-x-2 gap-y-2 justify-center items-center mt-2">
             {
-                list.map((x) => {
+                list.map((x: number) => {
                     count += 1;
                     return <OptionButton key={count} value={x} setValue={setValue} unit={unit} />
                 })
@@ -56,7 +56,8 @@ function DropdownButton({ value, unit, children }: { value: number, unit: string
     )
 }
 
-function GameConfig({ setGameIsActive, rowsState, colsState, score }: {setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], score: number}) {
+
+function GameSetting({ setGameIsActive, rowsState, colsState, score }: {setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], score: number}) {
     const [timerDuration, setTimerDuration] = useState<number>(DURATION_OPTIONS[0])
     const [rows, setRows] = rowsState
     const [cols, setCols] = colsState 
@@ -76,12 +77,15 @@ function GameConfig({ setGameIsActive, rowsState, colsState, score }: {setGameIs
                 setGameIsActive(true)
             }}>Play</Button>
         </div>
-        // <ScoreAndTimerTab setTimeIsUp={setTimeIsUp} score={score} />
+        // 
     )
 }
 
-export default function GameTab({ setGameIsActive, rowsState, colsState, score }: {setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], score: number}) {
+export default function GameTab({ gameIsActive, setGameIsActive, rowsState, colsState, score }: {gameIsActive: boolean, setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], score: number}) {
     return (
-        <GameConfig setGameIsActive={setGameIsActive} rowsState={rowsState} colsState={colsState} score={score} />
+        <>
+            {!gameIsActive && <GameSetting setGameIsActive={setGameIsActive} rowsState={rowsState} colsState={colsState} score={score} />}
+            {gameIsActive && <ScoreAndTimerTab setGameIsActive={setGameIsActive} score={score} />}
+        </>
     )
 }

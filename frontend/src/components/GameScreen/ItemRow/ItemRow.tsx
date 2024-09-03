@@ -4,9 +4,9 @@ export default function ItemRow({ itemValues, itemSize }: { itemValues: any, ite
     if(!itemValues) return <></>
     return(
         <>
-
             {itemValues.map((item: any) => {
-                return <Item itemInfo={item} itemSize={itemSize} />
+                if(!item) return 
+                return <Item key={item.id} itemInfo={item} itemSize={itemSize} />
             })}
         </>
     )

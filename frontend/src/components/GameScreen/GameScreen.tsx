@@ -36,7 +36,6 @@ function generateGameState(xOffset: number, yOffset: number, itemSize: number, i
 }
 
 function generateItemRows(gameState: any, itemSize: number, rows: number) {
-    console.log(gameState)
     if(!gameState) {
         return
     }
