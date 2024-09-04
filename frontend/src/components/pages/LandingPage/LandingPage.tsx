@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
     const navigate = useNavigate()
-    const firstSectionRef = useRef(null)
+    const firstSectionRef: any = useRef(null)
     const [gameScreenHeight, setGameScreenHeight] = useState<number>(0)
     useEffect(() => {
         if(firstSectionRef.current) {
@@ -17,7 +17,7 @@ export default function LandingPage() {
             <div className="w-full overflow-y-scroll">
                 <div ref={firstSectionRef} className="h-[700px] justify-center bg-app-tertiary">
                     <div className={`container mx-auto h-full flex flex-row`}> 
-                        <GameScreen width={gameScreenHeight} height={gameScreenHeight} setScore={undefined} allowPlay={false} rows={15} cols={15} />
+                        <GameScreen width={gameScreenHeight} height={gameScreenHeight} gameIsActive={false} rows={15} cols={15} score={undefined} setScore={undefined} gameScreenRef={undefined} allowDisplayScore={undefined}/>
                         <div className="w-full flex flex-col justify-center">
                             <div>
                                 <div className="text-[70px]">

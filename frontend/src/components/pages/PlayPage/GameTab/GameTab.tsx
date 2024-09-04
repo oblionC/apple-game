@@ -25,7 +25,7 @@ function ScoreAndTimerTab({ setGameIsActive, timeDuration, score }: {setGameIsAc
 
 function OptionButton({value, setValue, unit}: {value: number, setValue: Function, unit: string}) {
     return(
-            <Button intent="secondary" size="full" value={value} onClick={(e) => {setValue(e.target.value)}}>{value} {unit}</Button>
+            <Button intent="secondary" size="full" value={value} onClick={(e: any) => {setValue(e.target.value)}}>{value} {unit}</Button>
     )
 }
 

@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from "react"
-import { TIME_DURATION } from "../GameScreen/constants";
 
 const startTimer = (timer: any, setTime: Function, setGameIsActive: Function) => {
     if(timer.current) return;

@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Group, Layer, Rect, Stage, Text } from 'react-konva';
 import { ItemRow } from './ItemRow';
-import { ROWS, COLS, ITEM_SIZE_MULTIPLIER, ITEM_GAP_MULTIPLIER} from './constants';
+import { ITEM_SIZE_MULTIPLIER, ITEM_GAP_MULTIPLIER} from './constants';
 import { SelectorRect } from './SelectorRect';
 
 type calculatecCenterGroupPositionParams = {
@@ -12,6 +12,18 @@ type calculatecCenterGroupPositionParams = {
     itemGap?: number, 
     layerWidth?: number, 
     layerHeight?: number 
+}
+
+type GameScreenProps = { 
+    width: number, 
+    height: number, 
+    score: number | undefined, 
+    setScore: Function | undefined, 
+    gameIsActive: boolean, 
+    rows: number | undefined, 
+    cols: number | undefined, 
+    gameScreenRef: any, 
+    allowDisplayScore: boolean| undefined
 }
 
 function calculateCenterGroupPosition({ width, height, rows, cols, itemGap, layerWidth, layerHeight }: calculatecCenterGroupPositionParams) {
@@ -58,30 +70,31 @@ function generateItemRows(gameState: any, itemSize: number, rows: number) {
     return result;
 }
 
-function UnplayableOverlay({ allowDisplayScore, score, ...props }: {allowDisplayScore: Function, score: number}) {
+function UnplayableOverlay({ allowDisplayScore, score, width, height}: {allowDisplayScore: boolean | undefined, score: number | undefined, width: number, height: number}) {
     return (
         <>
             <Layer>
-                <Rect x={0} y={0} {...props} /> 
+                <Rect x={0} y={0} width={width} height={height} /> 
             </Layer>
-            {allowDisplayScore && <ScoreDisplay score={score} {...props} />}
+            {allowDisplayScore && <ScoreDisplay score={score} width={width} height={height} />}
         </>
 
     )
 }
 
-function ScoreDisplay({score, width, height}: { score: number, width: number, height: number }) {
+function ScoreDisplay({score, width, height}: { score: number | undefined, width: number, height: number }) {
     const bgWidth = 300
     const bgHeight = 300
+    const [xOffset, yOffset] = calculateCenterGroupPosition({width: width, height: height, layerWidth: bgWidth, layerHeight: bgHeight})
     return (
         <Layer>
-            <Rect width={bgWidth} height={bgHeight} fill="black" opacity={0.2}/>
-            <Text text={`Your score: ${score}`} fontSize={24} width={width} height={height} align="center" verticalAlign="middle" />
+            <Rect x={xOffset} y={yOffset} width={bgWidth} height={bgHeight} fill="black" opacity={0.2}/>
+            <Text text={`Your score: ${score}`} fill="white" fontSize={24} width={width} height={height} align="center" verticalAlign="middle" />
         </Layer>
     )
 }
 
-export default function GameScreen({ width, height, score, setScore, gameIsActive, rows, cols, gameScreenRef, allowDisplayScore }: { width: number, height: number, score: number, setScore: Function | undefined, gameIsActive: boolean, rows: number | undefined, cols: number | undefined, gameScreenRef: any, allowDisplayScore: Function}) {
+export default function GameScreen({ width, height, score, setScore, gameIsActive, rows, cols, gameScreenRef, allowDisplayScore }: GameScreenProps) {
     if(rows === undefined) {
         rows = 15;
     }

@@ -13,15 +13,6 @@ export default function PlayPage() {
     const [gameIsActive, setGameIsActive] = useState<boolean>(false)
     const [score, setScore] = useState<number>(0)
     const [allowDisplayScore, setAllowDisplayScore] = useState(false)
-    const gameStateData =  {
-        width: width,
-        height: height, 
-        setScore,
-        gameIsActive,
-        gameScreenRef,
-        rows: rowsState[0],
-        cols: colsState[0],
-    }               
 
     useEffect(function resetScore() {
         if(gameIsActive) {
