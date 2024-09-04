@@ -24,11 +24,11 @@ const stopTimer = (timer: any) => {
     timer.current = 0
 }
 
-export default function Timer({ setGameIsActive }: { setGameIsActive: Function }) {
+export default function Timer({ setGameIsActive, timeDuration }: { setGameIsActive: Function, timeDuration: number }) {
     const [time, setTime] = useState<number>()
     const timer = useRef<number>()
     useEffect(() => {
-        setTime(TIME_DURATION)
+        setTime(timeDuration)
         startTimer(timer, setTime, setGameIsActive)
     }, [])
     return(

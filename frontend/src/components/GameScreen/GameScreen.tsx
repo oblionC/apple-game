@@ -1,14 +1,26 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
-import { Group, Layer, Rect, Stage } from 'react-konva';
+import { Group, Layer, Rect, Stage, Text } from 'react-konva';
 import { ItemRow } from './ItemRow';
 import { ROWS, COLS, ITEM_SIZE_MULTIPLIER, ITEM_GAP_MULTIPLIER} from './constants';
 import { SelectorRect } from './SelectorRect';
 
-function calculateCenterGroupPosition(width: number, height: number, rows: number, cols: number, itemGap: number) {
-    let groupWidth = cols * itemGap;
-    let groupHeight = rows * itemGap;
-    let xOffset = (width - groupWidth) / 2;
-    let yOffset = (height - groupHeight) / 2;
+type calculatecCenterGroupPositionParams = {
+    width: number, 
+    height: number, 
+    rows?: number, 
+    cols?: number, 
+    itemGap?: number, 
+    layerWidth?: number, 
+    layerHeight?: number 
+}
+
+function calculateCenterGroupPosition({ width, height, rows, cols, itemGap, layerWidth, layerHeight }: calculatecCenterGroupPositionParams) {
+    if(!layerWidth) 
+        layerWidth = cols! * itemGap!;
+    if(!layerHeight)
+        layerHeight = rows! * itemGap!;
+    let xOffset = (width - layerWidth) / 2;
+    let yOffset = (height - layerHeight) / 2;
     return [xOffset, yOffset];
 }
 
@@ -46,15 +58,30 @@ function generateItemRows(gameState: any, itemSize: number, rows: number) {
     return result;
 }
 
-function UnplayableOverlay({ width, height }: { width: number, height: number}) {
+function UnplayableOverlay({ allowDisplayScore, score, ...props }: {allowDisplayScore: Function, score: number}) {
+    return (
+        <>
+            <Layer>
+                <Rect x={0} y={0} {...props} /> 
+            </Layer>
+            {allowDisplayScore && <ScoreDisplay score={score} {...props} />}
+        </>
+
+    )
+}
+
+function ScoreDisplay({score, width, height}: { score: number, width: number, height: number }) {
+    const bgWidth = 300
+    const bgHeight = 300
     return (
         <Layer>
-           <Rect x={0} y={0} width={width} height={height} /> 
+            <Rect width={bgWidth} height={bgHeight} fill="black" opacity={0.2}/>
+            <Text text={`Your score: ${score}`} fontSize={24} width={width} height={height} align="center" verticalAlign="middle" />
         </Layer>
     )
 }
 
-export default function GameScreen({ width, height, setScore, allowPlay, rows, cols, gameScreenRef }: { width: number, height: number, setScore: Function | undefined, allowPlay: boolean, rows: number | undefined, cols: number | undefined, gameScreenRef: any}) {
+export default function GameScreen({ width, height, score, setScore, gameIsActive, rows, cols, gameScreenRef, allowDisplayScore }: { width: number, height: number, score: number, setScore: Function | undefined, gameIsActive: boolean, rows: number | undefined, cols: number | undefined, gameScreenRef: any, allowDisplayScore: Function}) {
     if(rows === undefined) {
         rows = 15;
     }
@@ -65,9 +92,10 @@ export default function GameScreen({ width, height, setScore, allowPlay, rows, c
     const [stageHeight, setStageHeight] = useState(height)
     const itemSize = width * ITEM_SIZE_MULTIPLIER
     const itemGap = width * ITEM_GAP_MULTIPLIER
-    const [xOffset, yOffset] = useMemo(() => calculateCenterGroupPosition(width, height, rows, cols, itemGap), [width, height, rows, cols])
+    const [xOffset, yOffset] = useMemo(() => calculateCenterGroupPosition({width, height, rows, cols, itemGap}), [width, height, rows, cols])
     const [gameState, setGameState] = useState<number[][]>()
     const itemRows = useMemo(() => generateItemRows(gameState, itemSize, rows), [gameState, rows])
+
 
     useEffect(() => {
         setGameState(generateGameState(xOffset, yOffset, itemSize, itemGap, rows, cols))
@@ -91,13 +119,13 @@ export default function GameScreen({ width, height, setScore, allowPlay, rows, c
             width={stageWidth}
             height={stageHeight}
             >
-               <Layer>
+                <Layer>
                     <Group x={xOffset} y={yOffset}>
                         {itemRows}
                     </Group>
                 </Layer>
                 <SelectorRect width={stageWidth} height={stageHeight} gameState={gameState} setGameState={setGameState} setScore={setScore} />
-                {!allowPlay && <UnplayableOverlay width={width} height={height} />}
+                {!gameIsActive && <UnplayableOverlay score={score} allowDisplayScore={allowDisplayScore} width={width} height={height} />}  
             </Stage>
         </>
     );

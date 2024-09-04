@@ -11,11 +11,11 @@ const TIMER_UNIT = "seconds"
 const ROWS_UNIT = "rows"
 const COLS_UNIT = "cols"
 
-function ScoreAndTimerTab({ setGameIsActive, score }: {setGameIsActive: Function, score: number}) {
+function ScoreAndTimerTab({ setGameIsActive, timeDuration, score }: {setGameIsActive: Function, timeDuration: number, score: number}) {
     return (
         <>
             Timer Left:
-            <Timer setGameIsActive={setGameIsActive} />
+            <Timer setGameIsActive={setGameIsActive} timeDuration={timeDuration} />
             Score:
             <Score score={score} />
         </>
@@ -47,7 +47,7 @@ function DropdownButton({ value, unit, children }: { value: number, unit: string
     const [dropdownIsActive, setDropdownIsActive] = useState<boolean>(false)
     return(
         <div className="w-full flex flex-col justify-center items-center my-2">
-            <Button className="flex flex-row items-center justify-between" intent="secondary" size="medium" onClick={() => {setDropdownIsActive(x => !x)}}>
+            <Button className="flex flex-row items-center justify-between" intent="secondary" size="large" onClick={() => {setDropdownIsActive(x => !x)}}>
                 {value} {unit}
                 <SlArrowDown />
             </Button>
@@ -57,8 +57,8 @@ function DropdownButton({ value, unit, children }: { value: number, unit: string
 }
 
 
-function GameSetting({ setGameIsActive, rowsState, colsState, score }: {setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], score: number}) {
-    const [timerDuration, setTimerDuration] = useState<number>(DURATION_OPTIONS[0])
+function GameSetting({ setGameIsActive, rowsState, colsState, timeDurationState, setAllowDisplayScore }: { setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], timeDurationState: [number, Function], setAllowDisplayScore: Function }) {
+    const [timerDuration, setTimerDuration] = timeDurationState
     const [rows, setRows] = rowsState
     const [cols, setCols] = colsState 
 
@@ -75,17 +75,17 @@ function GameSetting({ setGameIsActive, rowsState, colsState, score }: {setGameI
             </DropdownButton>
             <Button intent="primary" size="large" onClick={() => {
                 setGameIsActive(true)
+                setAllowDisplayScore(true)
             }}>Play</Button>
         </div>
-        // 
     )
 }
 
-export default function GameTab({ gameIsActive, setGameIsActive, rowsState, colsState, score }: {gameIsActive: boolean, setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], score: number}) {
+export default function GameTab({ gameIsActive, setGameIsActive, rowsState, colsState, timeDurationState, score, setAllowDisplayScore }: {gameIsActive: boolean, setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], timeDurationState: [number, Function], score: number, setAllowDisplayScore: Function}) {
     return (
         <>
-            {!gameIsActive && <GameSetting setGameIsActive={setGameIsActive} rowsState={rowsState} colsState={colsState} score={score} />}
-            {gameIsActive && <ScoreAndTimerTab setGameIsActive={setGameIsActive} score={score} />}
+            {!gameIsActive && <GameSetting setGameIsActive={setGameIsActive} rowsState={rowsState} colsState={colsState} timeDurationState={timeDurationState} setAllowDisplayScore={setAllowDisplayScore} />}
+            {gameIsActive && <ScoreAndTimerTab setGameIsActive={setGameIsActive} timeDuration={timeDurationState[0]} score={score} />}
         </>
     )
 }

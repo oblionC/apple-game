@@ -1,20 +1,35 @@
 import { GameScreen } from "../../GameScreen"
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { GameTab } from "./GameTab";
 
 
 export default function PlayPage() {
     const rowsState = useState<number>(15)
     const colsState = useState<number>(15)
+    const timeDurationState = useState<number>(30)
     const gameScreenRef = useRef<any>();
     const [width, setWidth] = useState<number>(0)
     const [height, setHeight] = useState<number>(0)
     const [gameIsActive, setGameIsActive] = useState<boolean>(false)
     const [score, setScore] = useState<number>(0)
+    const [allowDisplayScore, setAllowDisplayScore] = useState(false)
+    const gameStateData =  {
+        width: width,
+        height: height, 
+        setScore,
+        gameIsActive,
+        gameScreenRef,
+        rows: rowsState[0],
+        cols: colsState[0],
+    }               
 
+    useEffect(function resetScore() {
+        if(gameIsActive) {
+            setScore(0)
+        }
+    }, [gameIsActive])
     
-    useEffect(() => {
+    useEffect(function setGameScreenDimensions() {
         setWidth(gameScreenRef.current.clientWidth)
         setHeight(gameScreenRef.current.scrollHeight)
     }, [])
@@ -22,7 +37,7 @@ export default function PlayPage() {
     return (
         <>
             <div ref={gameScreenRef} className="w-3/5">
-                <GameScreen width={width} height={height} setScore={setScore} allowPlay={gameIsActive} rows={rowsState[0]} cols={colsState[0]} gameScreenRef={gameScreenRef} />
+                <GameScreen width={width} height={height} score={score} setScore={setScore} gameIsActive={gameIsActive} rows={rowsState[0]} cols={colsState[0]} gameScreenRef={gameScreenRef} allowDisplayScore={allowDisplayScore} />
             </div>
             <div className="grow flex flex-col items-center justify-evenly">
                 <div className="w-3/4 h-[800px] flex flex-col items-center bg-app-primary">
@@ -30,7 +45,7 @@ export default function PlayPage() {
                         <button className="flex-grow">Game</button>
                         <button className="flex-grow">Scores</button>
                     </div>
-                    <GameTab rowsState={rowsState} colsState={colsState} gameIsActive={gameIsActive} setGameIsActive={setGameIsActive} score={score} /> 
+                    <GameTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeDurationState={timeDurationState} setGameIsActive={setGameIsActive} score={score} setAllowDisplayScore={setAllowDisplayScore} /> 
                 </div>
             </div>
         </>
