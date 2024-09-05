@@ -23,20 +23,22 @@ function ScoreAndTimerTab({ setGameIsActive, timeDuration, score }: {setGameIsAc
 }
 
 
-function OptionButton({value, setValue, unit}: {value: number, setValue: Function, unit: string}) {
+function OptionButton({value, valueState, unit}: {value: number, valueState: [number, Function], unit: string}) {
+    const [activeValue, setActiveValue] = valueState
+
     return(
-            <Button intent="secondary" size="full" value={value} onClick={(e: any) => {setValue(e.target.value)}}>{value} {unit}</Button>
+            <Button intent="secondary" size="full" border={activeValue === value ? "white" : "none"} value={value} onClick={(e: any) => {setActiveValue(+e.target.value)}}>{value} {unit}</Button>
     )
 }
 
-function Dropdown({ list, setValue, unit }: { list: any, setValue: Function, unit: string }) {
+function Dropdown({ list, valueState, unit }: { list: any, valueState: [number, Function], unit: string }) {
     let count = 0 
     return(
         <div className="grid w-9/12 grid-cols-3 gap-x-2 gap-y-2 justify-center items-center mt-2">
             {
                 list.map((x: number) => {
                     count += 1;
-                    return <OptionButton key={count} value={x} setValue={setValue} unit={unit} />
+                    return <OptionButton key={count} value={x} valueState={valueState} unit={unit} />
                 })
             }
         </div>
@@ -45,6 +47,7 @@ function Dropdown({ list, setValue, unit }: { list: any, setValue: Function, uni
 
 function DropdownButton({ value, unit, children }: { value: number, unit: string, children: React.ReactNode }) {
     const [dropdownIsActive, setDropdownIsActive] = useState<boolean>(false)
+
     return(
         <div className="w-full flex flex-col justify-center items-center my-2">
             <Button className="flex flex-row items-center justify-between" intent="secondary" size="large" onClick={() => {setDropdownIsActive(x => !x)}}>
@@ -65,13 +68,13 @@ function GameSetting({ setGameIsActive, rowsState, colsState, timeDurationState,
     return(
         <div className="w-full flex flex-col items-center">
             <DropdownButton value={timerDuration} unit={TIMER_UNIT}>
-                <Dropdown list={DURATION_OPTIONS} setValue={setTimerDuration} unit={TIMER_UNIT} />
+                <Dropdown list={DURATION_OPTIONS} valueState={timeDurationState} unit={TIMER_UNIT} />
             </DropdownButton>
             <DropdownButton value={rows} unit={ROWS_UNIT}>
-                <Dropdown list={ROWS_OPTIONS} setValue={setRows} unit={ROWS_UNIT}/>
+                <Dropdown list={ROWS_OPTIONS} valueState={rowsState} unit={ROWS_UNIT}/>
             </DropdownButton>
             <DropdownButton value={cols} unit={COLS_UNIT}>
-                <Dropdown list={COLS_OPTIONS} setValue={setCols} unit={COLS_UNIT} />
+                <Dropdown list={COLS_OPTIONS} valueState={colsState} unit={COLS_UNIT} />
             </DropdownButton>
             <Button intent="primary" size="large" onClick={() => {
                 setGameIsActive(true)

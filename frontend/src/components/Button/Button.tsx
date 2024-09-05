@@ -15,7 +15,7 @@ const button = cva(["rounded-lg", "p-1"], {
         }, 
         size: {
             small: [
-                "w-1/3"
+                "w-1/3",
             ],
             medium: [
                 "w-9/12",
@@ -27,20 +27,30 @@ const button = cva(["rounded-lg", "p-1"], {
             full: [
                 "w-full"
             ]
+        },
+        border: {
+            none: [
+                "border-transparent"
+            ],
+            white: [
+                "border-2",
+                "border-slate-50",
+            ]
         }
     },
     defaultVariants: {
         intent: "primary",
         size: "medium",
+        border: "none",
     }
 })
 
 type ButtonProps = VariantProps<typeof button> & ComponentProps<"button">
 
-export default function Button({ intent, size, className, children, ...props}: ButtonProps ) {
+export default function Button({ intent, size, border, className, children, ...props}: ButtonProps ) {
     return(
         <>
-            <button className={twMerge(className, button({ intent: intent, size: size}))} {...props}>{children}</button>
+            <button className={twMerge(className, button({ intent: intent, size: size, border: border}))} {...props}>{children}</button>
         </>
     )
 }

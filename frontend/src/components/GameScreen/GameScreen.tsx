@@ -91,7 +91,8 @@ function ScoreDisplay({score, width, height, allowDisplayScore}: { score: number
     const comeInAnimation = (node) => {
         node.to({
             y: yOffset,
-            duration: 0.2
+            opacity: 1, 
+            duration: 0.5 
         })
     }
 
@@ -107,6 +108,7 @@ function ScoreDisplay({score, width, height, allowDisplayScore}: { score: number
                 y={-yOffset / 2} 
                 width={bgWidth} 
                 height={bgHeight}
+                opacity={0}
             >
                 <Circle x={bgWidth / 2} y={bgHeight / 2} width={bgWidth} height={bgHeight} fill="#2D3250" opacity={0.7}/>
                 <Text text={`Your score: ${score}`} fill="white" fontSize={24} width={bgWidth} height={bgHeight} align="center" verticalAlign="middle" />
@@ -134,6 +136,11 @@ export default function GameScreen({ width, height, score, setScore, gameIsActiv
     useEffect(() => {
         setGameState(generateGameState(xOffset, yOffset, itemSize, itemGap, rows, cols))
     }, [rows, cols])
+
+    useEffect(() => {
+        if(gameIsActive) 
+            setGameState(generateGameState(xOffset, yOffset, itemSize, itemGap, rows, cols))
+    }, [gameIsActive])
 
     useEffect(() => {
         setStageWidth(width)
