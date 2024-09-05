@@ -1,5 +1,5 @@
-import { useEffect, useState, useMemo } from 'react';
-import { Group, Layer, Rect, Stage, Text } from 'react-konva';
+import { useEffect, useState, useRef, useMemo } from 'react';
+import { Group, Layer, Circle, Rect, Stage, Text } from 'react-konva';
 import { ItemRow } from './ItemRow';
 import { ITEM_SIZE_MULTIPLIER, ITEM_GAP_MULTIPLIER} from './constants';
 import { SelectorRect } from './SelectorRect';
@@ -76,20 +76,41 @@ function UnplayableOverlay({ allowDisplayScore, score, width, height}: {allowDis
             <Layer>
                 <Rect x={0} y={0} width={width} height={height} /> 
             </Layer>
-            {allowDisplayScore && <ScoreDisplay score={score} width={width} height={height} />}
+            {allowDisplayScore && <ScoreDisplay score={score} width={width} height={height} allowDisplayScore={allowDisplayScore} />}
         </>
 
     )
 }
 
-function ScoreDisplay({score, width, height}: { score: number | undefined, width: number, height: number }) {
+function ScoreDisplay({score, width, height, allowDisplayScore}: { score: number | undefined, width: number, height: number, allowDisplayScore: boolean }) {
+    const groupRef = useRef()
     const bgWidth = 300
     const bgHeight = 300
     const [xOffset, yOffset] = calculateCenterGroupPosition({width: width, height: height, layerWidth: bgWidth, layerHeight: bgHeight})
+
+    const comeInAnimation = (node) => {
+        node.to({
+            y: yOffset,
+            duration: 0.2
+        })
+    }
+
+    useEffect(() => {
+        comeInAnimation(groupRef.current)
+    }, [])
+
     return (
         <Layer>
-            <Rect x={xOffset} y={yOffset} width={bgWidth} height={bgHeight} fill="black" opacity={0.2}/>
-            <Text text={`Your score: ${score}`} fill="white" fontSize={24} width={width} height={height} align="center" verticalAlign="middle" />
+            <Group 
+                ref={groupRef}
+                x={xOffset} 
+                y={-yOffset / 2} 
+                width={bgWidth} 
+                height={bgHeight}
+            >
+                <Circle x={bgWidth / 2} y={bgHeight / 2} width={bgWidth} height={bgHeight} fill="#2D3250" opacity={0.7}/>
+                <Text text={`Your score: ${score}`} fill="white" fontSize={24} width={bgWidth} height={bgHeight} align="center" verticalAlign="middle" />
+            </Group>
         </Layer>
     )
 }

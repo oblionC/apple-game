@@ -6,7 +6,7 @@ import { GameTab } from "./GameTab";
 export default function PlayPage() {
     const rowsState = useState<number>(15)
     const colsState = useState<number>(15)
-    const timeDurationState = useState<number>(30)
+    const timeDurationState = useState<number>(5)
     const gameScreenRef = useRef<any>();
     const [width, setWidth] = useState<number>(0)
     const [height, setHeight] = useState<number>(0)
