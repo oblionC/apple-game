@@ -2,7 +2,7 @@ import { cva, VariantProps } from "class-variance-authority"
 import { twMerge } from "tailwind-merge"
 import { ComponentProps } from "react"
 
-const button = cva(["rounded-lg", "p-1"], {
+const button = cva(["rounded-lg", "p-1", "drop-shadow-xl"], {
     variants: {
         intent: {
             primary: [

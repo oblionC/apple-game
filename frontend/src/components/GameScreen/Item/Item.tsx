@@ -2,7 +2,7 @@ import { Rect, Text} from 'react-konva'
 
 const shadowConfig = {
     shadowColor: 'black',
-    shadowBlur: 10,
+    shadowBlur: 5,
     shadowOffset: {x : 7, y: 7},
     shadowOpacity: 0.5
 }

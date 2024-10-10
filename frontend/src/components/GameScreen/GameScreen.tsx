@@ -110,7 +110,7 @@ function ScoreDisplay({score, width, height, allowDisplayScore}: { score: number
                 height={bgHeight}
                 opacity={0}
             >
-                <Circle x={bgWidth / 2} y={bgHeight / 2} width={bgWidth} height={bgHeight} fill="#2D3250" opacity={0.7}/>
+                <Circle x={bgWidth / 2} y={bgHeight / 2} width={bgWidth} height={bgHeight} fill="#2D3250" shadowColor="black" shadowBlur={5} shadowOffset={{x: 5, y: 5}} shadowOpacity={0.5} stroke="white" strokeWidth={2}/>
                 <Text text={`Your score: ${score}`} fill="white" fontSize={24} width={bgWidth} height={bgHeight} align="center" verticalAlign="middle" />
             </Group>
         </Layer>
