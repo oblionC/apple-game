@@ -1,8 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority"
-import { twMerge } from "tailwind-merge"
 import { ComponentProps } from "react"
 
-const button = cva(["rounded-lg", "p-1", "drop-shadow-xl"], {
+const inputcva= cva(["rounded-lg", "p-1", "drop-shadow-xl"], {
     variants: {
         intent: {
             primary: [
@@ -12,9 +11,9 @@ const button = cva(["rounded-lg", "p-1", "drop-shadow-xl"], {
             secondary: [
                 "bg-app-tertiary",
             ],
-            blank: [
+            blank: {
                 "bg-white"
-            ] 
+            }
         }, 
         size: {
             small: [
@@ -48,12 +47,4 @@ const button = cva(["rounded-lg", "p-1", "drop-shadow-xl"], {
     }
 })
 
-type ButtonProps = VariantProps<typeof button> & ComponentProps<"button">
-
-export default function Button({ intent, size, border, className, children, ...props}: ButtonProps ) {
-    return(
-        <>
-            <button className={twMerge(className, button({ intent: intent, size: size, border: border}))} {...props}>{children}</button>
-        </>
-    )
-}
+type InputCVAProps= VariantProps<typeof inputcva> & ComponentProps<"input">
