@@ -11,8 +11,8 @@ export default function Sidebar() {
                 <img src={logo} alt="logo" />
             </div>
             <div className="mt-auto mb-0">
-                <Button intent="primary" size="medium" onClick={() => navigate('signup')}>Sign Up</Button>
-                <Button intent="primary" size="medium">Log In</Button>
+                <Button intent="primary" size="medium" onClick={() => navigate('entry/signup')}>Sign Up</Button>
+                <Button intent="primary" size="medium" onClick={() => navigate('entry/login')} >Log In</Button>
             </div>
         </div>
     )

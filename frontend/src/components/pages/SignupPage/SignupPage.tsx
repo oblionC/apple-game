@@ -27,7 +27,7 @@ export default function SignupPage() {
                 password: password
             })
         }
-        fetch(import.meta.env.VITE_BACKEND_URL + "/users", requestOptions)
+        fetch(import.meta.env.VITE_BACKEND_URL + "/users/new-user", requestOptions)
         .then(async (res) => {
             var json = await res.json()
 
@@ -49,17 +49,13 @@ export default function SignupPage() {
     }
 
     return (
-        <div className="flex justify-center items-center w-full h-screen bg-app-primary">
-            <div className="max-w-[35rem] min-h-[45rem] bg-app-secondary rounded-lg shadow-2xl flex flex-col justify-center align-center"> 
-                <div className="flex flex-col justify-center items-center">
-                    <img src={logo} className="w-1/3" /> 
-                    <UserInput name="Username" error={usernameError} value={username} onChange={(e) => {setUsername(e.target.value)}} />
-                    <UserInput name="Email" error={emailError} value={email} onChange={(e) => {setEmail(e.target.value)}} />
-                    <UserInput type="password" name="Password" error={passwordError} value={password} onChange={(e) => setPassword(e.target.value)} />
-                    <UserInput type="password" name="Confirm Password" error={confirmPasswordError} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-                    <Button intent="primary" size="large" onClick={handleSignup}>Sign Up</Button>
-                </div>
-            </div>
+        <div className="flex flex-col justify-center items-center">
+            <img src={logo} className="w-1/3" /> 
+            <UserInput name="Username" error={usernameError} value={username} onChange={(e) => {setUsername(e.target.value)}} />
+            <UserInput name="Email" error={emailError} value={email} onChange={(e) => {setEmail(e.target.value)}} />
+            <UserInput type="password" name="Password" error={passwordError} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <UserInput type="password" name="Confirm Password" error={confirmPasswordError} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+            <Button intent="primary" size="large" onClick={handleSignup}>Sign Up</Button>
         </div>
     )
 }
