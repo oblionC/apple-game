@@ -25,11 +25,18 @@ export default function LoginPage() {
         .then(async (res) => {
             // backend returns emailError and passwordError
             const json = await res.json()
+                
+            setEmailError(json.emailError) 
+            setPasswordError(json.passwordError)
             
-           setEmailError(json.emailError) 
-           setPasswordError(json.passwordError)
-           
-           if(json.emailError === '' && json.passwordError === '') navigate('/')
+            console.log(json.error)
+            if(!json.error) {
+                localStorage.setItem('applegame-user', JSON.stringify({
+                    username: json.username,
+                    email: json.email 
+                }))
+                navigate('/')
+            }
         })
     }
 

@@ -25,20 +25,37 @@ async function emailIsAlreadyUsed(email) {
 
 module.exports = {
     authenticateUserWithEmail: async(req, res) => {
+        var error = false
         var emailError = ''
         var passwordError= ''
 
         var email = req.body.email
         var password = req.body.password
+        var username = ""
 
-        var user = await User.findOne({email: email}, 'password').exec()
-        if(user === null) emailError = 'Account with this email does not exist!'
-        else if(user.password !== password) passwordError = 'Incorrect password'
+        var user = await User.findOne({email: email}, 'username password').exec()
 
-        return res.send({
+        var response = {
+            error: error,
+            username: username,
+            email: email,
             emailError: emailError, 
             passwordError: passwordError
-        })
+        }
+
+        if(user === null) {
+            emailError = 'Account with this email does not exist!'
+            error = true
+            return res.send(response)
+        }
+
+        response.username = user.username
+        if(user.password !== password) {
+            passwordError = 'Incorrect password'
+            error = true
+        }
+
+        return res.send(response)
     },
     post: async (req, res) => {
         var error = false
@@ -81,6 +98,7 @@ module.exports = {
         }
 
         return res.send({
+            error: error,
             usernameError: usernameError, 
             passwordError: passwordError,
             emailError: emailError, 

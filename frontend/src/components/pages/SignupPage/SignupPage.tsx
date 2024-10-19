@@ -42,7 +42,11 @@ export default function SignupPage() {
             }
 
             // if no errors navigate to home page
-            if(json.usernameError === '' && json.passwordError === '' && json.emailError === '' && password === confirmPassword) {
+            if(!json.error) {
+                localStorage.setItem('applegame-user', JSON.stringify({
+                    username: username,
+                    email: email
+                }))
                 navigate('/')
             }
         })
