@@ -35,24 +35,25 @@ module.exports = {
 
         var user = await User.findOne({email: email}, 'username password').exec()
 
+
+        if(user === null) {
+            emailError = 'Account with this email does not exist!'
+            error = true
+        }
+        else{
+            username = user.username
+            if(user.password !== password) {
+                passwordError = 'Incorrect password'
+                error = true
+            }
+        }
+
         var response = {
             error: error,
             username: username,
             email: email,
             emailError: emailError, 
             passwordError: passwordError
-        }
-
-        if(user === null) {
-            emailError = 'Account with this email does not exist!'
-            error = true
-            return res.send(response)
-        }
-
-        response.username = user.username
-        if(user.password !== password) {
-            passwordError = 'Incorrect password'
-            error = true
         }
 
         return res.send(response)
