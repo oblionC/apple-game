@@ -33,8 +33,7 @@ module.exports = {
         var password = req.body.password
         var username = ""
 
-        var user = await User.findOne({email: email}, 'username password').exec()
-
+        var user = await User.findOne({email: email}, '_id username password').exec()
 
         if(user === null) {
             emailError = 'Account with this email does not exist!'
@@ -50,6 +49,7 @@ module.exports = {
 
         var response = {
             error: error,
+            userId: user._id,
             username: username,
             email: email,
             emailError: emailError, 
@@ -58,8 +58,9 @@ module.exports = {
 
         return res.send(response)
     },
-    post: async (req, res) => {
+    newUser: async (req, res) => {
         var error = false
+        var newUser = {} 
 
         var usernameError = ''
         var passwordError = ''
@@ -91,18 +92,21 @@ module.exports = {
         }
 
         if(!error) {
-            new User({
+            newUser = new User({
                 username: req.body.username,
                 password: req.body.password,
                 email: req.body.email
             }).save()
         }
 
-        return res.send({
+        var response = {
             error: error,
             usernameError: usernameError, 
             passwordError: passwordError,
             emailError: emailError, 
-        })
+            userId: newUser._id
+        }
+
+        return res.send(response)
     }
 }

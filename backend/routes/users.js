@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-router.post('/new-user', controller.post)
+router.post('/new-user', controller.newUser)
 
 router.post('/login', controller.authenticateUserWithEmail)
 

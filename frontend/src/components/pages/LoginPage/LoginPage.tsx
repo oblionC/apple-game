@@ -29,9 +29,9 @@ export default function LoginPage() {
             setEmailError(json.emailError) 
             setPasswordError(json.passwordError)
             
-            console.log(json.error)
             if(!json.error) {
                 localStorage.setItem('applegame-user', JSON.stringify({
+                    userId: json.userId,
                     username: json.username,
                     email: json.email 
                 }))

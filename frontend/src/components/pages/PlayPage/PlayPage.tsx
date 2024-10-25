@@ -11,12 +11,42 @@ export default function PlayPage() {
     const [width, setWidth] = useState<number>(0)
     const [height, setHeight] = useState<number>(0)
     const [gameIsActive, setGameIsActive] = useState<boolean>(false)
+    const [userPlayedGame, setUserPlayedGame] = useState<boolean>(false)
     const [score, setScore] = useState<number>(0)
     const [allowDisplayScore, setAllowDisplayScore] = useState(false)
+
+    useEffect(function submitScore() {
+        if(gameIsActive) {
+            return
+        }
+        if(!userPlayedGame) {
+            return
+        }
+        console.log("function triggered")
+        var userInfo = localStorage.getItem("applegame-user")
+        if(!userInfo) {
+            return
+        } 
+        userInfo = JSON.parse(userInfo)
+        
+        var requestOptions = {
+            method: "POST",
+            headers: {"Content-Type": "application/json"}, 
+            body: JSON.stringify({
+                score: score,
+                rows: rowsState[0],
+                cols: colsState[0], 
+                timeDuration: timeDurationState[0],
+                userId: userInfo?.userId, 
+            }) 
+        }
+        fetch(import.meta.env.VITE_BACKEND_URL + "/scores/new-score", requestOptions)
+    }, [gameIsActive])
 
     useEffect(function resetScore() {
         if(gameIsActive) {
             setScore(0)
+            setUserPlayedGame(true)
         }
     }, [gameIsActive])
     

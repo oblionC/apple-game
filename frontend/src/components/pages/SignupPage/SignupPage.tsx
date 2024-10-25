@@ -44,6 +44,7 @@ export default function SignupPage() {
             // if no errors navigate to home page
             if(!json.error) {
                 localStorage.setItem('applegame-user', JSON.stringify({
+                    userId: json.userId, 
                     username: username,
                     email: email
                 }))

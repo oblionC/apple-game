@@ -2,6 +2,7 @@ var Score = require("../models/score")
 
 module.exports = {
     newScore: (req, res, next) => {
+        console.log(req.body)
         new Score({
             ...req.body,
             timeStamp: new Date(),
