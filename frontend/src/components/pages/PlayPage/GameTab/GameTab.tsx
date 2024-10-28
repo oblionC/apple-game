@@ -2,7 +2,7 @@ import { Timer } from "../../../Timer"
 import { Score } from "../../../Score"
 import { Button } from "../../../Button"
 import { SlArrowDown } from "react-icons/sl";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const DURATION_OPTIONS = [30, 60, 90]
 const ROWS_OPTIONS = [8, 12, 15]
@@ -11,11 +11,12 @@ const TIMER_UNIT = "seconds"
 const ROWS_UNIT = "rows"
 const COLS_UNIT = "cols"
 
-function ScoreAndTimerTab({ setGameIsActive, timeDuration, score }: {setGameIsActive: Function, timeDuration: number, score: number}) {
+function ScoreAndTimerTab({ setGameIsActive, timeValueState, score, timer }: {setGameIsActive: Function, timeValueState: [number, Function], score: number, timer: any}) {
+
     return (
         <>
             Timer Left:
-            <Timer setGameIsActive={setGameIsActive} timeDuration={timeDuration} />
+            <Timer setGameIsActive={setGameIsActive} timeValueState={timeValueState} timer={timer}/>
             Score:
             <Score score={score} />
         </>
@@ -84,11 +85,12 @@ function GameSetting({ setGameIsActive, rowsState, colsState, timeDurationState,
     )
 }
 
-export default function GameTab({ gameIsActive, setGameIsActive, rowsState, colsState, timeDurationState, score, setAllowDisplayScore }: {gameIsActive: boolean, setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], timeDurationState: [number, Function], score: number, setAllowDisplayScore: Function}) {
+export default function GameTab({ gameIsActive, setGameIsActive, rowsState, colsState, timeValueState, timeDurationState, score, setAllowDisplayScore, timer}: {gameIsActive: boolean, setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], timeValueState: [number, Function], timeDurationState: [number, Function], score: number, setAllowDisplayScore: Function, timer: any}) {
+
     return (
         <>
             {!gameIsActive && <GameSetting setGameIsActive={setGameIsActive} rowsState={rowsState} colsState={colsState} timeDurationState={timeDurationState} setAllowDisplayScore={setAllowDisplayScore} />}
-            {gameIsActive && <ScoreAndTimerTab setGameIsActive={setGameIsActive} timeDuration={timeDurationState[0]} score={score} />}
+            {gameIsActive && <ScoreAndTimerTab setGameIsActive={setGameIsActive} timeValueState={timeValueState} score={score} timer={timer} />}
         </>
     )
 }

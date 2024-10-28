@@ -1,19 +1,30 @@
 import { GameScreen } from "../../GameScreen"
 import { useEffect, useRef, useState } from "react";
 import { GameTab } from "./GameTab";
+import { ScoreTab } from "./ScoreTab";
+import startTimer from "../../../utils/startTimer";
+import stopTimer from "../../../utils/stoptimer";
 
 
 export default function PlayPage() {
     const rowsState = useState<number>(15)
     const colsState = useState<number>(15)
     const timeDurationState = useState<number>(30)
+
     const gameScreenRef = useRef<any>();
+    const timeValueState = useState<number>(30)
     const [width, setWidth] = useState<number>(0)
     const [height, setHeight] = useState<number>(0)
     const [gameIsActive, setGameIsActive] = useState<boolean>(false)
     const [userPlayedGame, setUserPlayedGame] = useState<boolean>(false)
     const [score, setScore] = useState<number>(0)
     const [allowDisplayScore, setAllowDisplayScore] = useState(false)
+    const [optionsTab, setOptionsTab] = useState("Game")
+    const timer = useRef<number>()
+    useEffect(() => {
+        startTimer(timer, timeValueState[1], setGameIsActive)
+        return () => stopTimer(timer)
+    }, [])
 
     useEffect(function submitScore() {
         if(gameIsActive) {
@@ -22,7 +33,7 @@ export default function PlayPage() {
         if(!userPlayedGame) {
             return
         }
-        console.log("function triggered")
+        
         var userInfo = localStorage.getItem("applegame-user")
         if(!userInfo) {
             return
@@ -43,7 +54,7 @@ export default function PlayPage() {
         fetch(import.meta.env.VITE_BACKEND_URL + "/scores/new-score", requestOptions)
     }, [gameIsActive])
 
-    useEffect(function resetScore() {
+    useEffect(function resetScoreAndTimer() {
         if(gameIsActive) {
             setScore(0)
             setUserPlayedGame(true)
@@ -63,10 +74,11 @@ export default function PlayPage() {
             <div className="grow flex flex-col items-center justify-evenly">
                 <div className="w-3/4 h-[800px] flex flex-col items-center bg-app-primary">
                     <div className="w-full flex flex-row h-[50px]">
-                        <button className="flex-grow">Game</button>
-                        <button className="flex-grow">Scores</button>
+                        <button className="flex-grow" onClick={() => setOptionsTab("Game")}>Game</button>
+                        <button className="flex-grow" onClick={() => setOptionsTab("Score")}>Scores</button>
                     </div>
-                    <GameTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeDurationState={timeDurationState} setGameIsActive={setGameIsActive} score={score} setAllowDisplayScore={setAllowDisplayScore} /> 
+                    {optionsTab==="Game" && <GameTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeValueState={timeValueState} timeDurationState={timeDurationState} setGameIsActive={setGameIsActive} score={score} setAllowDisplayScore={setAllowDisplayScore} timer={timer} /> }
+                    {optionsTab==="Score" && <ScoreTab />}
                 </div>
             </div>
         </>
