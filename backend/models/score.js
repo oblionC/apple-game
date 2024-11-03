@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 var scoreSchema = mongoose.Schema({
-    userId: mongoose.Schema.Types.UUID,
+    userId: mongoose.Schema.Types.ObjectId,
     score: mongoose.Schema.Types.Number, 
     rows: mongoose.Schema.Types.Number,
     cols: mongoose.Schema.Types.Number,

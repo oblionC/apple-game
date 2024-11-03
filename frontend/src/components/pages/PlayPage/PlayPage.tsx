@@ -2,6 +2,7 @@ import { GameScreen } from "../../GameScreen"
 import { useEffect, useRef, useState } from "react";
 import { GameTab } from "./GameTab";
 import { ScoreTab } from "./ScoreTab";
+import getLocalUserInfo from "../../../utils/getLocalUserInfo";
 import startTimer from "../../../utils/startTimer";
 import stopTimer from "../../../utils/stoptimer";
 
@@ -21,10 +22,31 @@ export default function PlayPage() {
     const [allowDisplayScore, setAllowDisplayScore] = useState(false)
     const [optionsTab, setOptionsTab] = useState("Game")
     const timer = useRef<number>()
-    useEffect(() => {
-        startTimer(timer, timeValueState[1], setGameIsActive)
-        return () => stopTimer(timer)
+
+    useEffect(function getScores() {
+        var userInfo = getLocalUserInfo()
+        var url = new URL(import.meta.env.VITE_BACKEND_URL + "/scores/user-bests")
+        if(userInfo !== undefined) {
+
+            url.searchParams.set('userId', userInfo.userId)
+
+            const requestOptions = {
+                method: "GET",
+                headers: { "Content-Type": "applicaton/json" },
+            }
+            fetch(url, requestOptions)
+            .then((res) => {
+                var json = res.json()
+                
+            })
+        }
     }, [])
+    useEffect(function startTimerWhenGameStarts() {
+        if(gameIsActive) {
+            startTimer(timer, timeValueState[1], setGameIsActive)
+        }
+        return () => stopTimer(timer)
+    }, [gameIsActive])
 
     useEffect(function submitScore() {
         if(gameIsActive) {
@@ -34,29 +56,26 @@ export default function PlayPage() {
             return
         }
         
-        var userInfo = localStorage.getItem("applegame-user")
-        if(!userInfo) {
-            return
+        var userInfo = getLocalUserInfo()
+        if(userInfo !== undefined) {
+            var requestOptions = { method: "POST",
+                headers: {"Content-Type": "application/json"}, 
+                body: JSON.stringify({
+                    score: score,
+                    rows: rowsState[0],
+                    cols: colsState[0], 
+                    timeDuration: timeDurationState[0],
+                    userId: userInfo?.userId, 
+                }) 
+            }
+            fetch(import.meta.env.VITE_BACKEND_URL + "/scores/new-score", requestOptions)
         } 
-        userInfo = JSON.parse(userInfo)
-        
-        var requestOptions = {
-            method: "POST",
-            headers: {"Content-Type": "application/json"}, 
-            body: JSON.stringify({
-                score: score,
-                rows: rowsState[0],
-                cols: colsState[0], 
-                timeDuration: timeDurationState[0],
-                userId: userInfo?.userId, 
-            }) 
-        }
-        fetch(import.meta.env.VITE_BACKEND_URL + "/scores/new-score", requestOptions)
     }, [gameIsActive])
 
     useEffect(function resetScoreAndTimer() {
         if(gameIsActive) {
             setScore(0)
+            timeValueState[1](timeDurationState[0])
             setUserPlayedGame(true)
         }
     }, [gameIsActive])

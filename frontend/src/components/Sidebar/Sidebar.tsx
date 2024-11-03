@@ -2,6 +2,7 @@ import { Button } from "../Button"
 import logo from '../../assets/logo.png'
 import { useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
+import getLocalUserInfo from "../../utils/getLocalUserInfo"
 
 
 export default function Sidebar() {
@@ -16,10 +17,10 @@ export default function Sidebar() {
     }
 
     useEffect(() => {
-        const applegameUser = localStorage.getItem("applegame-user")
-        if(applegameUser) {
+        const userInfo = getLocalUserInfo() 
+        if(userInfo !== undefined) {
             setUserIsLoggedIn(true)
-            setUserInfo(JSON.parse(applegameUser))
+            setUserInfo(userInfo)
         }
     }, [])
 

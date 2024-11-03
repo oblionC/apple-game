@@ -28,12 +28,13 @@ module.exports = {
         var error = false
         var emailError = ''
         var passwordError= ''
+        var userId = ''
 
         var email = req.body.email
         var password = req.body.password
         var username = ""
 
-        var user = await User.findOne({email: email}, '_id username password').exec()
+        var user = await User.findOne({email: email}, '_id username password').lean().exec()
 
         if(user === null) {
             emailError = 'Account with this email does not exist!'
@@ -41,6 +42,7 @@ module.exports = {
         }
         else{
             username = user.username
+            userId = user._id
             if(user.password !== password) {
                 passwordError = 'Incorrect password'
                 error = true
@@ -49,7 +51,7 @@ module.exports = {
 
         var response = {
             error: error,
-            userId: user._id,
+            userId: userId,
             username: username,
             email: email,
             emailError: emailError, 
@@ -60,7 +62,7 @@ module.exports = {
     },
     newUser: async (req, res) => {
         var error = false
-        var newUser = {} 
+        var userId = '' 
 
         var usernameError = ''
         var passwordError = ''
@@ -92,11 +94,15 @@ module.exports = {
         }
 
         if(!error) {
-            newUser = new User({
+            userId = await new User({
                 username: req.body.username,
                 password: req.body.password,
                 email: req.body.email
             }).save()
+            .then((user) => {
+                console.log(user._id.toString())
+                return user._id.toString()
+            })
         }
 
         var response = {
@@ -104,7 +110,7 @@ module.exports = {
             usernameError: usernameError, 
             passwordError: passwordError,
             emailError: emailError, 
-            userId: newUser._id
+            userId: userId
         }
 
         return res.send(response)
