@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import SignupPage from './components/pages/SignupPage/SignupPage'
 import { EntryPage } from './components/pages/EntryPage'
 import { LoginPage } from './components/pages/LoginPage'
+import { VersusPage } from './components/pages/VersusPage'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<RootPage />}>
           <Route index element={<LandingPage />} />
           <Route path="play" element={<PlayPage />} />
+          <Route path="versus" element={<VersusPage />} />
         </Route>
         <Route path="entry" element={<EntryPage />}>
           <Route path="signup" element={<SignupPage />} />
