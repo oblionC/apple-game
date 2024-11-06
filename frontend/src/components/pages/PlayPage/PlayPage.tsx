@@ -12,10 +12,6 @@ export default function PlayPage() {
     const colsState = useState<number>(15)
     const timeDurationState = useState<number>(30)
 
-    const scoresRowsState = useState<number>(15)
-    const scoresColsState = useState<number>(15)
-    const scoresDurationState = useState<number>(30)
-
     const gameScreenRef = useRef<any>();
     const timeValueState = useState<number>(30)
     const [width, setWidth] = useState<number>(0)
@@ -83,7 +79,7 @@ export default function PlayPage() {
                         <button className="flex-grow" onClick={() => setOptionsTab("Score")}>Scores</button>
                     </div>
                     {optionsTab==="Game" && <GameTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeValueState={timeValueState} timeDurationState={timeDurationState} setGameIsActive={setGameIsActive} score={score} setAllowDisplayScore={setAllowDisplayScore} timer={timer} /> }
-                    {optionsTab==="Score" && <ScoreTab rowsState={scoresRowsState} colsState={scoresColsState} durationState={scoresDurationState} />}
+                    {optionsTab==="Score" && <ScoreTab rowsState={rowsState} colsState={colsState} durationState={timeDurationState} />}
                 </div>
             </div>
         </>
