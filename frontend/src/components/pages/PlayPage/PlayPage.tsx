@@ -5,6 +5,7 @@ import { ScoreTab } from "../../ScoreTab";
 import getLocalUserInfo from "../../../utils/getLocalUserInfo";
 import startTimer from "../../../utils/startTimer";
 import stopTimer from "../../../utils/stoptimer";
+import generateGameStateValues from "../../../utils/generateGameStateValues";
 
 
 export default function PlayPage() {
@@ -12,16 +13,28 @@ export default function PlayPage() {
     const colsState = useState<number>(15)
     const timeDurationState = useState<number>(30)
 
+
+    const [rows, setRows] = rowsState
+    const [cols, setCols] = colsState
+    const [gameStateValues, setGameStateValues] = useState(generateGameStateValues(rows, cols))
     const gameScreenRef = useRef<any>();
     const timeValueState = useState<number>(30)
+
     const [width, setWidth] = useState<number>(0)
     const [height, setHeight] = useState<number>(0)
+
     const [gameIsActive, setGameIsActive] = useState<boolean>(false)
     const [userPlayedGame, setUserPlayedGame] = useState<boolean>(false)
     const [score, setScore] = useState<number>(0)
     const [allowDisplayScore, setAllowDisplayScore] = useState(false)
     const [optionsTab, setOptionsTab] = useState("Game")
     const timer = useRef<number>()
+
+    useEffect(function changeGameStateValues() {
+        if(gameIsActive) {
+            setGameStateValues(generateGameStateValues(rows, cols))
+        }
+    }, [gameIsActive])
 
     useEffect(function startTimerWhenGameStarts() {
         if(gameIsActive) {
@@ -57,6 +70,7 @@ export default function PlayPage() {
     useEffect(function resetScoreAndTimer() {
         if(gameIsActive) {
             setScore(0)
+            setGameStateValues(generateGameStateValues(rows, cols))
             timeValueState[1](timeDurationState[0])
             setUserPlayedGame(true)
         }
@@ -67,10 +81,11 @@ export default function PlayPage() {
         setHeight(gameScreenRef.current.scrollHeight)
     }, [])
 
+
     return (
         <>
             <div ref={gameScreenRef} className="w-3/5">
-                <GameScreen width={width} height={height} score={score} setScore={setScore} gameIsActive={gameIsActive} rows={rowsState[0]} cols={colsState[0]} gameScreenRef={gameScreenRef} allowDisplayScore={allowDisplayScore} />
+                <GameScreen gameStateValues={gameStateValues} width={width} height={height} score={score} setScore={setScore} gameIsActive={gameIsActive} rows={rowsState[0]} cols={colsState[0]} gameScreenRef={gameScreenRef} allowDisplayScore={allowDisplayScore} />
             </div>
             <div className="grow flex flex-col items-center justify-evenly">
                 <div className="w-3/4 h-[800px] flex flex-col items-center bg-app-primary">

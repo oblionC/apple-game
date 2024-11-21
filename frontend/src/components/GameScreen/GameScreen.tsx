@@ -3,6 +3,7 @@ import { Group, Layer, Circle, Rect, Stage, Text } from 'react-konva';
 import { ItemRow } from './ItemRow';
 import { ITEM_SIZE_MULTIPLIER, ITEM_GAP_MULTIPLIER} from './constants';
 import { SelectorRect } from './SelectorRect';
+import generateGameStateValues from '../../utils/generateGameStateValues';
 
 type calculatecCenterGroupPositionParams = {
     width: number, 
@@ -15,6 +16,7 @@ type calculatecCenterGroupPositionParams = {
 }
 
 type GameScreenProps = { 
+    gameStateValues: any, 
     width: number, 
     height: number, 
     score: number | undefined, 
@@ -36,7 +38,9 @@ function calculateCenterGroupPosition({ width, height, rows, cols, itemGap, laye
     return [xOffset, yOffset];
 }
 
-function generateGameState(xOffset: number, yOffset: number, itemSize: number, itemGap: number, rows: number, cols: number) {
+
+function generateGameState(gameStateValues: any, xOffset: number, yOffset: number, itemSize: number, itemGap: number, rows: number, cols: number) {
+    if(gameStateValues === undefined) return []
     let result: any = []
     let count = 0
     for(let i = 0; i < rows; i++) {
@@ -46,7 +50,7 @@ function generateGameState(xOffset: number, yOffset: number, itemSize: number, i
             let relativeY = i * itemGap
             result[i].push({
                 id: count, 
-                value: (Math.floor(Math.random() * (10 - 1))) + 1,
+                value: gameStateValues[i][j],
                 x: relativeX,
                 y: relativeY,
                 centerX: xOffset + relativeX + Math.floor(itemSize / 2),
@@ -117,35 +121,47 @@ function ScoreDisplay({score, width, height, allowDisplayScore}: { score: number
     )
 }
 
-export default function GameScreen({ width, height, score, setScore, gameIsActive, rows, cols, gameScreenRef, allowDisplayScore }: GameScreenProps) {
+export default function GameScreen({ gameStateValues, width, height, score, setScore, gameIsActive, rows, cols, gameScreenRef, allowDisplayScore }: GameScreenProps) {
     if(rows === undefined) {
         rows = 15;
     }
     if(cols === undefined) {
         cols = 15;
     }
+    if(gameStateValues === undefined) {
+        gameStateValues = generateGameStateValues(rows, cols)
+    }
+
+    const [gameState, setGameState] = useState<number[][]>()
+
     const [stageWidth, setStageWidth] = useState(width)
     const [stageHeight, setStageHeight] = useState(height)
     const itemSize = width * ITEM_SIZE_MULTIPLIER
     const itemGap = width * ITEM_GAP_MULTIPLIER
     const [xOffset, yOffset] = useMemo(() => calculateCenterGroupPosition({width, height, rows, cols, itemGap}), [width, height, rows, cols])
-    const [gameState, setGameState] = useState<number[][]>()
     const itemRows = useMemo(() => generateItemRows(gameState, itemSize, rows), [gameState, rows])
 
+    useEffect(function changeGameState() {
+        setGameState(generateGameState(gameStateValues, xOffset, yOffset, itemSize, itemGap, rows, cols))
+    }, [gameStateValues])
 
     useEffect(() => {
-        setGameState(generateGameState(xOffset, yOffset, itemSize, itemGap, rows, cols))
+        let newGameState = generateGameState(gameStateValues, xOffset, yOffset, itemSize, itemGap, rows, cols)
+        setGameState(newGameState)
     }, [rows, cols])
 
     useEffect(() => {
-        if(gameIsActive) 
-            setGameState(generateGameState(xOffset, yOffset, itemSize, itemGap, rows, cols))
+        if(gameIsActive){
+            let newGameState = generateGameState(gameStateValues, xOffset, yOffset, itemSize, itemGap, rows, cols)
+            setGameState(newGameState)
+        } 
     }, [gameIsActive])
 
     useEffect(() => {
         setStageWidth(width)
         setStageHeight(height)
-        setGameState(generateGameState(xOffset, yOffset, itemSize, itemGap, rows, cols))
+        let newGameState = generateGameState(gameStateValues, xOffset, yOffset, itemSize, itemGap, rows, cols)
+        setGameState(newGameState)
         function handleResize() {
             setStageWidth(gameScreenRef.current.clientWidth)
             setStageHeight(gameScreenRef.current.clientHeight)

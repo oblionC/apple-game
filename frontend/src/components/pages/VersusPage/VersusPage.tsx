@@ -5,6 +5,7 @@ import getLocalUserInfo from "../../../utils/getLocalUserInfo";
 import startTimer from "../../../utils/startTimer";
 import stopTimer from "../../../utils/stoptimer";
 import { ScoreTab } from "../../ScoreTab";
+import generateGameStateValues from "../../../utils/generateGameStateValues";
 
 
 export default function VersusPage() {
@@ -16,8 +17,14 @@ export default function VersusPage() {
     const scoresColsState = useState<number>(15)
     const scoresDurationState = useState<number>(30)
 
+    const oppScreenRef = useRef<any>();
+    const [rows, setRows] = rowsState
+    const [cols, setCols] = colsState
+    const [gameStateValues, setGameStateValues] = useState(generateGameStateValues(rows, cols))
     const gameScreenRef = useRef<any>();
     const timeValueState = useState<number>(30)
+    const [oppWidth, setOppWidth] = useState(0)
+    const [oppHeight, setOppHeight] = useState(0)
     const [width, setWidth] = useState<number>(0)
     const [height, setHeight] = useState<number>(0)
     const [gameIsActive, setGameIsActive] = useState<boolean>(false)
@@ -71,19 +78,26 @@ export default function VersusPage() {
         setHeight(gameScreenRef.current.scrollHeight)
     }, [])
 
+    useEffect(function setGameScreenDimensions() {
+        setOppWidth(oppScreenRef.current.clientWidth)
+        setOppHeight(oppScreenRef.current.scrollHeight)
+    }, [])
     return (
         <>
             <div ref={gameScreenRef} className="w-3/5">
-                <GameScreen width={width} height={height} score={score} setScore={setScore} gameIsActive={gameIsActive} rows={rowsState[0]} cols={colsState[0]} gameScreenRef={gameScreenRef} allowDisplayScore={allowDisplayScore} />
+                <GameScreen gameStateValues={gameStateValues} width={width} height={height} score={score} setScore={setScore} gameIsActive={gameIsActive} rows={rowsState[0]} cols={colsState[0]} gameScreenRef={gameScreenRef} allowDisplayScore={allowDisplayScore} />
             </div>
             <div className="grow flex flex-col items-center justify-evenly">
-                <div className="w-3/4 h-[800px] flex flex-col items-center bg-app-primary">
+                <div className="w-3/4 h-[400px] flex flex-col items-center bg-app-primary overflow-auto">
                     <div className="w-full flex flex-row min-h-[50px]">
                         <button className="flex-grow" onClick={() => setOptionsTab("Game")}>Game</button>
                         <button className="flex-grow" onClick={() => setOptionsTab("Score")}>Scores</button>
                     </div>
                     {optionsTab==="Game" && <GameTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeValueState={timeValueState} timeDurationState={timeDurationState} setGameIsActive={setGameIsActive} score={score} setAllowDisplayScore={setAllowDisplayScore} timer={timer} /> }
                     {optionsTab==="Score" && <ScoreTab rowsState={scoresRowsState} colsState={scoresColsState} durationState={scoresDurationState} />}
+                </div>
+                <div ref={oppScreenRef} className="w-3/4 h-[400px] flex flex-col items-center ">
+                    <GameScreen gameStateValues={gameStateValues} width={oppWidth} height={oppHeight} score={score} setScore={setScore} gameIsActive={gameIsActive} rows={rowsState[0]} cols={colsState[0]} gameScreenRef={gameScreenRef} allowDisplayScore={allowDisplayScore} />
                 </div>
             </div>
         </>
