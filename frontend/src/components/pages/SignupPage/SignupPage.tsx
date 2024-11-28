@@ -3,6 +3,7 @@ import { Button } from "../../Button";
 import { UserInput } from "../../UserInput"
 import logo from "../../../assets/logo.png"
 import { useNavigate } from "react-router-dom";
+import { AppAuth } from "../../../utils/AppAuth";
 
 
 export default function SignupPage() {
@@ -43,11 +44,7 @@ export default function SignupPage() {
 
             // if no errors navigate to home page
             if(!json.error) {
-                localStorage.setItem('applegame-user', JSON.stringify({
-                    userId: json.userId, 
-                    username: username,
-                    email: email
-                }))
+                AppAuth.loginUser(json.userId, username, email)
                 navigate('/')
             }
         })

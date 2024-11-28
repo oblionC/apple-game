@@ -7,13 +7,12 @@ var logger = require('morgan');
 var cors = require('cors');
 require('./db/mongoose')
 
-var User = require('./models/user')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var scoresRouter = require('./routes/scores');
+var gamestatevaluesRouter = require('./routes/gameStateValues');
 
-var convertUserIdHexToObjectId = require('./middleware/convertUserIdHexToObjectId')
 
 var app = express();
 
@@ -28,10 +27,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
-
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/scores', scoresRouter);
+app.use('/gamestatevalues', gamestatevaluesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

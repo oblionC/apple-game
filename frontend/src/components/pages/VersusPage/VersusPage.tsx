@@ -5,7 +5,9 @@ import getLocalUserInfo from "../../../utils/getLocalUserInfo";
 import startTimer from "../../../utils/startTimer";
 import stopTimer from "../../../utils/stoptimer";
 import { ScoreTab } from "../../ScoreTab";
+import { socket } from "../../../socket";
 import generateGameStateValues from "../../../utils/generateGameStateValues";
+import { AppAuth } from "../../../utils/AppAuth";
 
 
 export default function VersusPage() {
@@ -33,6 +35,35 @@ export default function VersusPage() {
     const [allowDisplayScore, setAllowDisplayScore] = useState(false)
     const [optionsTab, setOptionsTab] = useState("Game")
     const timer = useRef<number>()
+
+    useEffect(function initializeSockets() {
+        let userInfo = AppAuth.getUserInfo()
+
+        function onConnect () {
+            console.log("connected")
+        }
+        function onDisconnect () {
+            console.log("disconneted")
+        }
+        function onJoinRoom(msg: String) {
+            console.log(msg)
+        }
+
+        socket.on('connect', onConnect);
+        socket.on('disconnect', onDisconnect);
+        socket.on("joinedRoom", onJoinRoom);
+        socket.on("waitingForRoom", onJoinRoom);
+
+        socket.emit("joinQueue", userInfo, 15, 15)
+
+        return () => {
+            socket.off("connect", onConnect);
+            socket.off("disconnect", onDisconnect);
+            socket.off("joinedRoom", onJoinRoom);
+            socket.off("waitingForRoom", onJoinRoom);
+        }
+    }, [])
+
 
     useEffect(function startTimerWhenGameStarts() {
         if(gameIsActive) {

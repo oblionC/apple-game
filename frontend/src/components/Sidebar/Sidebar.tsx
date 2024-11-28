@@ -3,21 +3,22 @@ import logo from '../../assets/logo.png'
 import { useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import getLocalUserInfo from "../../utils/getLocalUserInfo"
+import { AppAuth } from "../../utils/AppAuth"
 
 
 export default function Sidebar() {
     const navigate = useNavigate()
-    const [userInfo, setUserInfo] = useState({})
+    const [userInfo, setUserInfo] = useState()
     const [userIsLoggedIn, setUserIsLoggedIn] = useState<boolean>(false)
 
     function handleLogout() {
-        localStorage.removeItem('applegame-user')
+        AppAuth.logoutUser()
         setUserIsLoggedIn(false)
         setUserInfo({})
     }
 
     useEffect(() => {
-        const userInfo = getLocalUserInfo() 
+        const userInfo = AppAuth.getUserInfo() 
         if(userInfo !== undefined) {
             setUserIsLoggedIn(true)
             setUserInfo(userInfo)
@@ -30,9 +31,11 @@ export default function Sidebar() {
                 <img src={logo} alt="logo" />
             </div>
             <div className="mt-auto mb-0">
-                {userInfo.username !== undefined && userInfo.username}
+                {userInfo !== undefined && userInfo.username}
                 {!userIsLoggedIn && <Button intent="primary" size="medium" onClick={() => navigate('entry/signup')}>Sign Up</Button>}
                 {!userIsLoggedIn && <Button intent="primary" size="medium" onClick={() => navigate('entry/login')} >Log In</Button>}
+                <Button intent="primary" size="medium" onClick={() => navigate('play')} >Solo</Button>
+                {userIsLoggedIn && <Button intent="primary" size="medium" onClick={() => navigate('versus')} >Versus</Button>}
                 {userIsLoggedIn && <Button intent="primary" size="medium" onClick={handleLogout} >Log Out</Button>}
             </div>
         </div>

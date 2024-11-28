@@ -156,6 +156,8 @@ export default function SelectorRect( { width, height, gameState, setGameState, 
                     }))
                     if(selectedSum === 10) {
                         scoreHandler.addScore(selectedItems)
+                        setSelectedSum(0);
+                        setSelectedItems([]);
                     }
                     setSelectorRectInfo({
                         ...selectorRectInfo,
@@ -176,6 +178,11 @@ export default function SelectorRect( { width, height, gameState, setGameState, 
                             }
                         })
                     }))
+                    if(selectedSum === 10) {
+                        scoreHandler.addScore(selectedItems)
+                        setSelectedSum(0);
+                        setSelectedItems([]);
+                    }
                     setSelectorRectInfo({
                         ...selectorRectInfo,
                         width: 0,

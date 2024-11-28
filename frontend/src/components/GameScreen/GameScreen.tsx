@@ -128,12 +128,8 @@ export default function GameScreen({ gameStateValues, width, height, score, setS
     if(cols === undefined) {
         cols = 15;
     }
-    if(gameStateValues === undefined) {
-        gameStateValues = generateGameStateValues(rows, cols)
-    }
 
     const [gameState, setGameState] = useState<number[][]>()
-
     const [stageWidth, setStageWidth] = useState(width)
     const [stageHeight, setStageHeight] = useState(height)
     const itemSize = width * ITEM_SIZE_MULTIPLIER
@@ -142,7 +138,10 @@ export default function GameScreen({ gameStateValues, width, height, score, setS
     const itemRows = useMemo(() => generateItemRows(gameState, itemSize, rows), [gameState, rows])
 
     useEffect(function changeGameState() {
-        setGameState(generateGameState(gameStateValues, xOffset, yOffset, itemSize, itemGap, rows, cols))
+        let newGameStateValues = gameStateValues;
+        if(gameStateValues === undefined)
+            newGameStateValues = generateGameStateValues(rows, cols);
+        setGameState(generateGameState(newGameStateValues, xOffset, yOffset, itemSize, itemGap, rows, cols))
     }, [gameStateValues])
 
     useEffect(() => {

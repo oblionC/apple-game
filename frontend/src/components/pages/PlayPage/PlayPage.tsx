@@ -32,6 +32,7 @@ export default function PlayPage() {
 
     useEffect(function changeGameStateValues() {
         if(gameIsActive) {
+            console.log("wowo")
             setGameStateValues(generateGameStateValues(rows, cols))
         }
     }, [gameIsActive])

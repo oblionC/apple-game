@@ -3,6 +3,7 @@ import { Button } from "../../Button"
 import { useState } from "react"
 import logo from "../../../assets/logo.png"
 import { useNavigate } from "react-router-dom"
+import { AppAuth } from "../../../utils/AppAuth"
 
 export default function LoginPage() {
     const navigate = useNavigate()
@@ -30,11 +31,7 @@ export default function LoginPage() {
             setPasswordError(json.passwordError)
             
             if(!json.error) {
-                localStorage.setItem('applegame-user', JSON.stringify({
-                    userId: json.userId,
-                    username: json.username,
-                    email: json.email 
-                }))
+                AppAuth.loginUser(json.userId, json.username, json.email)
                 navigate('/')
             }
         })
