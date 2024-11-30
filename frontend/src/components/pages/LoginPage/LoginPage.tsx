@@ -1,7 +1,6 @@
 import { UserInput } from "../../UserInput"
 import { Button } from "../../Button"
 import { useState } from "react"
-import logo from "../../../assets/logo.png"
 import { useNavigate } from "react-router-dom"
 import { AppAuth } from "../../../utils/AppAuth"
 
@@ -39,7 +38,6 @@ export default function LoginPage() {
 
     return (
         <div className="flex flex-col justify-center items-center">
-            <img src={logo} className="w-1/3" /> 
             <UserInput name="Email" error={emailError} value={email} onChange={(e) => {setEmail(e.target.value)}} />
             <UserInput type="password" name="Password" error={passwordError} value={password} onChange={(e) => setPassword(e.target.value)} />
             <Button intent="primary" size="large" onClick={handleLogin}>Log In</Button>

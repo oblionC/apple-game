@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import getLocalUserInfo from "../../utils/getLocalUserInfo"
 import { AppAuth } from "../../utils/AppAuth"
+import { Logo } from "../Logo"
+import { SidebarLogo } from "../SidebarLogo"
 
 
 export default function Sidebar() {
@@ -27,9 +29,7 @@ export default function Sidebar() {
 
     return(
         <div className="flex-col bg-app-primary h-screen w-36 sticky top-0">
-            <div className="font-medium text-lg p-5">
-                <img src={logo} alt="logo" />
-            </div>
+            <SidebarLogo /> 
             <div className="mt-auto mb-0">
                 {userInfo !== undefined && userInfo.username}
                 {!userIsLoggedIn && <Button intent="primary" size="medium" onClick={() => navigate('entry/signup')}>Sign Up</Button>}

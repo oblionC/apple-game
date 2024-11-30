@@ -13,35 +13,93 @@ const io = new Server(server, {
   }
 });
 
-var activeRooms = []
+var socketIdToUserIdMapping = {}
+var socketsInRoom = {}
 var waitingRooms = [];
-var gamesList = [];
+var roomsToGameInfoMapping = {};
+
+const generateVersusGame = async (socket, roomId, rows, cols, duration) => {
+  let url = new URL(process.env.BACKEND_URL + "/gamestatevalues")
+  url.searchParams.append("rows", rows)
+  url.searchParams.append("cols", cols)
+
+  let response = await fetch(url)
+  let json = await response.json()
+
+  const game = {
+    gameStateValues: json.gameStateValues,
+    rows: rows,
+    cols: cols,
+    duration: duration
+  }
+
+  return game
+}
+
+function storeSocketInfo(id, oppId, roomId) {
+  socketsInRoom[id] =  {
+    oppId: oppId, 
+    roomId: roomId 
+  }
+  socketsInRoom[oppId] = {
+    oppId: id,
+    roomId: roomId
+  }
+}
+
+function leaveRoom(socket) {
+  var oppId = socketsInRoom[socket.id].oppId
+
+  delete socketsInRoom[socket.id]
+  delete socketsInRoom[oppId]
+
+  io.sockets.sockets.get(oppId).emit("opponentLeftRoom", "opponent left your room")
+  io.sockets.sockets.get(oppId).leave(roomId)
+}
+
+function leaveQueue(socket) {
+  waitingRooms.splice(waitingRooms.indexOf(socket.id), 1)
+  delete socketIdToUserIdMapping[socket.id]
+}
 
 io.on('connection', (socket) => {
-  console.log('A user connected');
   socket.on('disconnect', () => {
-    console.log('User disconnected');
+    leaveQueue(socket)
+    leaveRoom(socket)
+    console.log(socketsInRoom)
   });
 
-  socket.on('joinQueue', (userInfo, rows, cols) => {
+  socket.on('leaveQueue', (userInfo) => {
+    leaveQueue(socket)
+  })
+
+  socket.on('joinQueue', (userInfo, rows, cols, duration) => {
+    socketIdToUserIdMapping[socket.id] = userInfo.userId
     if(socket.rooms.size > 1) return
 
     if(waitingRooms.length == 0) {
-      socket.join(userInfo.userId)
-      waitingRooms.push(userInfo.userId)
-      io.to(userInfo.userId).emit("waitingForRoom", 'you are waiting for room')
+      waitingRooms.push(socket.id)
+      io.to(socket.id).emit("waitingForRoom", 'you are waiting for room')
     }  
     else {
       var roomId = waitingRooms[0]
-      if(userInfo.userId === roomId) {
+      if(socket.id in socketsInRoom) {
+        // User already in a room 
+        return
+      }
+      if(socket.id === roomId) {
         // User already has a room
         return
       }
-      waitingRooms.pop(0)
+      waitingRooms.pop()
       socket.join(roomId)
-      activeRooms.push(roomId)
+
+      storeSocketInfo(roomId, socket.id, roomId)
+
       io.to(roomId).emit("joinedRoom", 'you have joined a room')
+      generateVersusGame(socket, roomId, rows, cols, duration)
     }
+    console.log(socketsInRoom)
   })
 });
 

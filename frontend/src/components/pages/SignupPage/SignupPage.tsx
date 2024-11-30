@@ -52,7 +52,6 @@ export default function SignupPage() {
 
     return (
         <div className="flex flex-col justify-center items-center">
-            <img src={logo} className="w-1/3" /> 
             <UserInput name="Username" error={usernameError} value={username} onChange={(e) => {setUsername(e.target.value)}} />
             <UserInput name="Email" error={emailError} value={email} onChange={(e) => {setEmail(e.target.value)}} />
             <UserInput type="password" name="Password" error={passwordError} value={password} onChange={(e) => setPassword(e.target.value)} />

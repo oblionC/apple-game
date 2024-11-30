@@ -8,9 +8,12 @@ import { ScoreTab } from "../../ScoreTab";
 import { socket } from "../../../socket";
 import generateGameStateValues from "../../../utils/generateGameStateValues";
 import { AppAuth } from "../../../utils/AppAuth";
+import { Button } from "../../Button";
+import { useNavigate } from "react-router-dom";
 
 
 export default function VersusPage() {
+    const navigate = useNavigate()
     const rowsState = useState<number>(15)
     const colsState = useState<number>(15)
     const timeDurationState = useState<number>(30)
@@ -22,13 +25,16 @@ export default function VersusPage() {
     const oppScreenRef = useRef<any>();
     const [rows, setRows] = rowsState
     const [cols, setCols] = colsState
+    const [duration, setDuration] = timeDurationState
     const [gameStateValues, setGameStateValues] = useState(generateGameStateValues(rows, cols))
+    const [userInfo, setUserInfo] =  useState(AppAuth.getUserInfo())
     const gameScreenRef = useRef<any>();
     const timeValueState = useState<number>(30)
     const [oppWidth, setOppWidth] = useState(0)
     const [oppHeight, setOppHeight] = useState(0)
     const [width, setWidth] = useState<number>(0)
     const [height, setHeight] = useState<number>(0)
+    const [msg, setMsg] = useState<String>("")
     const [gameIsActive, setGameIsActive] = useState<boolean>(false)
     const [userPlayedGame, setUserPlayedGame] = useState<boolean>(false)
     const [score, setScore] = useState<number>(0)
@@ -36,8 +42,13 @@ export default function VersusPage() {
     const [optionsTab, setOptionsTab] = useState("Game")
     const timer = useRef<number>()
 
+    useEffect(function sendToLoginPageIfNotLoggedIn() {
+        if(AppAuth.getUserInfo() === undefined) {
+            navigate("/entry/login")
+        }
+    }, [])
+
     useEffect(function initializeSockets() {
-        let userInfo = AppAuth.getUserInfo()
 
         function onConnect () {
             console.log("connected")
@@ -45,22 +56,23 @@ export default function VersusPage() {
         function onDisconnect () {
             console.log("disconneted")
         }
-        function onJoinRoom(msg: String) {
-            console.log(msg)
+        function onJoinRoom(m: String) {
+            setMsg(m)
         }
 
         socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);
         socket.on("joinedRoom", onJoinRoom);
         socket.on("waitingForRoom", onJoinRoom);
+        socket.on("opponentLeftRoom", onJoinRoom);
 
-        socket.emit("joinQueue", userInfo, 15, 15)
 
         return () => {
             socket.off("connect", onConnect);
             socket.off("disconnect", onDisconnect);
             socket.off("joinedRoom", onJoinRoom);
             socket.off("waitingForRoom", onJoinRoom);
+            socket.off("opponentLeftRoom", onJoinRoom);
         }
     }, [])
 
@@ -123,6 +135,13 @@ export default function VersusPage() {
                     <div className="w-full flex flex-row min-h-[50px]">
                         <button className="flex-grow" onClick={() => setOptionsTab("Game")}>Game</button>
                         <button className="flex-grow" onClick={() => setOptionsTab("Score")}>Scores</button>
+                    </div>
+                    <div className="w-full flex flex-col items-center">
+                        {msg}
+                        <Button intent="primary" size="large" onClick={() => {
+                            if(userInfo)
+                                socket.emit("joinQueue", userInfo, 15, 15, duration)
+                        }}>Play</Button>
                     </div>
                     {optionsTab==="Game" && <GameTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeValueState={timeValueState} timeDurationState={timeDurationState} setGameIsActive={setGameIsActive} score={score} setAllowDisplayScore={setAllowDisplayScore} timer={timer} /> }
                     {optionsTab==="Score" && <ScoreTab rowsState={scoresRowsState} colsState={scoresColsState} durationState={scoresDurationState} />}
