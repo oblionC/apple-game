@@ -48,7 +48,10 @@ function storeSocketInfo(id, oppId, roomId) {
 }
 
 function leaveRoom(socket) {
+  if(!(socket.id in socketsInRoom)) return 
+
   var oppId = socketsInRoom[socket.id].oppId
+  var roomId = socketsInRoom[socket.id].roomId
 
   delete socketsInRoom[socket.id]
   delete socketsInRoom[oppId]
@@ -66,7 +69,6 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     leaveQueue(socket)
     leaveRoom(socket)
-    console.log(socketsInRoom)
   });
 
   socket.on('leaveQueue', (userInfo) => {
@@ -74,7 +76,6 @@ io.on('connection', (socket) => {
   })
 
   socket.on('joinQueue', (userInfo, rows, cols, duration) => {
-    socketIdToUserIdMapping[socket.id] = userInfo.userId
     if(socket.rooms.size > 1) return
 
     if(waitingRooms.length == 0) {
@@ -100,6 +101,8 @@ io.on('connection', (socket) => {
       generateVersusGame(socket, roomId, rows, cols, duration)
     }
     console.log(socketsInRoom)
+    console.log(waitingRooms)
+    console.log(io.sockets.adapter.rooms)
   })
 });
 
