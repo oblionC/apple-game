@@ -7,6 +7,7 @@ export default function LandingPage() {
     const navigate = useNavigate()
     const firstSectionRef: any = useRef(null)
     const [gameStateValues, setGameStateValues] = useState(generateGameStateValues(15, 15))
+    const gameStateState = useState()
     const [gameScreenHeight, setGameScreenHeight] = useState<number>(0)
     useEffect(() => {
         if(firstSectionRef.current) {
@@ -19,7 +20,7 @@ export default function LandingPage() {
             <div className="w-full overflow-y-scroll">
                 <div ref={firstSectionRef} className="h-[700px] justify-center bg-app-tertiary">
                     <div className={`container mx-auto h-full flex flex-row`}> 
-                        <GameScreen gameStateValues={gameStateValues} width={gameScreenHeight} height={gameScreenHeight} gameIsActive={false} rows={15} cols={15} score={undefined} setScore={undefined} gameScreenRef={undefined} allowDisplayScore={undefined}/>
+                        <GameScreen gameStateValues={gameStateValues} width={gameScreenHeight} height={gameScreenHeight} gameIsActive={false} rows={15} cols={15} score={undefined} setScore={undefined} gameScreenRef={undefined} allowDisplayScore={undefined} gameStateState={gameStateState}/>
                         <div className="w-full flex flex-col justify-center">
                             <div>
                                 <div className="text-[70px]">

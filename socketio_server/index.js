@@ -1,4 +1,7 @@
 require('dotenv').config()
+const { 
+  v4: uuidv4,
+} = require('uuid')
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -13,10 +16,16 @@ const io = new Server(server, {
   }
 });
 
-var socketIdToUserIdMapping = {}
+var socketInfo = {}
 var socketsInRoom = {}
 var waitingRooms = [];
 var roomsToGameInfoMapping = {};
+
+const clearSocketInRooms = (roomId) => {
+  for(socketid of io.sockets.adapter.rooms.get(roomId)) {
+    delete socketsInRoom[socketid]
+  }
+}
 
 const generateVersusGame = async (socket, roomId, rows, cols, duration) => {
   let url = new URL(process.env.BACKEND_URL + "/gamestatevalues")
@@ -32,40 +41,65 @@ const generateVersusGame = async (socket, roomId, rows, cols, duration) => {
     cols: cols,
     duration: duration
   }
-
   return game
 }
 
-function storeSocketInfo(id, oppId, roomId) {
-  socketsInRoom[id] =  {
-    oppId: oppId, 
-    roomId: roomId 
-  }
-  socketsInRoom[oppId] = {
-    oppId: id,
-    roomId: roomId
+function storeSocketInfo(roomId) {
+  for(var socketid of io.sockets.adapter.rooms.get(roomId)) {
+    socketsInRoom[socketid] =  {
+      oppIds: [...io.sockets.adapter.rooms.get(roomId)].filter(id => id !== socketid),
+      roomId: roomId,
+      ready: false
+    }
   }
 }
 
 function leaveRoom(socket) {
   if(!(socket.id in socketsInRoom)) return 
 
-  var oppId = socketsInRoom[socket.id].oppId
   var roomId = socketsInRoom[socket.id].roomId
-
+  socket.leave(roomId)
   delete socketsInRoom[socket.id]
-  delete socketsInRoom[oppId]
 
-  io.sockets.sockets.get(oppId).emit("opponentLeftRoom", "opponent left your room")
-  io.sockets.sockets.get(oppId).leave(roomId)
+  if(io.sockets.adapter.rooms.get(roomId).size === 1) {
+    socket.to(roomId).emit("opponentLeftRoom", "opponent left your room")
+    clearSocketInRooms(roomId)
+    io.sockets.adapter.rooms.delete(roomId)
+  }
 }
 
 function leaveQueue(socket) {
-  waitingRooms.splice(waitingRooms.indexOf(socket.id), 1)
-  delete socketIdToUserIdMapping[socket.id]
+  if(waitingRooms.includes(socket.id)) {
+    waitingRooms.splice(waitingRooms.indexOf(socket.id), 1)
+  }
 }
 
 io.on('connection', (socket) => {
+  function getOppSockets(s) {
+    var oppIds = socketsInRoom[socket.id].oppIds
+    return io.sockets.sockets.get(socketsInRoom[s.id].oppId)
+  }
+
+  function getRoomId(s) {
+    return socketsInRoom[s.id].roomId
+  }
+
+  function socketsAreReady(roomId) {
+    var flag = true
+    for(var socketid of io.sockets.adapter.rooms.get(roomId)) {
+      if(!socketsInRoom[socketid].ready)
+        flag = false
+    }
+    return flag
+  }
+
+  function unreadyAllPlayers(s) {
+    var roomId = socketsInRoom[s.id].roomId
+    for(const id of io.sockets.adapter.rooms.get(roomId)) {
+      socketsInRoom[id].ready = false
+    }
+  }
+
   socket.on('disconnect', () => {
     leaveQueue(socket)
     leaveRoom(socket)
@@ -73,13 +107,51 @@ io.on('connection', (socket) => {
 
   socket.on('leaveQueue', (userInfo) => {
     leaveQueue(socket)
+    socket.emit("leftQueue")
+  })
+
+  socket.on('leaveRoom', () => {
+    leaveRoom(socket)
+    console.log(socketsInRoom)
+    console.log(waitingRooms)
+    console.log(io.sockets.adapter.rooms)
+    console.log("-----------------------")
+  })
+
+  socket.on('sendGameState', (gameState) => {
+    if(socket.id in socketsInRoom)
+      for(var socketid of socketsInRoom[socket.id].oppIds) {
+        io.sockets.sockets.get(socketid).emit("getOppGameState", gameState)
+      }
+  })
+
+  socket.on('setPlayerReadyState', (isReady) => {
+    socketsInRoom[socket.id].ready = true
+  })
+
+  socket.on('playerIsReady', () => {
+    if(socket.id in socketsInRoom) {
+      socketsInRoom[socket.id].ready = true 
+      if(socketsAreReady(getRoomId(socket)) === true) {
+        io.to(getRoomId(socket)).emit("startGame")
+        unreadyAllPlayers(socket)
+      }
+    }
+  })
+
+  socket.on('playerIsUnready', () => {
+    if(socket.id in socketsInRoom)
+      socketsInRoom[socket.id].ready = false
   })
 
   socket.on('joinQueue', (userInfo, rows, cols, duration) => {
-    if(socket.rooms.size > 1) return
+    if(waitingRooms.length === 0) {
+      if(socket.id in socketsInRoom) return 
 
-    if(waitingRooms.length == 0) {
-      waitingRooms.push(socket.id)
+      var roomId = uuidv4()
+      socket.join(roomId)
+
+      waitingRooms.push(roomId)
       io.to(socket.id).emit("waitingForRoom", 'you are waiting for room')
     }  
     else {
@@ -88,21 +160,21 @@ io.on('connection', (socket) => {
         // User already in a room 
         return
       }
-      if(socket.id === roomId) {
+      if(roomId in socket.rooms) {
         // User already has a room
         return
       }
       waitingRooms.pop()
       socket.join(roomId)
 
-      storeSocketInfo(roomId, socket.id, roomId)
+      storeSocketInfo(roomId)
 
       io.to(roomId).emit("joinedRoom", 'you have joined a room')
-      generateVersusGame(socket, roomId, rows, cols, duration)
     }
     console.log(socketsInRoom)
     console.log(waitingRooms)
     console.log(io.sockets.adapter.rooms)
+    console.log("-----------------------")
   })
 });
 

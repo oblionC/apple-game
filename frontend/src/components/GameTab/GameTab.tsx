@@ -1,26 +1,10 @@
-import { Score } from "../Score"
 import { Button } from "../Button"
 import { SlArrowDown } from "react-icons/sl";
 import { useState } from "react";
 import { RadioSelect } from "../RadioSelect";
 import { DURATION_OPTIONS, ROWS_OPTIONS, COLS_OPTIONS } from "../../constants/gameOptions"
 import { DURATION_UNIT, ROWS_UNIT, COLS_UNIT } from "../../constants/optionUnits";
-import { Timer } from "../Timer";
-
-function ScoreAndTimerTab({ setGameIsActive, timeValueState, score, timer }: {setGameIsActive: Function, timeValueState: [number, Function], score: number, timer: any}) {
-
-    return (
-        <>
-            Timer Left:
-            <Timer setGameIsActive={setGameIsActive} timeValueState={timeValueState} timer={timer}/>
-            Score:
-            <Score score={score} />
-        </>
-    ) 
-}
-
-
-
+import { ScoreAndTimerTab } from "../ScoreAndTimerTab";
 
 function DropdownButton({ value, unit, children }: { value: number, unit: string, children: React.ReactNode }) {
     const [dropdownIsActive, setDropdownIsActive] = useState<boolean>(false)

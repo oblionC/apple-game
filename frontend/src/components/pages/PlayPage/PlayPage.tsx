@@ -13,10 +13,10 @@ export default function PlayPage() {
     const colsState = useState<number>(15)
     const timeDurationState = useState<number>(30)
 
-
     const [rows, setRows] = rowsState
     const [cols, setCols] = colsState
     const [gameStateValues, setGameStateValues] = useState(generateGameStateValues(rows, cols))
+    const gameStateState = useState()
     const gameScreenRef = useRef<any>();
     const timeValueState = useState<number>(30)
 
@@ -32,7 +32,6 @@ export default function PlayPage() {
 
     useEffect(function changeGameStateValues() {
         if(gameIsActive) {
-            console.log("wowo")
             setGameStateValues(generateGameStateValues(rows, cols))
         }
     }, [gameIsActive])
@@ -86,7 +85,7 @@ export default function PlayPage() {
     return (
         <>
             <div ref={gameScreenRef} className="w-3/5">
-                <GameScreen gameStateValues={gameStateValues} width={width} height={height} score={score} setScore={setScore} gameIsActive={gameIsActive} rows={rowsState[0]} cols={colsState[0]} gameScreenRef={gameScreenRef} allowDisplayScore={allowDisplayScore} />
+                <GameScreen gameStateValues={gameStateValues} width={width} height={height} score={score} setScore={setScore} gameIsActive={gameIsActive} rows={rowsState[0]} cols={colsState[0]} gameScreenRef={gameScreenRef} allowDisplayScore={allowDisplayScore} gameStateState={gameStateState}/>
             </div>
             <div className="grow flex flex-col items-center justify-evenly">
                 <div className="w-3/4 h-[800px] flex flex-col items-center bg-app-primary">

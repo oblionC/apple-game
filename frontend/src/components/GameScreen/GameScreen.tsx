@@ -25,7 +25,9 @@ type GameScreenProps = {
     rows: number | undefined, 
     cols: number | undefined, 
     gameScreenRef: any, 
-    allowDisplayScore: boolean| undefined
+    allowDisplayScore: boolean| undefined,
+    gameStateState: any,
+    stagingGameState: any | undefined
 }
 
 function calculateCenterGroupPosition({ width, height, rows, cols, itemGap, layerWidth, layerHeight }: calculatecCenterGroupPositionParams) {
@@ -62,6 +64,31 @@ function generateGameState(gameStateValues: any, xOffset: number, yOffset: numbe
     }
     return result
 }
+
+function updatePositionInfo(gameState: any, xOffset: number, yOffset: number, itemSize: number, itemGap: number, rows: number, cols: number) {
+    if(gameState === undefined) return []
+    rows = gameState.length
+    cols = gameState[0].length
+    let result = [...gameState]
+    for(let i = 0; i < rows; i++) {
+        for(let j = 0; j < cols; j++) {
+            let relativeX = j * itemGap
+            let relativeY = i * itemGap
+            if(result[i][j]) {
+                result[i][j] = {
+                    ...result[i][j],
+                    x: result[i][j].x !== -1 ? relativeX : -1,
+                    y: relativeY,
+                    centerX: xOffset + relativeX + Math.floor(itemSize / 2),
+                    centerY: yOffset + relativeY + Math.floor(itemSize / 2),
+                }
+            }
+        }
+    }
+    return result
+
+}
+
 
 function generateItemRows(gameState: any, itemSize: number, rows: number) {
     if(!gameState) {
@@ -115,13 +142,25 @@ function ScoreDisplay({score, width, height, allowDisplayScore}: { score: number
                 opacity={0}
             >
                 <Circle x={bgWidth / 2} y={bgHeight / 2} width={bgWidth} height={bgHeight} fill="#2D3250" shadowColor="black" shadowBlur={5} shadowOffset={{x: 5, y: 5}} shadowOpacity={0.5} stroke="white" strokeWidth={2}/>
-                <Text text={`Your score: ${score}`} fill="white" fontSize={24} width={bgWidth} height={bgHeight} align="center" verticalAlign="middle" />
+                <Text text={`Final Score: ${score}`} fill="white" fontSize={24} width={bgWidth} height={bgHeight} align="center" verticalAlign="middle" />
             </Group>
         </Layer>
     )
 }
 
-export default function GameScreen({ gameStateValues, width, height, score, setScore, gameIsActive, rows, cols, gameScreenRef, allowDisplayScore }: GameScreenProps) {
+export default function GameScreen({ 
+    gameStateValues, 
+    width, 
+    height, 
+    score, 
+    setScore, 
+    gameIsActive, 
+    rows, 
+    cols, 
+    gameScreenRef, 
+    allowDisplayScore, 
+    gameStateState,
+    stagingGameState}: GameScreenProps) {
     if(rows === undefined) {
         rows = 15;
     }
@@ -129,13 +168,18 @@ export default function GameScreen({ gameStateValues, width, height, score, setS
         cols = 15;
     }
 
-    const [gameState, setGameState] = useState<number[][]>()
+    const [gameState, setGameState] = gameStateState 
     const [stageWidth, setStageWidth] = useState(width)
     const [stageHeight, setStageHeight] = useState(height)
     const itemSize = width * ITEM_SIZE_MULTIPLIER
     const itemGap = width * ITEM_GAP_MULTIPLIER
     const [xOffset, yOffset] = useMemo(() => calculateCenterGroupPosition({width, height, rows, cols, itemGap}), [width, height, rows, cols])
-    const itemRows = useMemo(() => generateItemRows(gameState, itemSize, rows), [gameState, rows])
+    const itemRows = useMemo(() => generateItemRows(gameState, itemSize, rows), [stagingGameState, gameState, rows])
+
+    useEffect(function updateGameStatePositionInfo() {
+        if(!stagingGameState) return
+        setGameState(updatePositionInfo(stagingGameState, xOffset, yOffset, itemSize, itemGap, rows, cols))
+    }, [stagingGameState])
 
     useEffect(function changeGameState() {
         let newGameStateValues = gameStateValues;
