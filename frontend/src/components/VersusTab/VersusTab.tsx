@@ -19,7 +19,7 @@ export default function VersusTab({ gameIsActive, setGameIsActive, rowsState, co
 
     useEffect(function unreadyUser() {
         setReady(false)
-    }, [gameIsActive])
+    }, [gameIsActive, userInRoom])
 
     useEffect(function detectGameHasStarted() {
         if(gameIsActive)
@@ -89,16 +89,18 @@ export default function VersusTab({ gameIsActive, setGameIsActive, rowsState, co
                 <ScoreAndTimerTab setGameIsActive={setGameIsActive} timeValueState={timeValueState} score={score} timer={timer} />
             )}
             {view === "Lobby" && (
-                <>
-                    <Button intent="primary" size="large" onClick={() => {
-                        socket.emit("playerIsReady")
-                        setReady(r => !r)
-                    }}>{ready ? "Unready" : "Ready"}</Button>
-                    <Button intent="primary" size="large" onClick={() => {
-                        socket.emit("leaveRoom")
-                        setUserInRoom(false)
-                    }}>Leave</Button>
-                </>
+                <div className="flex flex-col justify-center items-center w-full h-full">
+                    <div className="w-full">
+                        <Button intent="primary" size="large" onClick={() => {
+                            socket.emit("playerIsReady")
+                            setReady(r => !r)
+                        }}>{ready ? "Unready" : "Ready"}</Button>
+                        <Button intent="primary" size="large" onClick={() => {
+                            socket.emit("leaveRoom")
+                            setUserInRoom(false)
+                        }}>Leave</Button>
+                    </div>
+                </div>
             )}
         </> 
     )

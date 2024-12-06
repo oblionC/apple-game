@@ -172,7 +172,7 @@ export default function VersusPage() {
                 <GameScreen gameStateValues={gameStateValues} width={width} height={height} score={score} setScore={setScore} gameIsActive={gameIsActive} rows={rowsState[0]} cols={colsState[0]} gameScreenRef={gameScreenRef} allowDisplayScore={allowDisplayScore} gameStateState={gameStateState} />
             </div>
             <div className="grow flex flex-col items-center justify-evenly">
-                <div className="w-3/4 h-[400px] flex flex-col items-center bg-app-primary overflow-auto">
+                <div className="w-3/4 h-[400px] flex flex-col items-center bg-app-primary overflow-auto rounded-lg">
                     <div className="w-full flex flex-row min-h-[50px]">
                         <button className="flex-grow" onClick={() => setOptionsTab("Game")}>Game</button>
                         <button className="flex-grow" onClick={() => setOptionsTab("Score")}>Scores</button>

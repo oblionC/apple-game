@@ -27,6 +27,12 @@ const clearSocketInRooms = (roomId) => {
   }
 }
 
+function getRoomId(socket) {
+  if(socket.id in socketsInRoom) {
+    return socketsInRoom[socket.id].roomId
+  }
+}
+
 const generateVersusGame = async (socket, roomId, rows, cols, duration) => {
   let url = new URL(process.env.BACKEND_URL + "/gamestatevalues")
   url.searchParams.append("rows", rows)
@@ -44,13 +50,17 @@ const generateVersusGame = async (socket, roomId, rows, cols, duration) => {
   return game
 }
 
+function addToSocketInRoom(socketId, roomId) {
+  socketsInRoom[socketId] =  {
+    oppIds: [...io.sockets.adapter.rooms.get(roomId)].filter(id => id !== socketId),
+    roomId: roomId,
+    ready: false
+  }
+}
+
 function storeSocketInfo(roomId) {
   for(var socketid of io.sockets.adapter.rooms.get(roomId)) {
-    socketsInRoom[socketid] =  {
-      oppIds: [...io.sockets.adapter.rooms.get(roomId)].filter(id => id !== socketid),
-      roomId: roomId,
-      ready: false
-    }
+    addToSocketInRoom(socketid, roomId)
   }
 }
 
@@ -61,7 +71,7 @@ function leaveRoom(socket) {
   socket.leave(roomId)
   delete socketsInRoom[socket.id]
 
-  if(io.sockets.adapter.rooms.get(roomId).size === 1) {
+  if(io.sockets.adapter.rooms.get(roomId) && io.sockets.adapter.rooms.get(roomId).size <= 1) {
     socket.to(roomId).emit("opponentLeftRoom", "opponent left your room")
     clearSocketInRooms(roomId)
     io.sockets.adapter.rooms.delete(roomId)
@@ -69,8 +79,9 @@ function leaveRoom(socket) {
 }
 
 function leaveQueue(socket) {
-  if(waitingRooms.includes(socket.id)) {
-    waitingRooms.splice(waitingRooms.indexOf(socket.id), 1)
+  var roomId = getRoomId(socket)
+  if(waitingRooms.includes(roomId)) {
+    waitingRooms.splice(waitingRooms.indexOf(roomId), 1)
   }
 }
 
@@ -80,9 +91,6 @@ io.on('connection', (socket) => {
     return io.sockets.sockets.get(socketsInRoom[s.id].oppId)
   }
 
-  function getRoomId(s) {
-    return socketsInRoom[s.id].roomId
-  }
 
   function socketsAreReady(roomId) {
     var flag = true
@@ -150,6 +158,7 @@ io.on('connection', (socket) => {
 
       var roomId = uuidv4()
       socket.join(roomId)
+      addToSocketInRoom(socket.id, roomId)
 
       waitingRooms.push(roomId)
       io.to(socket.id).emit("waitingForRoom", 'you are waiting for room')
