@@ -27,7 +27,7 @@ function GameSetting({ setGameIsActive, rowsState, colsState, timeDurationState,
     const [cols, setCols] = colsState 
 
     return(
-        <div className="w-full flex flex-col items-center">
+        <div className="w-full flex flex-col items-center pt-10">
             <DropdownButton value={timerDuration} unit={DURATION_UNIT}>
                 <RadioSelect list={DURATION_OPTIONS} valueState={timeDurationState} unit={DURATION_UNIT} />
             </DropdownButton>

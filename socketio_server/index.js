@@ -18,7 +18,7 @@ const io = new Server(server, {
 
 var socketInfo = {}
 var socketsInRoom = {}
-var waitingRooms = [];
+var waitingRooms = {};
 var roomsToGameInfoMapping = {};
 
 const clearSocketInRooms = (roomId) => {
@@ -33,34 +33,33 @@ function getRoomId(socket) {
   }
 }
 
-const generateVersusGame = async (socket, roomId, rows, cols, duration) => {
+const generateVersusGameStateValues = async (rows, cols) => {
   let url = new URL(process.env.BACKEND_URL + "/gamestatevalues")
   url.searchParams.append("rows", rows)
   url.searchParams.append("cols", cols)
 
   let response = await fetch(url)
   let json = await response.json()
-
-  const game = {
-    gameStateValues: json.gameStateValues,
-    rows: rows,
-    cols: cols,
-    duration: duration
-  }
-  return game
+  let gameStateValues = json.gameStateValues
+  return gameStateValues
 }
 
-function addToSocketInRoom(socketId, roomId) {
+function addToSocketInRoom(socketId, roomId, userInfo, rows, cols, duration) {
   socketsInRoom[socketId] =  {
     oppIds: [...io.sockets.adapter.rooms.get(roomId)].filter(id => id !== socketId),
     roomId: roomId,
-    ready: false
+    ready: false,
+    userInfo: userInfo,
+    rows: rows,
+    cols: cols,
+    duration: duration,
+    queueString: generateQueueString(rows, cols, duration)
   }
 }
 
-function storeSocketInfo(roomId) {
+function storeSocketInfo(roomId, userInfo, rows, cols, duration) {
   for(var socketid of io.sockets.adapter.rooms.get(roomId)) {
-    addToSocketInRoom(socketid, roomId)
+    addToSocketInRoom(socketid, roomId, userInfo, rows, cols, duration)
   }
 }
 
@@ -79,10 +78,17 @@ function leaveRoom(socket) {
 }
 
 function leaveQueue(socket) {
-  var roomId = getRoomId(socket)
-  if(waitingRooms.includes(roomId)) {
-    waitingRooms.splice(waitingRooms.indexOf(roomId), 1)
+  if(socket.id in socketsInRoom) {
+    var roomId = getRoomId(socket)
+    var queueString = socketsInRoom[socket.id].queueString
+    if(waitingRooms[queueString].includes(roomId)) {
+      waitingRooms[queueString].splice(waitingRooms[queueString].indexOf(roomId), 1)
+    }
   }
+}
+
+function generateQueueString(rows, cols, duration) {
+  return `${rows} ${cols} ${duration}`
 }
 
 io.on('connection', (socket) => {
@@ -137,11 +143,14 @@ io.on('connection', (socket) => {
     socketsInRoom[socket.id].ready = true
   })
 
-  socket.on('playerIsReady', () => {
+  socket.on('playerIsReady', async () => {
     if(socket.id in socketsInRoom) {
       socketsInRoom[socket.id].ready = true 
       if(socketsAreReady(getRoomId(socket)) === true) {
-        io.to(getRoomId(socket)).emit("startGame")
+        var rows = socketsInRoom[socket.id].rows
+        var cols = socketsInRoom[socket.id].cols
+        var stateValues = await generateVersusGameStateValues(rows, cols)
+        io.to(getRoomId(socket)).emit("startGame", stateValues)
         unreadyAllPlayers(socket)
       }
     }
@@ -151,20 +160,26 @@ io.on('connection', (socket) => {
     if(socket.id in socketsInRoom)
       socketsInRoom[socket.id].ready = false
   })
+  
 
   socket.on('joinQueue', (userInfo, rows, cols, duration) => {
-    if(waitingRooms.length === 0) {
+    queueString = generateQueueString(rows, cols, duration) 
+    if(!waitingRooms[queueString]) {
+      waitingRooms[queueString] = []
+    }
+
+    if(waitingRooms[queueString].length === 0) {
       if(socket.id in socketsInRoom) return 
 
       var roomId = uuidv4()
       socket.join(roomId)
-      addToSocketInRoom(socket.id, roomId)
+      addToSocketInRoom(socket.id, roomId, userInfo, rows, cols, duration)
 
-      waitingRooms.push(roomId)
+      waitingRooms[queueString].push(roomId)
       io.to(socket.id).emit("waitingForRoom", 'you are waiting for room')
     }  
     else {
-      var roomId = waitingRooms[0]
+      var roomId = waitingRooms[queueString][0]
       if(socket.id in socketsInRoom) {
         // User already in a room 
         return
@@ -173,10 +188,10 @@ io.on('connection', (socket) => {
         // User already has a room
         return
       }
-      waitingRooms.pop()
+      waitingRooms[queueString].pop()
       socket.join(roomId)
 
-      storeSocketInfo(roomId)
+      storeSocketInfo(roomId, userInfo, rows, cols, duration)
 
       io.to(roomId).emit("joinedRoom", 'you have joined a room')
     }

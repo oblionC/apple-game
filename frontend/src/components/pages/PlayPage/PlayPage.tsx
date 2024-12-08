@@ -90,8 +90,8 @@ export default function PlayPage() {
             <div className="grow flex flex-col items-center justify-evenly">
                 <div className="w-3/4 h-[800px] flex flex-col items-center bg-app-primary rounded-lg">
                     <div className="w-full flex flex-row min-h-[50px]">
-                        <button className="flex-grow" onClick={() => setOptionsTab("Game")}>Game</button>
-                        <button className="flex-grow rounded-tr-lg" onClick={() => setOptionsTab("Score")}>Scores</button>
+                        <button className={`flex-grow border-${optionsTab === "Game"? "transparent": "white"}`} onClick={() => setOptionsTab("Game")}>Game</button>
+                        <button className="flex-grow" onClick={() => setOptionsTab("Score")}>Scores</button>
                     </div>
                     {optionsTab==="Game" && <GameTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeValueState={timeValueState} timeDurationState={timeDurationState} setGameIsActive={setGameIsActive} score={score} setAllowDisplayScore={setAllowDisplayScore} timer={timer} /> }
                     {optionsTab==="Score" && <ScoreTab rowsState={rowsState} colsState={colsState} durationState={timeDurationState} />}

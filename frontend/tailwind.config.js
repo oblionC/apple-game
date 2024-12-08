@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      transitionProperty: {
+        "height": "height"
+      },
       colors: {
           "app-primary": "#2D3250",
           "app-secondary": "#424769",

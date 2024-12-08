@@ -3,20 +3,8 @@ import { useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { AppAuth } from "../../utils/AppAuth"
 import { SidebarLogo } from "../SidebarLogo"
-import userPlaceholder from '../../assets/user_placeholder.jpg'
+import { SidebarProfile } from "../SidebarProfile"
 
-function SidebarProfile({ userInfo }: { userInfo: any }) {
-    return (
-        <div className="w-full flex flex-col justify-center items-center mb-5">
-            <div className="w-9/12 bg-app-tertiary rounded-lg p-3 overflow-x-visible">
-                <div className="w-full aspect-square rounded-full overflow-hidden mb-2">
-                   <img src={userPlaceholder} /> 
-                </div>
-                {userInfo.username}
-            </div>
-        </div>
-    )
-}
 
 export default function Sidebar() {
     const navigate = useNavigate()

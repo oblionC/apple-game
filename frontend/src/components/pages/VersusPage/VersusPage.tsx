@@ -55,6 +55,13 @@ export default function VersusPage() {
     const [userInRoom, setUserInRoom] = userInRoomState 
     const timer = useRef<number>()
 
+    useEffect(function connectToSocket() {
+        socket.connect()
+        return () => {
+            socket.disconnect()
+        }
+    }, [])
+
     useEffect(function updateOppGameStateInfo() {
         if(!stagingOppGameState) return
         setOppRows(stagingOppGameState.length)
@@ -82,16 +89,19 @@ export default function VersusPage() {
         function onWaitingForRoom() {
         }
         function onOpponentLeftRoom() {
+            setGameIsActive(false)    
+            setAllowDisplayScore(false)
             setUserInRoom(false)
         }
         function onGetOppGameState(state: any) {
             setStagingOppGameState(state)
         }
-        function onStartGame() {
-            console.log("game started")
+        function onStartGame(stateValues: any) {
+            setGameStateValues(stateValues)
             setGameIsActive(true)
             setAllowDisplayScore(true)
         }
+
 
         socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);

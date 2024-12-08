@@ -7,6 +7,7 @@ import { socket } from "../../socket";
 import { useEffect, useState } from "react";
 import { AppAuth } from "../../utils/AppAuth";
 import { ScoreAndTimerTab } from "../ScoreAndTimerTab";
+import { LobbyUser } from "../LobbyUser";
 
 export default function VersusTab({ gameIsActive, setGameIsActive, rowsState, colsState, timeValueState, timeDurationState, score, setAllowDisplayScore, timer, userInRoomState}: {gameIsActive: boolean, setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], timeValueState: [number, Function], timeDurationState: [number, Function], score: number, setAllowDisplayScore: Function, timer: any, userInRoomState: [boolean, Function]}) {
     const [timeDuration, setTimeDuration] = timeDurationState
@@ -89,8 +90,8 @@ export default function VersusTab({ gameIsActive, setGameIsActive, rowsState, co
                 <ScoreAndTimerTab setGameIsActive={setGameIsActive} timeValueState={timeValueState} score={score} timer={timer} />
             )}
             {view === "Lobby" && (
-                <div className="flex flex-col justify-center items-center w-full h-full">
-                    <div className="w-full">
+                <div className="flex flex-col items-center w-full h-full">
+                    <div className="w-full my-5">
                         <Button intent="primary" size="large" onClick={() => {
                             socket.emit("playerIsReady")
                             setReady(r => !r)
@@ -99,6 +100,9 @@ export default function VersusTab({ gameIsActive, setGameIsActive, rowsState, co
                             socket.emit("leaveRoom")
                             setUserInRoom(false)
                         }}>Leave</Button>
+                    </div>
+                    <div className="w-9/12 my-5 bg-app-tertiary p-2 rounded-lg">
+                        <LobbyUser /> 
                     </div>
                 </div>
             )}
