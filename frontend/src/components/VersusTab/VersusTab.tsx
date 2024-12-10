@@ -9,7 +9,33 @@ import { AppAuth } from "../../utils/AppAuth";
 import { ScoreAndTimerTab } from "../ScoreAndTimerTab";
 import { LobbyUser } from "../LobbyUser";
 
-export default function VersusTab({ gameIsActive, setGameIsActive, rowsState, colsState, timeValueState, timeDurationState, score, setAllowDisplayScore, timer, userInRoomState}: {gameIsActive: boolean, setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], timeValueState: [number, Function], timeDurationState: [number, Function], score: number, setAllowDisplayScore: Function, timer: any, userInRoomState: [boolean, Function]}) {
+type VersusTabProps = {
+    gameIsActive: boolean, 
+    setGameIsActive: Function, 
+    rowsState: [number, Function], 
+    colsState: [number, Function], 
+    timeValueState: [number, Function], 
+    timeDurationState: [number, Function], 
+    score: number, 
+    setAllowDisplayScore: Function, 
+    timer: any, 
+    userInRoomState: [boolean, Function]
+    oppUserInfo: any
+}
+
+export default function VersusTab({ 
+    gameIsActive, 
+    setGameIsActive, 
+    rowsState, 
+    colsState, 
+    timeValueState, 
+    timeDurationState, 
+    score, 
+    setAllowDisplayScore, 
+    timer, 
+    userInRoomState,
+    oppUserInfo,
+}: VersusTabProps) {
     const [timeDuration, setTimeDuration] = timeDurationState
     const [rows, setRows] = rowsState
     const [cols, setCols] = colsState 
@@ -51,19 +77,10 @@ export default function VersusTab({ gameIsActive, setGameIsActive, rowsState, co
         }
     }, [userInRoom])
 
-    useEffect(function changeSocketReadyState() {
-        if(ready) {
-            socket.emit("playerIsReady")
-        }
-        else {
-            socket.emit("playerIsUnready")
-        }
-    }, [ready])
-
     return(
         <>
             {view === "Options" && (
-                <div className="w-full flex flex-col items-center">
+                <div className="w-full flex flex-col items-center no-scrollbar">
                     <DropdownButton value={timeDuration} unit={DURATION_UNIT}>
                         <RadioSelect list={DURATION_OPTIONS} valueState={timeDurationState} unit={DURATION_UNIT} />
                     </DropdownButton>
@@ -90,11 +107,13 @@ export default function VersusTab({ gameIsActive, setGameIsActive, rowsState, co
                 <ScoreAndTimerTab setGameIsActive={setGameIsActive} timeValueState={timeValueState} score={score} timer={timer} />
             )}
             {view === "Lobby" && (
-                <div className="flex flex-col items-center w-full h-full">
-                    <div className="w-full my-5">
+                <div className="flex flex-col items-center w-full py-10 overflow-auto no-scrollbar">
+                    <div className="w-full">
                         <Button intent="primary" size="large" onClick={() => {
-                            socket.emit("playerIsReady")
-                            setReady(r => !r)
+                            setReady(r => {
+                                socket.emit("playerIsReady", !r)
+                                return !r
+                            })
                         }}>{ready ? "Unready" : "Ready"}</Button>
                         <Button intent="primary" size="large" onClick={() => {
                             socket.emit("leaveRoom")
@@ -102,7 +121,10 @@ export default function VersusTab({ gameIsActive, setGameIsActive, rowsState, co
                         }}>Leave</Button>
                     </div>
                     <div className="w-9/12 my-5 bg-app-tertiary p-2 rounded-lg">
-                        <LobbyUser /> 
+                        <div className="h-10 flex items-center justify-center">
+                            Vs.
+                        </div>
+                        {oppUserInfo && <LobbyUser userInfo={oppUserInfo[0]}/>}
                     </div>
                 </div>
             )}

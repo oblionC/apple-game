@@ -46,6 +46,7 @@ const generateVersusGameStateValues = async (rows, cols) => {
 
 function addToSocketInRoom(socketId, roomId, userInfo, rows, cols, duration) {
   socketsInRoom[socketId] =  {
+    socketId: socketId,
     oppIds: [...io.sockets.adapter.rooms.get(roomId)].filter(id => id !== socketId),
     roomId: roomId,
     ready: false,
@@ -55,13 +56,9 @@ function addToSocketInRoom(socketId, roomId, userInfo, rows, cols, duration) {
     duration: duration,
     queueString: generateQueueString(rows, cols, duration)
   }
+  updateSocketOppIds(roomId)
 }
 
-function storeSocketInfo(roomId, userInfo, rows, cols, duration) {
-  for(var socketid of io.sockets.adapter.rooms.get(roomId)) {
-    addToSocketInRoom(socketid, roomId, userInfo, rows, cols, duration)
-  }
-}
 
 function leaveRoom(socket) {
   if(!(socket.id in socketsInRoom)) return 
@@ -87,17 +84,27 @@ function leaveQueue(socket) {
   }
 }
 
+function getOppUserInfo(socket) {
+  if(socket.id in socketsInRoom) {
+    var oppIds = socketsInRoom[socket.id].oppIds
+    var userInfos = oppIds.map((oppId) => {
+      return socketsInRoom[oppId]
+    })
+    return userInfos
+  }
+}
+
+function updateSocketOppIds(roomId) {
+  for(socketid of io.sockets.adapter.rooms.get(roomId)) {
+    socketsInRoom[socketid].oppIds = [...io.sockets.adapter.rooms.get(roomId)].filter(s => s !== socketid)
+  }
+}
+
 function generateQueueString(rows, cols, duration) {
   return `${rows} ${cols} ${duration}`
 }
 
 io.on('connection', (socket) => {
-  function getOppSockets(s) {
-    var oppIds = socketsInRoom[socket.id].oppIds
-    return io.sockets.sockets.get(socketsInRoom[s.id].oppId)
-  }
-
-
   function socketsAreReady(roomId) {
     var flag = true
     for(var socketid of io.sockets.adapter.rooms.get(roomId)) {
@@ -126,10 +133,6 @@ io.on('connection', (socket) => {
 
   socket.on('leaveRoom', () => {
     leaveRoom(socket)
-    console.log(socketsInRoom)
-    console.log(waitingRooms)
-    console.log(io.sockets.adapter.rooms)
-    console.log("-----------------------")
   })
 
   socket.on('sendGameState', (gameState) => {
@@ -143,15 +146,23 @@ io.on('connection', (socket) => {
     socketsInRoom[socket.id].ready = true
   })
 
-  socket.on('playerIsReady', async () => {
+  socket.on('playerIsReady', async (ready) => {
     if(socket.id in socketsInRoom) {
-      socketsInRoom[socket.id].ready = true 
+      socketsInRoom[socket.id].ready = ready 
       if(socketsAreReady(getRoomId(socket)) === true) {
         var rows = socketsInRoom[socket.id].rows
         var cols = socketsInRoom[socket.id].cols
         var stateValues = await generateVersusGameStateValues(rows, cols)
         io.to(getRoomId(socket)).emit("startGame", stateValues)
         unreadyAllPlayers(socket)
+      }
+      else {
+        for(var socketid of socketsInRoom[socket.id].oppIds) {
+          if(socketid in socketsInRoom) {
+            var oppUserInfo = getOppUserInfo(io.sockets.sockets.get(socketid))
+            io.sockets.sockets.get(socketid).emit("getOppUserInfo", oppUserInfo)
+          }
+        }
       }
     }
   })
@@ -161,6 +172,9 @@ io.on('connection', (socket) => {
       socketsInRoom[socket.id].ready = false
   })
   
+  socket.on('getOppUserInfo', () => {
+    socket.emit("getOppUserInfo", getOppUserInfo(socket))
+  }) 
 
   socket.on('joinQueue', (userInfo, rows, cols, duration) => {
     queueString = generateQueueString(rows, cols, duration) 
@@ -191,14 +205,10 @@ io.on('connection', (socket) => {
       waitingRooms[queueString].pop()
       socket.join(roomId)
 
-      storeSocketInfo(roomId, userInfo, rows, cols, duration)
+      addToSocketInRoom(socket.id, roomId, userInfo, rows, cols, duration)
 
-      io.to(roomId).emit("joinedRoom", 'you have joined a room')
+      io.to(roomId).emit("joinedRoom")
     }
-    console.log(socketsInRoom)
-    console.log(waitingRooms)
-    console.log(io.sockets.adapter.rooms)
-    console.log("-----------------------")
   })
 });
 

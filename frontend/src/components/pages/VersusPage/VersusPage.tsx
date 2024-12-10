@@ -53,7 +53,9 @@ export default function VersusPage() {
     const [optionsTab, setOptionsTab] = useState("Game")
     const userInRoomState = useState(false)
     const [userInRoom, setUserInRoom] = userInRoomState 
+    const [oppUserInfo, setOppUserInfo] = useState({})
     const timer = useRef<number>()
+
 
     useEffect(function connectToSocket() {
         socket.connect()
@@ -82,8 +84,9 @@ export default function VersusPage() {
             setUserInRoom(false)
             console.log("disconneted")
         }
-        function onJoinedRoom(m) {
+        function onJoinedRoom() {
             setUserInRoom(true)
+            socket.emit("getOppUserInfo")
             socket.emit("sendGameState", gameState)
         }
         function onWaitingForRoom() {
@@ -101,11 +104,15 @@ export default function VersusPage() {
             setGameIsActive(true)
             setAllowDisplayScore(true)
         }
-
+        function onGetOppUserInfo(oppUserInfo: any) {
+            console.log(oppUserInfo)
+            setOppUserInfo(oppUserInfo)    
+        }
 
         socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);
         socket.on("joinedRoom", onJoinedRoom);
+        socket.on("getOppUserInfo", onGetOppUserInfo);
         socket.on("getOppGameState", onGetOppGameState);
         socket.on("waitingForRoom", onWaitingForRoom);
         socket.on("opponentLeftRoom", onOpponentLeftRoom);
@@ -115,9 +122,11 @@ export default function VersusPage() {
             socket.off("connect", onConnect);
             socket.off("disconnect", onDisconnect);
             socket.off("joinedRoom", onJoinedRoom);
+            socket.off("getOppUserInfo", onGetOppUserInfo);
             socket.off("getOppGameState", onGetOppGameState);
             socket.off("waitingForRoom", onWaitingForRoom);
             socket.off("opponentLeftRoom", onOpponentLeftRoom);
+            socket.off("startGame", onStartGame)
         }
     }, [gameState])
 
@@ -182,12 +191,12 @@ export default function VersusPage() {
                 <GameScreen gameStateValues={gameStateValues} width={width} height={height} score={score} setScore={setScore} gameIsActive={gameIsActive} rows={rowsState[0]} cols={colsState[0]} gameScreenRef={gameScreenRef} allowDisplayScore={allowDisplayScore} gameStateState={gameStateState} />
             </div>
             <div className="grow flex flex-col items-center justify-evenly">
-                <div className="w-3/4 h-[400px] flex flex-col items-center bg-app-primary overflow-auto rounded-lg">
+                <div className="w-3/4 h-[400px] flex flex-col items-center bg-app-primary rounded-lg">
                     <div className="w-full flex flex-row min-h-[50px]">
                         <button className="flex-grow" onClick={() => setOptionsTab("Game")}>Game</button>
                         <button className="flex-grow" onClick={() => setOptionsTab("Score")}>Scores</button>
                     </div>
-                    {optionsTab==="Game" && <VersusTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeValueState={timeValueState} timeDurationState={timeDurationState} setGameIsActive={setGameIsActive} score={score} setAllowDisplayScore={setAllowDisplayScore} timer={timer} userInRoomState={userInRoomState} /> }
+                    {optionsTab==="Game" && <VersusTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeValueState={timeValueState} timeDurationState={timeDurationState} setGameIsActive={setGameIsActive} score={score} setAllowDisplayScore={setAllowDisplayScore} timer={timer} userInRoomState={userInRoomState} oppUserInfo={oppUserInfo}/> }
                     {optionsTab==="Score" && <ScoreTab rowsState={scoresRowsState} colsState={scoresColsState} durationState={scoresDurationState} />}
                 </div>
                 <div ref={oppScreenRef} className="w-3/4 h-[400px] flex flex-col items-center ">
