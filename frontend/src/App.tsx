@@ -7,6 +7,7 @@ import SignupPage from './components/pages/SignupPage/SignupPage'
 import { EntryPage } from './components/pages/EntryPage'
 import { LoginPage } from './components/pages/LoginPage'
 import { VersusPage } from './components/pages/VersusPage'
+import { ProfilePage } from './components/pages/ProfilePage'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route index element={<LandingPage />} />
           <Route path="play" element={<PlayPage />} />
           <Route path="versus" element={<VersusPage />} />
+          <Route path="profile" element={<ProfilePage />} />
         </Route>
         <Route path="entry" element={<EntryPage />}>
           <Route path="signup" element={<SignupPage />} />

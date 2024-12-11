@@ -6,6 +6,7 @@ import getLocalUserInfo from "../../../utils/getLocalUserInfo";
 import startTimer from "../../../utils/startTimer";
 import stopTimer from "../../../utils/stoptimer";
 import generateGameStateValues from "../../../utils/generateGameStateValues";
+import { AppAuth } from "../../../utils/AppAuth";
 
 
 export default function PlayPage() {
@@ -29,6 +30,7 @@ export default function PlayPage() {
     const [allowDisplayScore, setAllowDisplayScore] = useState(false)
     const [optionsTab, setOptionsTab] = useState("Game")
     const timer = useRef<number>()
+    const userInfo = AppAuth.getUserInfo()
 
     useEffect(function changeGameStateValues() {
         if(gameIsActive) {
@@ -94,7 +96,7 @@ export default function PlayPage() {
                         <button className="flex-grow" onClick={() => setOptionsTab("Score")}>Scores</button>
                     </div>
                     {optionsTab==="Game" && <GameTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeValueState={timeValueState} timeDurationState={timeDurationState} setGameIsActive={setGameIsActive} score={score} setAllowDisplayScore={setAllowDisplayScore} timer={timer} /> }
-                    {optionsTab==="Score" && <ScoreTab rowsState={rowsState} colsState={colsState} durationState={timeDurationState} />}
+                    {optionsTab==="Score" && <ScoreTab userInfo={userInfo} rowsState={rowsState} colsState={colsState} durationState={timeDurationState} />}
                 </div>
             </div>
         </>

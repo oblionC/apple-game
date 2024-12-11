@@ -15,14 +15,12 @@ function generateScoreCards(scores: unknown) {
     })
 }
 
-export default function ScoreTab({ rowsState, colsState, durationState }: { rowsState: [number, Function], colsState: [number, Function], durationState: [number, Function]}) {
+export default function ScoreTab({ userInfo, rowsState, colsState, durationState }: { userInfo: any, rowsState: [number, Function], colsState: [number, Function], durationState: [number, Function]}) {
     const [scores, setScores] = useState([])
 
     useEffect(function getScores() {
-        var userInfo = getLocalUserInfo()
         var url = new URL(import.meta.env.VITE_BACKEND_URL + "/scores/user-bests")
         if(userInfo !== undefined) {
-
             url.searchParams.set('userId', userInfo.userId)
             url.searchParams.set('rows', String(rowsState[0]))
             url.searchParams.set('cols', String(colsState[0]))
