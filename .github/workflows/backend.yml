@@ -1,0 +1,24 @@
+name: Deploy backend to AWS EC2
+
+on: 
+  push:
+    branches:
+      - main
+    paths:
+      - ./backend/**
+
+jobs:
+  Upload-Backend-Image-To-DockerHub:
+    runs-on: ubuntu-latest
+    defaults: 
+      run:
+        working-directory: ./backend
+    steps:
+      - name: Checkout branch
+        uses: action/checkout@v4
+      - name: Build docker image
+        run: docker build -t tanmaykule17/sumfight-backend
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Upload image to dockerhub
+        run: docker push tanmaykule17/sumfight-backend:latest
