@@ -13,7 +13,6 @@ router.get("/", (req, res) => {
         }
     }
     return res.send({gameStateValues: result})
-    // wowo
 })
 
 module.exports = router;
