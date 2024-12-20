@@ -17,7 +17,7 @@ jobs:
       - name: Checkout branch
         uses: actions/checkout@v4
       - name: Build docker image
-        run: docker build -t tanmaykule17/sumfight-backend
+        run: docker build -t tanmaykule17/sumfight-backend .
       - name: Login to docker hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Upload image to dockerhub
