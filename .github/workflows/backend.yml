@@ -5,14 +5,14 @@ on:
     branches:
       - main
     paths:
-      - ./backend/**
+      - backend/**
 
 jobs:
   Upload-Backend-Image-To-DockerHub:
     runs-on: ubuntu-latest
     defaults: 
       run:
-        working-directory: ./backend
+        working-directory: backend/
     steps:
       - name: Checkout branch
         uses: action/checkout@v4
