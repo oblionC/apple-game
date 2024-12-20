@@ -13,10 +13,10 @@ To-do list:
 - [x] Landing page
 - [ ] Google/Github signup using passport js
 - [ ] User page with statistics (highscores for gamemodes, clear rate, etc)
-- [ ] Real time multiplayer (sockets)
+- [x] Real time multiplayer (sockets)
 - [ ] Game modes (time trouble, zen mode)
 - [ ] Animations and effects
-- [ ] Highscore tracking
+- [x] Highscore tracking
 - [x] Row and column customization
 - [ ] Music
 
