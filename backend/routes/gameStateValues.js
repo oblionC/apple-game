@@ -13,6 +13,7 @@ router.get("/", (req, res) => {
         }
     }
     return res.send({gameStateValues: result})
+    // wow
 })
 
 module.exports = router;
