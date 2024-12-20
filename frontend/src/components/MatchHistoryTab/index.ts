@@ -1,0 +1,1 @@
+export { default as MatchHistoryTab } from './MatchHistoryTab'

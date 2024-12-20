@@ -19,8 +19,9 @@ type VersusTabProps = {
     score: number, 
     setAllowDisplayScore: Function, 
     timer: any, 
-    userInRoomState: [boolean, Function]
-    oppUserInfo: any
+    userInRoomState: [boolean, Function],
+    oppUserInfo: any,
+    oppIsReady: boolean
 }
 
 export default function VersusTab({ 
@@ -35,6 +36,7 @@ export default function VersusTab({
     timer, 
     userInRoomState,
     oppUserInfo,
+    oppIsReady,
 }: VersusTabProps) {
     const [timeDuration, setTimeDuration] = timeDurationState
     const [rows, setRows] = rowsState
@@ -43,6 +45,19 @@ export default function VersusTab({
     const [view, setView] = useState("Options")
     const [ready, setReady] = useState(false)
     const [userInRoom, setUserInRoom] = userInRoomState
+
+    useEffect(function initializeSockets() {
+        function onGetReady(ready: boolean) {
+            console.log(ready)
+            setReady(ready) 
+        }
+
+        socket.on("playerIsReady", onGetReady)
+
+        return () => {
+            socket.off("playerIsReady", onGetReady)
+        }
+    })
 
     useEffect(function unreadyUser() {
         setReady(false)
@@ -110,10 +125,7 @@ export default function VersusTab({
                 <div className="flex flex-col items-center w-full py-10 overflow-auto no-scrollbar">
                     <div className="w-full">
                         <Button intent="primary" size="large" onClick={() => {
-                            setReady(r => {
-                                socket.emit("playerIsReady", !r)
-                                return !r
-                            })
+                            socket.emit("playerIsReady")
                         }}>{ready ? "Unready" : "Ready"}</Button>
                         <Button intent="primary" size="large" onClick={() => {
                             socket.emit("leaveRoom")
@@ -124,7 +136,7 @@ export default function VersusTab({
                         <div className="h-10 flex items-center justify-center">
                             Vs.
                         </div>
-                        {oppUserInfo && <LobbyUser userInfo={oppUserInfo[0]}/>}
+                        {oppUserInfo && <LobbyUser userInfo={oppUserInfo[0]} userIsReady={oppIsReady} />}
                     </div>
                 </div>
             )}

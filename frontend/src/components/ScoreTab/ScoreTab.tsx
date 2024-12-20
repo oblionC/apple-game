@@ -39,7 +39,7 @@ export default function ScoreTab({ userInfo, rowsState, colsState, durationState
     }, [rowsState[0], colsState[0], durationState[0]])
     return (
         <div className="w-full h-full flex flex-col overflow-auto no-scrollbar">
-            <div className="w-full flex flex-col items-center justify-center">
+            <div className="w-full flex flex-col items-center justify-center my-2">
                 <RadioSelect list={DURATION_OPTIONS} valueState={durationState} unit={DURATION_UNIT} /> 
                 <RadioSelect list={ROWS_OPTIONS} valueState={rowsState} unit={ROWS_UNIT} /> 
                 <RadioSelect list={COLS_OPTIONS} valueState={colsState} unit={COLS_UNIT} /> 

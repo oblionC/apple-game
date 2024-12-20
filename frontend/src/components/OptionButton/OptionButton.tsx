@@ -4,6 +4,8 @@ export default function OptionButton({value, valueState, unit}: {value: number, 
     const [activeValue, setActiveValue] = valueState
 
     return(
-            <Button intent="secondary" size="full" border={activeValue === value ? "white" : "none"} value={value} onClick={(e: any) => {setActiveValue(+e.target.value)}}>{value} {unit}</Button>
+            <Button intent="secondary" size="full" border={activeValue === value ? "white" : "none"} value={value}  onClick={(e: any) => {setActiveValue(+e.target.value)}}>
+                {value} {unit}
+            </Button>
     )
 }

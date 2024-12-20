@@ -21,6 +21,7 @@ var socketsInRoom = {}
 var waitingRooms = {};
 var roomsToGameInfoMapping = {};
 
+
 const clearSocketInRooms = (roomId) => {
   for(socketid of io.sockets.adapter.rooms.get(roomId)) {
     delete socketsInRoom[socketid]
@@ -54,11 +55,21 @@ function addToSocketInRoom(socketId, roomId, userInfo, rows, cols, duration) {
     rows: rows,
     cols: cols,
     duration: duration,
-    queueString: generateQueueString(rows, cols, duration)
+    queueString: generateQueueString(rows, cols, duration),
+    score: 0,
+    gameIsFinished: false
   }
   updateSocketOppIds(roomId)
 }
 
+function resetSocketInfoAfterGame(socket) {
+  socketsInRoom[socket.id] =  {
+    ...socketsInRoom[socket.id],
+    score: 0, 
+    ready: false,
+    gameIsFinished: false
+  }
+}
 
 function leaveRoom(socket) {
   if(!(socket.id in socketsInRoom)) return 
@@ -84,11 +95,21 @@ function leaveQueue(socket) {
   }
 }
 
-function getOppUserInfo(socket) {
+function getOppSocketInfo(socket) {
   if(socket.id in socketsInRoom) {
     var oppIds = socketsInRoom[socket.id].oppIds
     var userInfos = oppIds.map((oppId) => {
       return socketsInRoom[oppId]
+    })
+    return userInfos
+  }
+}
+
+function getOppUserInfo(socket) {
+  if(socket.id in socketsInRoom) {
+    var oppIds = socketsInRoom[socket.id].oppIds
+    var userInfos = oppIds.map((oppId) => {
+      return socketsInRoom[oppId].userInfo
     })
     return userInfos
   }
@@ -104,7 +125,33 @@ function generateQueueString(rows, cols, duration) {
   return `${rows} ${cols} ${duration}`
 }
 
+function submitMatchInfo(socket) {
+  var scores = []
+  var userIds = []
+  var usernames = []
+  for(var socketid of io.sockets.adapter.rooms.get(socketsInRoom[socket.id].roomId)) {
+    if(socketid in socketsInRoom) {
+      scores.push(socketsInRoom[socketid].score)
+      userIds.push(socketsInRoom[socketid].userInfo.userId)
+      usernames.push(socketsInRoom[socketid].userInfo.username)
+    }
+  }
+  var requestOptions = { method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+          scores: scores,
+          rows: socketsInRoom[socket.id].rows, 
+          cols: socketsInRoom[socket.id].cols, 
+          duration: socketsInRoom[socket.id].duration,
+          userIds: userIds, 
+          usernames: usernames,
+      }) 
+  }
+  fetch(process.env.BACKEND_URL + "/matchInfo", requestOptions)
+}
+
 io.on('connection', (socket) => {
+
   function socketsAreReady(roomId) {
     var flag = true
     for(var socketid of io.sockets.adapter.rooms.get(roomId)) {
@@ -126,6 +173,28 @@ io.on('connection', (socket) => {
     leaveRoom(socket)
   });
 
+  socket.on('finishGame', () => {
+    if(socket.id in socketsInRoom) {
+      socketsInRoom[socket.id].gameIsFinished = true
+      var usersGameIsFinished = true 
+      for(var socketid of socketsInRoom[socket.id].oppIds) {
+        if(!(socketid in socketsInRoom)) continue 
+        if(!(socketsInRoom[socketid].gameIsFinished)) {
+          usersGameIsFinished = false
+        } 
+      }
+      if(usersGameIsFinished) {
+        submitMatchInfo(socket)
+        resetSocketInfoAfterGame(socket)
+      }
+    }
+  })
+
+  socket.on('sendScore', (score) => {
+    if(socket.id in socketsInRoom)
+      socketsInRoom[socket.id].score = score
+  })
+
   socket.on('leaveQueue', (userInfo) => {
     leaveQueue(socket)
     socket.emit("leftQueue")
@@ -146,9 +215,10 @@ io.on('connection', (socket) => {
     socketsInRoom[socket.id].ready = true
   })
 
-  socket.on('playerIsReady', async (ready) => {
+  socket.on('playerIsReady', async () => {
     if(socket.id in socketsInRoom) {
-      socketsInRoom[socket.id].ready = ready 
+      var ready = !socketsInRoom[socket.id].ready 
+      socketsInRoom[socket.id].ready = ready
       if(socketsAreReady(getRoomId(socket)) === true) {
         var rows = socketsInRoom[socket.id].rows
         var cols = socketsInRoom[socket.id].cols
@@ -157,10 +227,10 @@ io.on('connection', (socket) => {
         unreadyAllPlayers(socket)
       }
       else {
+        socket.emit("playerIsReady", ready)
         for(var socketid of socketsInRoom[socket.id].oppIds) {
           if(socketid in socketsInRoom) {
-            var oppUserInfo = getOppUserInfo(io.sockets.sockets.get(socketid))
-            io.sockets.sockets.get(socketid).emit("getOppUserInfo", oppUserInfo)
+            io.sockets.sockets.get(socketid).emit("opponentIsReady", socketsInRoom[socket.id].ready)
           }
         }
       }

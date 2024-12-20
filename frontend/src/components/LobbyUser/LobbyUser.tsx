@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import userPlaceholder from "../../assets/user_placeholder.jpg"
 
-export default function LobbyUser({ userInfo }: { userInfo: any }) {
+export default function LobbyUser({ userInfo, userIsReady }: { userInfo: any, userIsReady: boolean }) {
     const navigate = useNavigate()
     return (
         <div className="w-full p-2 h-20 flex">
@@ -11,10 +11,10 @@ export default function LobbyUser({ userInfo }: { userInfo: any }) {
                 </div>
             </div>
             <div className="h-full flex flex-grow justify-center items-center p-4">
-                {userInfo && userInfo.userInfo.username } 
+                {userInfo && userInfo.username } 
             </div>
             <div className="h-full flex items-center p-4">
-                {userInfo && userInfo.ready ? "Ready" : "Unready"} 
+                {userIsReady ? "Ready" : "Unready"} 
             </div>
         </div>
     )

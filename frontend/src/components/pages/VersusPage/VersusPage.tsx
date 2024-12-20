@@ -1,6 +1,5 @@
 import { GameScreen } from "../../GameScreen"
 import { useEffect, useRef, useState } from "react";
-import { GameTab } from "../../GameTab";
 import getLocalUserInfo from "../../../utils/getLocalUserInfo";
 import startTimer from "../../../utils/startTimer";
 import stopTimer from "../../../utils/stoptimer";
@@ -11,6 +10,7 @@ import { AppAuth } from "../../../utils/AppAuth";
 import { useNavigate } from "react-router-dom";
 import { VersusTab } from "../../VersusTab";
 import countGameStateScore from "../../../utils/countGameStateScore";
+import { MatchHistoryTab } from "../../MatchHistoryTab";
 
 export default function VersusPage() {
     const navigate = useNavigate()
@@ -41,6 +41,7 @@ export default function VersusPage() {
     const [gameStateValues, setGameStateValues] = useState(generateGameStateValues(rows, cols))
     const gameScreenRef = useRef<any>();
     const timeValueState = useState<number>(30)
+    const [oppIsReady, setOppIsReady] = useState(false)
     const [oppWidth, setOppWidth] = useState(0)
     const [oppHeight, setOppHeight] = useState(0)
     const [width, setWidth] = useState<number>(0)
@@ -53,6 +54,7 @@ export default function VersusPage() {
     const [optionsTab, setOptionsTab] = useState("Game")
     const userInRoomState = useState(false)
     const [userInRoom, setUserInRoom] = userInRoomState 
+    const userInfo = AppAuth.getUserInfo()
     const [oppUserInfo, setOppUserInfo] = useState({})
     const timer = useRef<number>()
 
@@ -86,6 +88,7 @@ export default function VersusPage() {
         }
         function onJoinedRoom() {
             setUserInRoom(true)
+            setOppIsReady(false)
             socket.emit("getOppUserInfo")
             socket.emit("sendGameState", gameState)
         }
@@ -104,8 +107,10 @@ export default function VersusPage() {
             setGameIsActive(true)
             setAllowDisplayScore(true)
         }
+        function onOpponentIsReady(ready: boolean) {
+            setOppIsReady(ready)
+        }
         function onGetOppUserInfo(oppUserInfo: any) {
-            console.log(oppUserInfo)
             setOppUserInfo(oppUserInfo)    
         }
 
@@ -116,6 +121,7 @@ export default function VersusPage() {
         socket.on("getOppGameState", onGetOppGameState);
         socket.on("waitingForRoom", onWaitingForRoom);
         socket.on("opponentLeftRoom", onOpponentLeftRoom);
+        socket.on("opponentIsReady", onOpponentIsReady)
         socket.on("startGame", onStartGame)
 
         return () => {
@@ -126,14 +132,17 @@ export default function VersusPage() {
             socket.off("getOppGameState", onGetOppGameState);
             socket.off("waitingForRoom", onWaitingForRoom);
             socket.off("opponentLeftRoom", onOpponentLeftRoom);
+            socket.off("opponentIsReady", onOpponentIsReady)
             socket.off("startGame", onStartGame)
         }
     }, [gameState])
 
     useEffect(function sendGameState() {
-        if(userInRoom)
+        if(userInRoom) {
             socket.emit("sendGameState", gameState)
-    }, [gameState])
+            socket.emit("sendScore", score)
+        }
+    }, [score])
 
     useEffect(function startTimerWhenGameStarts() {
         if(gameIsActive) {
@@ -154,17 +163,18 @@ export default function VersusPage() {
 
         var userInfo = getLocalUserInfo()
         if(userInfo !== undefined) {
-            var requestOptions = { method: "POST",
-                headers: {"Content-Type": "application/json"}, 
-                body: JSON.stringify({
-                    score: score,
-                    rows: rowsState[0],
-                    cols: colsState[0], 
-                    timeDuration: timeDurationState[0],
-                    userId: userInfo?.userId, 
-                }) 
-            }
-            fetch(import.meta.env.VITE_BACKEND_URL + "/scores/new-score", requestOptions)
+            socket.emit("finishGame")
+            // var requestOptions = { method: "POST",
+            //     headers: {"Content-Type": "application/json"}, 
+            //     body: JSON.stringify({
+            //         scores: [score, oppScore],
+            //         rows: rowsState[0], 
+            //         cols: colsState[0], 
+            //         timeDuration: timeDurationState[0],
+            //         userIds: [userInfo.userId, oppUserInfo[0].userId], 
+            //     }) 
+            // }
+            // fetch(import.meta.env.VITE_BACKEND_URL + "/matchInfo", requestOptions)
         } 
     }, [gameIsActive])
 
@@ -173,6 +183,7 @@ export default function VersusPage() {
             setScore(0)
             timeValueState[1](timeDurationState[0])
             setUserPlayedGame(true)
+            setOppIsReady(false)
         }
     }, [gameIsActive])
     
@@ -196,8 +207,8 @@ export default function VersusPage() {
                         <button className="flex-grow" onClick={() => setOptionsTab("Game")}>Game</button>
                         <button className="flex-grow" onClick={() => setOptionsTab("Score")}>Scores</button>
                     </div>
-                    {optionsTab==="Game" && <VersusTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeValueState={timeValueState} timeDurationState={timeDurationState} setGameIsActive={setGameIsActive} score={score} setAllowDisplayScore={setAllowDisplayScore} timer={timer} userInRoomState={userInRoomState} oppUserInfo={oppUserInfo}/> }
-                    {optionsTab==="Score" && <ScoreTab rowsState={scoresRowsState} colsState={scoresColsState} durationState={scoresDurationState} />}
+                    {optionsTab==="Game" && <VersusTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeValueState={timeValueState} timeDurationState={timeDurationState} setGameIsActive={setGameIsActive} score={score} setAllowDisplayScore={setAllowDisplayScore} timer={timer} userInRoomState={userInRoomState} oppUserInfo={oppUserInfo} oppIsReady={oppIsReady}/> }
+                    {optionsTab==="Score" && <MatchHistoryTab userInfo={userInfo} rowsState={scoresRowsState} colsState={scoresColsState} durationState={scoresDurationState} />}
                 </div>
                 <div ref={oppScreenRef} className="w-3/4 h-[400px] flex flex-col items-center ">
                     <GameScreen gameStateValues={gameStateValues} width={oppWidth} height={oppHeight} score={oppScore} setScore={setOppScore} gameIsActive={gameIsActive} rows={oppRows} cols={oppCols} gameScreenRef={oppScreenRef} allowDisplayScore={allowDisplayScore} gameStateState={oppGameStateState} stagingGameState={stagingOppGameState}/>

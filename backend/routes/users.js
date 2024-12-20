@@ -4,12 +4,11 @@ var router = express.Router();
 var controller = require('../controllers/usersController')
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+router.get('/', controller.getUser);
 
 router.post('/new-user', controller.newUser)
 
 router.post('/login', controller.authenticateUserWithEmail)
+
 
 module.exports = router;
