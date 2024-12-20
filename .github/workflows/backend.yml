@@ -15,7 +15,7 @@ jobs:
         working-directory: backend/
     steps:
       - name: Checkout branch
-        uses: action/checkout@v4
+        uses: actions/checkout@v4
       - name: Build docker image
         run: docker build -t tanmaykule17/sumfight-backend
       - name: Login to docker hub
