@@ -1,0 +1,24 @@
+name: Deploy socket server to AWS EC2
+
+on: 
+  push:
+    branches:
+      - main
+    paths:
+      - socketio_server/**
+
+jobs:
+  Upload-Backend-Image-To-DockerHub:
+    runs-on: ubuntu-latest
+    defaults: 
+      run:
+        working-directory: socketio_server/
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+      - name: Build docker image
+        run: docker build -t tanmaykule17/sumfight-socketio-server .
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Upload image to dockerhub
+        run: docker push tanmaykule17/sumfight-socketio-server:latest
