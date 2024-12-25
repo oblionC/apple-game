@@ -19,15 +19,15 @@ type GameScreenProps = {
     gameStateValues: any, 
     width: number, 
     height: number, 
-    score: number | undefined, 
-    setScore: Function | undefined, 
+    score?: number, 
+    setScore?: Function | undefined, 
     gameIsActive: boolean, 
-    rows: number | undefined, 
-    cols: number | undefined, 
+    rows?: number | undefined, 
+    cols?: number | undefined, 
     gameScreenRef: any, 
-    allowDisplayScore: boolean| undefined,
+    allowDisplayScore?: boolean| undefined,
     gameStateState: any,
-    stagingGameState: any | undefined
+    stagingGameState?: any | undefined
 }
 
 function calculateCenterGroupPosition({ width, height, rows, cols, itemGap, layerWidth, layerHeight }: calculatecCenterGroupPositionParams) {
@@ -39,8 +39,6 @@ function calculateCenterGroupPosition({ width, height, rows, cols, itemGap, laye
     let yOffset = (height - layerHeight) / 2;
     return [xOffset, yOffset];
 }
-
-
 function generateGameState(gameStateValues: any, xOffset: number, yOffset: number, itemSize: number, itemGap: number, rows: number, cols: number) {
     if(gameStateValues === undefined) return []
     let result: any = []
@@ -107,19 +105,19 @@ function UnplayableOverlay({ allowDisplayScore, score, width, height}: {allowDis
             <Layer>
                 <Rect x={0} y={0} width={width} height={height} /> 
             </Layer>
-            {allowDisplayScore && <ScoreDisplay score={score} width={width} height={height} allowDisplayScore={allowDisplayScore} />}
+            {allowDisplayScore && <ScoreDisplay score={score} width={width} height={height} />}
         </>
 
     )
 }
 
-function ScoreDisplay({score, width, height, allowDisplayScore}: { score: number | undefined, width: number, height: number, allowDisplayScore: boolean }) {
-    const groupRef = useRef()
+function ScoreDisplay({score, width, height}: { score: number | undefined, width: number, height: number}) {
+    const groupRef = useRef(null)
     const bgWidth = 300
     const bgHeight = 300
     const [xOffset, yOffset] = calculateCenterGroupPosition({width: width, height: height, layerWidth: bgWidth, layerHeight: bgHeight})
 
-    const comeInAnimation = (node) => {
+    const comeInAnimation = (node: any) => {
         node.to({
             y: yOffset,
             opacity: 1, 

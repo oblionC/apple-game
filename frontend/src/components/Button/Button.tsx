@@ -11,6 +11,7 @@ const button = cva(["rounded-lg", "p-1", "drop-shadow-xl", "min-w-fit", "min-h-f
             ],
             secondary: [
                 "bg-app-tertiary",
+                
             ],
             blank: [
                 "bg-white"

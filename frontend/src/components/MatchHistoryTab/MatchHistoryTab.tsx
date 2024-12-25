@@ -1,5 +1,5 @@
 import { MatchCard } from "./MatchCard"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { DURATION_OPTIONS, ROWS_OPTIONS, COLS_OPTIONS } from "../../constants/gameOptions"
 import { DURATION_UNIT, ROWS_UNIT, COLS_UNIT } from "../../constants/optionUnits"
 import { RadioSelect } from "../RadioSelect"
@@ -12,12 +12,12 @@ type MatchHistoryProps = {
     durationState: [number, Function],
 }
 
-function generateMatchCards(matches: unknown) {
+function generateMatchCards(matches: any) {
     var position = 0
-    return matches.map((match) => {
+    return matches.map((match: any) => {
         position += 1  
         return (
-            <MatchCard key={position} position={position} match={match} />
+            <MatchCard key={position} match={match} />
         )
     })
 }

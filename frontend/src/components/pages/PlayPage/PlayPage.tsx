@@ -14,9 +14,7 @@ export default function PlayPage() {
     const colsState = useState<number>(15)
     const timeDurationState = useState<number>(30)
 
-    const [rows, setRows] = rowsState
-    const [cols, setCols] = colsState
-    const [gameStateValues, setGameStateValues] = useState(generateGameStateValues(rows, cols))
+    const [gameStateValues, setGameStateValues] = useState(generateGameStateValues(rowsState[0], colsState[0]))
     const gameStateState = useState()
     const gameScreenRef = useRef<any>();
     const timeValueState = useState<number>(30)
@@ -34,7 +32,7 @@ export default function PlayPage() {
 
     useEffect(function changeGameStateValues() {
         if(gameIsActive) {
-            setGameStateValues(generateGameStateValues(rows, cols))
+            setGameStateValues(generateGameStateValues(rowsState[0], colsState[0]))
         }
     }, [gameIsActive])
 
@@ -72,7 +70,7 @@ export default function PlayPage() {
     useEffect(function resetScoreAndTimer() {
         if(gameIsActive) {
             setScore(0)
-            setGameStateValues(generateGameStateValues(rows, cols))
+            setGameStateValues(generateGameStateValues(rowsState[0], colsState[0]))
             timeValueState[1](timeDurationState[0])
             setUserPlayedGame(true)
         }
@@ -95,7 +93,7 @@ export default function PlayPage() {
                         <button className={`flex-grow border-${optionsTab === "Game"? "transparent": "white"}`} onClick={() => setOptionsTab("Game")}>Game</button>
                         <button className="flex-grow" onClick={() => setOptionsTab("Score")}>Scores</button>
                     </div>
-                    {optionsTab==="Game" && <GameTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeValueState={timeValueState} timeDurationState={timeDurationState} setGameIsActive={setGameIsActive} score={score} setAllowDisplayScore={setAllowDisplayScore} timer={timer} /> }
+                    {optionsTab==="Game" && <GameTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeValueState={timeValueState} timeDurationState={timeDurationState} setGameIsActive={setGameIsActive} score={score} setAllowDisplayScore={setAllowDisplayScore} /> }
                     {optionsTab==="Score" && <ScoreTab userInfo={userInfo} rowsState={rowsState} colsState={colsState} durationState={timeDurationState} />}
                 </div>
             </div>

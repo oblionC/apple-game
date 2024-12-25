@@ -22,3 +22,14 @@ jobs:
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Upload image to dockerhub
         run: docker push tanmaykule17/sumfight-backend:latest
+    
+  # Pull-And-Run-Docker-Image:
+  #   needs: Upload-Backend-Image-To-DockerHub
+  #   runs-on: self-hosted
+  #   steps:
+  #     - name: Delete existing image
+  #       run: docker rm tanmaykule17/sumfight-backend:latest
+  #     - name: Pull docker image
+  #       run: docker pull tanmaykule17/sumfight-backend:latest
+  #     - name: Run docker container
+  #       run: docker run -d -p 3000:3000 -e MONGODB_URI=${{ secrets.MONGODB_URI }} tanmaykule17/sumfight-backend:latest 

@@ -1,0 +1,13 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+  socket-server:
+    build: ./socketio_server
+    ports:
+      - "4000:4000"

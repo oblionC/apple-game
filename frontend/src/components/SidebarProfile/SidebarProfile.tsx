@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import styles from './SidebarProfile.module.css'
 import userPlaceholder from '../../assets/user_placeholder.jpg'
 import { useNavigate } from 'react-router-dom'
 
 export default function SidebarProfile({ userInfo }: { userInfo: any }) {
     const navigate = useNavigate()
     const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [height, setHeight] = useState(null)
-    const buttonRef = useRef<HTMLButtonElement>()
+    const [height, setHeight] = useState<number>()
+    const buttonRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         console.log(buttonRef.current?.scrollHeight)

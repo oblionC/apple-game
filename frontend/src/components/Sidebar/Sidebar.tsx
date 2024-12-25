@@ -8,7 +8,7 @@ import { SidebarProfile } from "../SidebarProfile"
 
 export default function Sidebar() {
     const navigate = useNavigate()
-    const [userInfo, setUserInfo] = useState()
+    const [userInfo, setUserInfo] = useState<any>()
     const [userIsLoggedIn, setUserIsLoggedIn] = useState<boolean>(false)
 
     function handleLogout() {

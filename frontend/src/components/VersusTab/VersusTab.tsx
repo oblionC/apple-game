@@ -11,14 +11,11 @@ import { LobbyUser } from "../LobbyUser";
 
 type VersusTabProps = {
     gameIsActive: boolean, 
-    setGameIsActive: Function, 
     rowsState: [number, Function], 
     colsState: [number, Function], 
     timeValueState: [number, Function], 
     timeDurationState: [number, Function], 
     score: number, 
-    setAllowDisplayScore: Function, 
-    timer: any, 
     userInRoomState: [boolean, Function],
     oppUserInfo: any,
     oppIsReady: boolean
@@ -26,21 +23,15 @@ type VersusTabProps = {
 
 export default function VersusTab({ 
     gameIsActive, 
-    setGameIsActive, 
     rowsState, 
     colsState, 
     timeValueState, 
     timeDurationState, 
     score, 
-    setAllowDisplayScore, 
-    timer, 
     userInRoomState,
     oppUserInfo,
     oppIsReady,
 }: VersusTabProps) {
-    const [timeDuration, setTimeDuration] = timeDurationState
-    const [rows, setRows] = rowsState
-    const [cols, setCols] = colsState 
     const [userInfo, setUserInfo] = useState()
     const [view, setView] = useState("Options")
     const [ready, setReady] = useState(false)
@@ -96,19 +87,17 @@ export default function VersusTab({
         <>
             {view === "Options" && (
                 <div className="w-full flex flex-col items-center no-scrollbar">
-                    <DropdownButton value={timeDuration} unit={DURATION_UNIT}>
+                    <DropdownButton value={timeDurationState[0]} unit={DURATION_UNIT}>
                         <RadioSelect list={DURATION_OPTIONS} valueState={timeDurationState} unit={DURATION_UNIT} />
                     </DropdownButton>
-                    <DropdownButton value={rows} unit={ROWS_UNIT}>
+                    <DropdownButton value={rowsState[0]} unit={ROWS_UNIT}>
                         <RadioSelect list={ROWS_OPTIONS} valueState={rowsState} unit={ROWS_UNIT}/>
                     </DropdownButton>
-                    <DropdownButton value={cols} unit={COLS_UNIT}>
+                    <DropdownButton value={colsState[0]} unit={COLS_UNIT}>
                         <RadioSelect list={COLS_OPTIONS} valueState={colsState} unit={COLS_UNIT} />
                     </DropdownButton>
                     <Button intent="primary" size="large" onClick={() => {
-                        socket.emit("joinQueue", userInfo, rows, cols, timeDuration, (error) => {
-                            console.log(error)
-                        })
+                        socket.emit("joinQueue", userInfo, rowsState[0], colsState[0], timeDurationState[0])
                         setView("Waiting")
                     }}>Join Queue</Button>
                 </div>
@@ -119,7 +108,7 @@ export default function VersusTab({
                 </span>
             )}
             {view === "Playing" && (
-                <ScoreAndTimerTab setGameIsActive={setGameIsActive} timeValueState={timeValueState} score={score} timer={timer} />
+                <ScoreAndTimerTab timeValueState={timeValueState} score={score} />
             )}
             {view === "Lobby" && (
                 <div className="flex flex-col items-center w-full py-10 overflow-auto no-scrollbar">

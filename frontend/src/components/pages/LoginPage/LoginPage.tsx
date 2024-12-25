@@ -38,8 +38,8 @@ export default function LoginPage() {
 
     return (
         <div className="flex flex-col justify-center items-center">
-            <UserInput name="Email" error={emailError} value={email} onChange={(e) => {setEmail(e.target.value)}} />
-            <UserInput type="password" name="Password" error={passwordError} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <UserInput name="Email" error={emailError} value={email} onChange={(e: any) => {setEmail(e.target.value)}} />
+            <UserInput type="password" name="Password" error={passwordError} value={password} onChange={(e: any) => setPassword(e.target.value)} />
             <Button intent="primary" size="large" onClick={handleLogin}>Log In</Button>
         </div>
     )

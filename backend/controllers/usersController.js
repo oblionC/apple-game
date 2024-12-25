@@ -118,7 +118,7 @@ module.exports = {
     getUser: async (req, res, next) => {
         var userId = mongoose.Types.ObjectId.createFromHexString(req.query.userId) 
         var users = await User.findOne({_id: userId}).select('_id username').exec()
-        
+         
         return res.send(users)
     }
 

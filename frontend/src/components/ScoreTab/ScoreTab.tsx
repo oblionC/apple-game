@@ -1,13 +1,12 @@
 import { ScoreCard } from "./ScoreCard"
 import { useEffect, useState } from "react"
-import getLocalUserInfo from "../../utils/getLocalUserInfo"
 import { DURATION_OPTIONS, ROWS_OPTIONS, COLS_OPTIONS } from "../../constants/gameOptions"
 import { DURATION_UNIT, ROWS_UNIT, COLS_UNIT } from "../../constants/optionUnits"
 import { RadioSelect } from "../RadioSelect"
 
-function generateScoreCards(scores: unknown) {
+function generateScoreCards(scores: any) {
     var position = 0
-    return scores.map((score) => {
+    return scores.map((score: number) => {
         position += 1  
         return (
             <ScoreCard key={position} position={position} score={score} />

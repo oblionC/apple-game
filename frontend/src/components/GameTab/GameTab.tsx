@@ -22,19 +22,15 @@ function DropdownButton({ value, unit, children }: { value: number, unit: string
 
 
 function GameSetting({ setGameIsActive, rowsState, colsState, timeDurationState, setAllowDisplayScore }: { setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], timeDurationState: [number, Function], setAllowDisplayScore: Function }) {
-    const [timerDuration, setTimerDuration] = timeDurationState
-    const [rows, setRows] = rowsState
-    const [cols, setCols] = colsState 
-
     return(
         <div className="w-full flex flex-col items-center pt-10">
-            <DropdownButton value={timerDuration} unit={DURATION_UNIT}>
+            <DropdownButton value={timeDurationState[0]} unit={DURATION_UNIT}>
                 <RadioSelect list={DURATION_OPTIONS} valueState={timeDurationState} unit={DURATION_UNIT} />
             </DropdownButton>
-            <DropdownButton value={rows} unit={ROWS_UNIT}>
+            <DropdownButton value={rowsState[0]} unit={ROWS_UNIT}>
                 <RadioSelect list={ROWS_OPTIONS} valueState={rowsState} unit={ROWS_UNIT}/>
             </DropdownButton>
-            <DropdownButton value={cols} unit={COLS_UNIT}>
+            <DropdownButton value={colsState[0]} unit={COLS_UNIT}>
                 <RadioSelect list={COLS_OPTIONS} valueState={colsState} unit={COLS_UNIT} />
             </DropdownButton>
             <Button intent="primary" size="large" onClick={() => {
@@ -45,12 +41,12 @@ function GameSetting({ setGameIsActive, rowsState, colsState, timeDurationState,
     )
 }
 
-export default function GameTab({ gameIsActive, setGameIsActive, rowsState, colsState, timeValueState, timeDurationState, score, setAllowDisplayScore, timer}: {gameIsActive: boolean, setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], timeValueState: [number, Function], timeDurationState: [number, Function], score: number, setAllowDisplayScore: Function, timer: any}) {
+export default function GameTab({ gameIsActive, setGameIsActive, rowsState, colsState, timeValueState, timeDurationState, score, setAllowDisplayScore}: {gameIsActive: boolean, setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], timeValueState: [number, Function], timeDurationState: [number, Function], score: number, setAllowDisplayScore: Function}) {
 
     return (
         <>
             {!gameIsActive && <GameSetting setGameIsActive={setGameIsActive} rowsState={rowsState} colsState={colsState} timeDurationState={timeDurationState} setAllowDisplayScore={setAllowDisplayScore} />}
-            {gameIsActive && <ScoreAndTimerTab setGameIsActive={setGameIsActive} timeValueState={timeValueState} score={score} timer={timer} />}
+            {gameIsActive && <ScoreAndTimerTab timeValueState={timeValueState} score={score} />}
         </>
     )
 }

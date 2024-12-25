@@ -1,9 +1,7 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Logo } from "../../Logo";
 
 export default function EntryPage() {
-    const navigate = useNavigate()
-
     return(
         <>
             <div className="flex justify-center items-center w-full h-screen bg-app-primary">

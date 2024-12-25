@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button } from "../../Button";
 import { UserInput } from "../../UserInput"
-import logo from "../../../assets/logo.png"
 import { useNavigate } from "react-router-dom";
 import { AppAuth } from "../../../utils/AppAuth";
 
