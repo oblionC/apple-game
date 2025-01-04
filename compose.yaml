@@ -6,8 +6,10 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "80:80"
-  socket-server:
+      - "8080:80"
+  socketserver:
     build: ./socketio_server
     ports:
       - "4000:4000"
+  redis:
+    image: "redis:alpine"
