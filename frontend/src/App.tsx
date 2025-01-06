@@ -8,6 +8,7 @@ import { EntryPage } from './components/pages/EntryPage'
 import { LoginPage } from './components/pages/LoginPage'
 import { VersusPage } from './components/pages/VersusPage'
 import { ProfilePage } from './components/pages/ProfilePage'
+import { LeaderboardsPage } from './components/pages/LeaderboardsPage'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="play" element={<PlayPage />} />
           <Route path="versus" element={<VersusPage />} />
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="leaderboards" element={<LeaderboardsPage/>} />
         </Route>
         <Route path="entry" element={<EntryPage />}>
           <Route path="signup" element={<SignupPage />} />

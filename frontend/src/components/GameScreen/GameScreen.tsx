@@ -172,7 +172,7 @@ export default function GameScreen({
     const itemSize = width * ITEM_SIZE_MULTIPLIER
     const itemGap = width * ITEM_GAP_MULTIPLIER
     const [xOffset, yOffset] = useMemo(() => calculateCenterGroupPosition({width, height, rows, cols, itemGap}), [width, height, rows, cols])
-    const itemRows = useMemo(() => generateItemRows(gameState, itemSize, rows), [stagingGameState, gameState, rows])
+    const itemRows = useMemo(() => generateItemRows(gameState, itemSize, rows), [stagingGameState, gameState, rows, cols])
 
     useEffect(function updateGameStatePositionInfo() {
         if(!stagingGameState) return
@@ -187,7 +187,8 @@ export default function GameScreen({
     }, [gameStateValues])
 
     useEffect(() => {
-        let newGameState = generateGameState(gameStateValues, xOffset, yOffset, itemSize, itemGap, rows, cols)
+        let newGameStateValues = generateGameStateValues(rows, cols)
+        let newGameState = generateGameState(newGameStateValues, xOffset, yOffset, itemSize, itemGap, rows, cols)
         setGameState(newGameState)
     }, [rows, cols])
 

@@ -34,6 +34,7 @@ export default function Sidebar() {
                 {!userIsLoggedIn && <Button intent="primary" size="medium" onClick={() => navigate('entry/login')} >Log In</Button>}
                 <Button intent="primary" size="medium" onClick={() => navigate('play')} >Solo</Button>
                 {userIsLoggedIn && <Button intent="primary" size="medium" onClick={() => navigate('versus')} >Versus</Button>}
+                <Button intent="primary" size="medium" onClick={() => navigate('leaderboards')} >Leaderboards</Button>
                 {userIsLoggedIn && <Button intent="primary" size="medium" onClick={handleLogout} >Log Out</Button>}
             </div>
         </div>
