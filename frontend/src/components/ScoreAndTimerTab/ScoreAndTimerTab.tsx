@@ -3,10 +3,8 @@ import Score from "../Score/Score"
 
 export default function ScoreAndTimerTab({ timeValueState, score }: {timeValueState: [number, Function], score: number}) {
     return (
-        <div className="no-scrollbar overflow-auto">
-            Timer Left:
+        <div className="w-full flex flex-col justify-center items-center no-scrollbar overflow-auto">
             <Timer timeValueState={timeValueState} />
-            Score:
             <Score score={score} />
         </div>
     ) 

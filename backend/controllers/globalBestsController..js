@@ -57,6 +57,11 @@ module.exports = {
                     score: {$max: "$score"},
                     timeStamp: {$first: "$timeStamp"}
                 },
+            },
+            {
+                $sort: {
+                    score: -1
+                }
             }
         ])
 
