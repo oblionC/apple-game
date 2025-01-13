@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useMemo } from 'react';
+import { useEffect, useState, useRef, useMemo, useLayoutEffect } from 'react';
 import { Group, Layer, Circle, Rect, Stage, Text } from 'react-konva';
 import { ItemRow } from './ItemRow';
 import { ITEM_SIZE_MULTIPLIER, ITEM_GAP_MULTIPLIER} from './constants';
@@ -6,8 +6,8 @@ import { SelectorRect } from './SelectorRect';
 import generateGameStateValues from '../../utils/generateGameStateValues';
 
 type calculatecCenterGroupPositionParams = {
-    width: number, 
-    height: number, 
+    stageWidth: number, 
+    stageHeight: number, 
     rows?: number, 
     cols?: number, 
     itemGap?: number, 
@@ -30,13 +30,13 @@ type GameScreenProps = {
     stagingGameState?: any | undefined
 }
 
-function calculateCenterGroupPosition({ width, height, rows, cols, itemGap, layerWidth, layerHeight }: calculatecCenterGroupPositionParams) {
+function calculateCenterGroupPosition({ stageWidth, stageHeight, rows, cols, itemGap, layerWidth, layerHeight }: calculatecCenterGroupPositionParams) {
     if(!layerWidth) 
         layerWidth = cols! * itemGap!;
     if(!layerHeight)
         layerHeight = rows! * itemGap!;
-    let xOffset = (width - layerWidth) / 2;
-    let yOffset = (height - layerHeight) / 2;
+    let xOffset = (stageWidth - layerWidth) / 2;
+    let yOffset = (stageHeight - layerHeight) / 2;
     return [xOffset, yOffset];
 }
 function generateGameState(gameStateValues: any, xOffset: number, yOffset: number, itemSize: number, itemGap: number, rows: number, cols: number) {
@@ -115,7 +115,7 @@ function ScoreDisplay({score, width, height}: { score: number | undefined, width
     const groupRef = useRef(null)
     const bgWidth = 300
     const bgHeight = 300
-    const [xOffset, yOffset] = calculateCenterGroupPosition({width: width, height: height, layerWidth: bgWidth, layerHeight: bgHeight})
+    const [xOffset, yOffset] = calculateCenterGroupPosition({stageWidth: width, stageHeight: height, layerWidth: bgWidth, layerHeight: bgHeight})
 
     const comeInAnimation = (node: any) => {
         node.to({
@@ -169,9 +169,9 @@ export default function GameScreen({
     const [gameState, setGameState] = gameStateState 
     const [stageWidth, setStageWidth] = useState(width)
     const [stageHeight, setStageHeight] = useState(height)
-    const itemSize = width * ITEM_SIZE_MULTIPLIER
-    const itemGap = width * ITEM_GAP_MULTIPLIER
-    const [xOffset, yOffset] = useMemo(() => calculateCenterGroupPosition({width, height, rows, cols, itemGap}), [width, height, rows, cols])
+    const itemSize = stageWidth * ITEM_SIZE_MULTIPLIER
+    const itemGap = stageWidth * ITEM_GAP_MULTIPLIER
+    const [xOffset, yOffset] = useMemo(() => calculateCenterGroupPosition({stageWidth, stageHeight, rows, cols, itemGap}), [stageWidth, stageHeight, rows, cols])
     const itemRows = useMemo(() => generateItemRows(gameState, itemSize, rows), [stagingGameState, gameState, rows, cols])
 
     useEffect(function updateGameStatePositionInfo() {
@@ -202,14 +202,24 @@ export default function GameScreen({
     useEffect(() => {
         setStageWidth(width)
         setStageHeight(height)
+
+    }, [width, height])
+
+    useEffect(() => {
+        console.log(itemSize, itemGap)
         let newGameState = generateGameState(gameStateValues, xOffset, yOffset, itemSize, itemGap, rows, cols)
         setGameState(newGameState)
+    }, [stageWidth, stageHeight])
+
+    useLayoutEffect(() => {
         function handleResize() {
-            setStageWidth(gameScreenRef.current.clientWidth)
-            setStageHeight(gameScreenRef.current.clientHeight)
+            setStageWidth(gameScreenRef.current?.clientWidth)
+            setStageHeight(gameScreenRef.current?.clientHeight)
         }
         window.addEventListener("resize", handleResize)
-    }, [width])
+        handleResize()
+        return () => window.removeEventListener("resize", handleResize)
+    }, [])
 
     return (
         <>
@@ -224,7 +234,7 @@ export default function GameScreen({
                     </Group>
                 </Layer>
                 <SelectorRect width={stageWidth} height={stageHeight} gameState={gameState} setGameState={setGameState} setScore={setScore} />
-                {!gameIsActive && <UnplayableOverlay score={score} allowDisplayScore={allowDisplayScore} width={width} height={height} />}  
+                {!gameIsActive && <UnplayableOverlay score={score} allowDisplayScore={allowDisplayScore} width={stageWidth} height={stageHeight} />}  
             </Stage>
         </>
     );
