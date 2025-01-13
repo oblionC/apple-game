@@ -1,9 +1,14 @@
 var mongoose = require("mongoose")
 var Score = require("../models/score")
 
+function setGlobalBests() {
+
+}
+
 module.exports = {
-    newScore: (req, res, next) => {
+    newScore: async (req, res, next) => {
         req.body.userId = mongoose.Types.ObjectId.createFromHexString(req.body.userId) 
+        console.log(req.body)
         new Score({
             ...req.body,
             timeStamp: new Date(),
@@ -26,5 +31,15 @@ module.exports = {
         .limit(10)
         .exec()
         return res.send({scores: scores})
+    },
+    getScore: (req, res, next) => {
+        var scoreId = mongoose.Types.ObjectId.createFromHexString(req.query.scoreId)
+
+        var result = Score.findOne({
+            _id: scoreId 
+        })
+        .exec()
+
+        return result
     }
 }

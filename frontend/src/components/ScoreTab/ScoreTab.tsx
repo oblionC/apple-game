@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { DURATION_OPTIONS, ROWS_OPTIONS, COLS_OPTIONS } from "../../constants/gameOptions"
 import { DURATION_UNIT, ROWS_UNIT, COLS_UNIT } from "../../constants/optionUnits"
 import { RadioSelect } from "../RadioSelect"
+import { ScoreCardContainer } from "./ScoreCardContainer"
 
 function generateScoreCards(scores: any) {
     var position = 0
@@ -44,7 +45,9 @@ export default function ScoreTab({ userInfo, rowsState, colsState, durationState
                 <RadioSelect list={COLS_OPTIONS} valueState={colsState} unit={COLS_UNIT} /> 
             </div>
             <div className="w-full flex flex-col items-center justify-center py-2">
-                {generateScoreCards(scores)}
+                <ScoreCardContainer>
+                    {generateScoreCards(scores)}
+                </ScoreCardContainer>
             </div>
         </div>
     )

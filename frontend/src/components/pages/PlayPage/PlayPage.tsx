@@ -83,11 +83,11 @@ export default function PlayPage() {
 
 
     return (
-        <>
-            <div ref={gameScreenRef} className="w-3/5">
+        <div className="w-full grid grid-cols-12">
+            <div ref={gameScreenRef} className="md:col-span-7 col-span-12">
                 <GameScreen gameStateValues={gameStateValues} width={width} height={height} score={score} setScore={setScore} gameIsActive={gameIsActive} rows={rowsState[0]} cols={colsState[0]} gameScreenRef={gameScreenRef} allowDisplayScore={allowDisplayScore} gameStateState={gameStateState}/>
             </div>
-            <div className="grow flex flex-col items-center justify-evenly">
+            <div className="md:col-span-5 col-span-12 grow flex flex-col items-center justify-evenly">
                 <div className="w-3/4 h-[800px] flex flex-col items-center bg-app-primary rounded-lg">
                     <div className="w-full flex flex-row min-h-[50px]">
                         <button className={`flex-grow border-${optionsTab === "Game"? "transparent": "white"}`} onClick={() => setOptionsTab("Game")}>Game</button>
@@ -97,6 +97,6 @@ export default function PlayPage() {
                     {optionsTab==="Score" && <ScoreTab userInfo={userInfo} rowsState={rowsState} colsState={colsState} durationState={timeDurationState} />}
                 </div>
             </div>
-        </>
+        </div>
     )
 }

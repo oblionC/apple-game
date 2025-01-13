@@ -13,6 +13,7 @@ var usersRouter = require('./routes/users');
 var scoresRouter = require('./routes/scores');
 var gamestatevaluesRouter = require('./routes/gameStateValues');
 var matchInfoRouter = require('./routes/matchInfo')
+var globalBestsRouter = require('./routes/globalBests')
 
 
 var app = express();
@@ -33,6 +34,7 @@ app.use('/users', usersRouter);
 app.use('/scores', scoresRouter);
 app.use('/gamestatevalues', gamestatevaluesRouter);
 app.use('/matchInfo', matchInfoRouter);
+app.use('/globalBests', globalBestsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

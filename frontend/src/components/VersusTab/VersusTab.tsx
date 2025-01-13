@@ -86,7 +86,7 @@ export default function VersusTab({
     return(
         <>
             {view === "Options" && (
-                <div className="w-full flex flex-col items-center no-scrollbar">
+                <div className="w-full flex flex-col items-center no-scrollbar overflow-auto">
                     <DropdownButton value={timeDurationState[0]} unit={DURATION_UNIT}>
                         <RadioSelect list={DURATION_OPTIONS} valueState={timeDurationState} unit={DURATION_UNIT} />
                     </DropdownButton>

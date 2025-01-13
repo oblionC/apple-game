@@ -192,7 +192,7 @@ export default function VersusPage() {
                     {optionsTab==="Game" && <VersusTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeValueState={timeValueState} timeDurationState={timeDurationState} score={score} userInRoomState={userInRoomState} oppUserInfo={oppUserInfo} oppIsReady={oppIsReady}/> }
                     {optionsTab==="Score" && <MatchHistoryTab userInfo={userInfo} rowsState={scoresRowsState} colsState={scoresColsState} durationState={scoresDurationState} />}
                 </div>
-                <div ref={oppScreenRef} className="w-3/4 h-[400px] flex flex-col items-center ">
+                <div ref={oppScreenRef} className="w-3/4 h-[400px] flex flex-col items-center overflow-auto">
                     <GameScreen gameStateValues={gameStateValues} width={oppWidth} height={oppHeight} score={oppScore} setScore={setOppScore} gameIsActive={gameIsActive} rows={oppRows} cols={oppCols} gameScreenRef={oppScreenRef} allowDisplayScore={allowDisplayScore} gameStateState={oppGameStateState} stagingGameState={stagingOppGameState}/>
                 </div>
             </div>

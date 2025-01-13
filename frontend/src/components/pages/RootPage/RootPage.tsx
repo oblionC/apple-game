@@ -7,7 +7,7 @@ export default function RootPage() {
         <>
             <div className="w-screen h-screen flex flex-row">
                 <Sidebar /> 
-                <div className="bg-app-secondary w-full flex grow">
+                <div className="bg-app-secondary w-full flex grow overflow-auto">
                     <Outlet />
                 </div>
             </div>
