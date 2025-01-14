@@ -17,8 +17,9 @@ function App() {
         <Route path="/" element={<RootPage />}>
           <Route index element={<LandingPage />} />
           <Route path="play" element={<PlayPage />} />
-          <Route path="versus" element={<VersusPage />} />
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="profile/:username" element={<ProfilePage />} />
+          <Route path="versus" element={<VersusPage />} />
           <Route path="leaderboards" element={<LeaderboardsPage/>} />
         </Route>
         <Route path="entry" element={<EntryPage />}>

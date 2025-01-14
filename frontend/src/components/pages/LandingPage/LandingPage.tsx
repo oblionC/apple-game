@@ -18,9 +18,11 @@ export default function LandingPage() {
     return(
         <>
             <div className="w-full flex justify-center items-center">
-                <div ref={firstSectionRef} className="h-[700px] container justify-center bg-app-tertiary rounded-lg">
+                <div  className="h-[700px] container justify-center bg-app-tertiary rounded-lg">
                     <div className={`container mx-auto h-full flex flex-row`}> 
-                        <GameScreen gameStateValues={gameStateValues.current} width={gameScreenHeight} height={gameScreenHeight} gameIsActive={false} rows={15} cols={15} score={undefined} setScore={undefined} gameScreenRef={undefined} allowDisplayScore={undefined} gameStateState={gameStateState}/>
+                        <div ref={firstSectionRef}>
+                            <GameScreen gameStateValues={gameStateValues.current} width={gameScreenHeight} height={gameScreenHeight} gameIsActive={false} rows={15} cols={15} score={undefined} setScore={undefined} gameScreenRef={firstSectionRef} allowDisplayScore={undefined} gameStateState={gameStateState}/>
+                        </div>
                         <div className="w-full flex flex-col justify-center">
                             <div>
                                 <div className="text-[70px] font-semibold mb-10">

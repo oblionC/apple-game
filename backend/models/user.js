@@ -4,7 +4,8 @@ const crypto = require('node:crypto')
 const userSchema = mongoose.Schema({
     username: String,
     email: String,
-    password: String
+    password: String,
+    timeStamp: mongoose.Schema.Types.Date
 });
 
 const User = mongoose.model('User', userSchema);

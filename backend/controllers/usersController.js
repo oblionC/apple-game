@@ -97,7 +97,8 @@ module.exports = {
             userId = await new User({
                 username: req.body.username,
                 password: req.body.password,
-                email: req.body.email
+                email: req.body.email,
+                timeStamp: new Date()
             }).save()
             .then((user) => {
                 console.log(user._id.toString())
@@ -116,10 +117,32 @@ module.exports = {
         return res.send(response)
     },
     getUser: async (req, res, next) => {
-        var userId = mongoose.Types.ObjectId.createFromHexString(req.query.userId) 
-        var users = await User.findOne({_id: userId}).select('_id username').exec()
-         
-        return res.send(users)
-    }
+        try {
+            var userId
+            try {
+                userId = mongoose.Types.ObjectId.createFromHexString(req.query.userId) 
+            }
+            catch {
+                userId = undefined
+            }
+            var username = req.query.username
+            console.log(userId, username)
 
+            var users
+
+            if(userId)
+                users = await User.findOne({_id: userId}).select('_id username timeStamp').exec()
+
+            if(username) 
+                users = await User.findOne({username: username}).select('_id username timeStamp').exec()
+            
+
+            console.log(users)
+
+            return res.send(users)
+        }
+        catch {
+            return res.sendStatus(400)
+        }
+    },
 }

@@ -72,7 +72,8 @@ interface selectorRect {
     height: number;
 }
 
-export default function SelectorRect( { width, height, gameState, setGameState, setScore}: {width: number, height: number, gameState: any, setGameState: Function, setScore: Function | undefined}) {
+export default function SelectorRect( { width, height, gameState, setGameState, targetSum, setScore}: {width: number, height: number, gameState: any, setGameState: Function, targetSum?: number, setScore: Function | undefined}) {
+    if(!targetSum) targetSum = 10
     const [mouseIsDown, setMouseIsDown] = useState<boolean>(false)
     const [selectorRectInfo, setSelectorRectInfo] = useState<selectorRect>({
         x: 0,
@@ -147,14 +148,14 @@ export default function SelectorRect( { width, height, gameState, setGameState, 
                     setGameState(gameState.map((itemRows: any) => {
                         return itemRows.map((item: any) => {
                             if(!item) return item
-                            if(selectedSum === 10 && selectedItems.includes(item.id)) return undefined
+                            if(selectedSum === targetSum && selectedItems.includes(item.id)) return undefined
                             return {
                                 ...item,
                                 selected: false
                             }
                         })
                     }))
-                    if(selectedSum === 10) {
+                    if(selectedSum === targetSum) {
                         scoreHandler.addScore(selectedItems)
                         setSelectedSum(0);
                         setSelectedItems([]);
@@ -171,14 +172,14 @@ export default function SelectorRect( { width, height, gameState, setGameState, 
                     setGameState(gameState.map((itemRows: any) => {
                         return itemRows.map((item: any) => {
                             if(!item) return item
-                            if(selectedSum === 10 && item.selected) return undefined
+                            if(selectedSum === targetSum && item.selected) return undefined
                             return {
                                 ...item,
                                 selected: false
                             }
                         })
                     }))
-                    if(selectedSum === 10) {
+                    if(selectedSum === targetSum) {
                         scoreHandler.addScore(selectedItems)
                         setSelectedSum(0);
                         setSelectedItems([]);

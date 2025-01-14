@@ -2,15 +2,45 @@ import userPlaceholder from '../../../assets/user_placeholder.jpg'
 import { HiOutlineStatusOnline } from "react-icons/hi";
 import { FaRegCalendarPlus } from "react-icons/fa";
 import { ScoreTab } from '../../ScoreTab';
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AppAuth } from '../../../utils/AppAuth';
 import { MatchHistoryTab } from '../../MatchHistoryTab';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function ProfilePage() {
+    const navigate = useNavigate()
+    const routeParams = useParams()
     const scoreRowsState = useState<number>(15)
     const scoreColsState = useState<number>(15)
     const scoreDurationState = useState<number>(30)
-    const userInfo = AppAuth.getUserInfo()
+    const [userInfo, setUserInfo] = useState<any>()
+
+    useEffect(() => {
+        if(routeParams && routeParams.username) {
+            var url = new URL(import.meta.env.VITE_BACKEND_URL + "/users")
+            url.searchParams.set("username", routeParams.username)
+
+            var requestOptions = {
+                method: "GET",
+                headers: {"Content-Type": "application/json"}
+            }
+
+            fetch(url, requestOptions)
+            .then(async res => {
+                if(res.status === 400) {
+                    navigate("/profile")
+                }
+                var json = await res.json()
+
+                console.log(json)
+            })
+        }
+        var localUserInfo = AppAuth.getUserInfo()
+        if(!localUserInfo) {
+            navigate("/entry/login")
+        }
+        setUserInfo(localUserInfo)
+    }, [])
 
 
     return (
@@ -21,7 +51,7 @@ export default function ProfilePage() {
                         <img src={userPlaceholder} className='object-cover'/> 
                     </div>
                     <div className="w-1/2 flex flex-col">
-                        <span className='lg:text-[42px] md:text-[30px] text-[20px] font-bold'>TanmayKule</span>
+                        <span className='lg:text-[42px] md:text-[30px] text-[20px] font-bold'>{userInfo?.username}</span>
                         <div className="flex flex-row min-h-[100px] m-5 gap-5">
                             <div className='w-1/2 flex flex-col justify-center items-center bg-app-quaternary rounded-lg'>
                                 <div className='w-full flex justify-center items-center my-2'>

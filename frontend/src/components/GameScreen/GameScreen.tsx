@@ -24,6 +24,7 @@ type GameScreenProps = {
     gameIsActive: boolean, 
     rows?: number | undefined, 
     cols?: number | undefined, 
+    targetSum?: number ,
     gameScreenRef: any, 
     allowDisplayScore?: boolean| undefined,
     gameStateState: any,
@@ -155,6 +156,7 @@ export default function GameScreen({
     gameIsActive, 
     rows, 
     cols, 
+    targetSum, 
     gameScreenRef, 
     allowDisplayScore, 
     gameStateState,
@@ -206,15 +208,20 @@ export default function GameScreen({
     }, [width, height])
 
     useEffect(() => {
-        console.log(itemSize, itemGap)
-        let newGameState = generateGameState(gameStateValues, xOffset, yOffset, itemSize, itemGap, rows, cols)
+        let newGameState
+        if(gameState?.length) {
+            newGameState = updatePositionInfo(gameState, xOffset, yOffset, itemSize, itemGap, rows, cols)
+        }
+        else
+            newGameState = generateGameState(gameStateValues, xOffset, yOffset, itemSize, itemGap, rows, cols)
+
         setGameState(newGameState)
     }, [stageWidth, stageHeight])
 
     useLayoutEffect(() => {
         function handleResize() {
-            setStageWidth(gameScreenRef.current?.clientWidth)
-            setStageHeight(gameScreenRef.current?.clientHeight)
+            setStageWidth(gameScreenRef?.current?.clientWidth)
+            setStageHeight(gameScreenRef?.current?.clientHeight)
         }
         window.addEventListener("resize", handleResize)
         handleResize()
@@ -233,7 +240,7 @@ export default function GameScreen({
                         {itemRows}
                     </Group>
                 </Layer>
-                <SelectorRect width={stageWidth} height={stageHeight} gameState={gameState} setGameState={setGameState} setScore={setScore} />
+                <SelectorRect width={stageWidth} height={stageHeight} gameState={gameState} setGameState={setGameState} targetSum={targetSum} setScore={setScore} />
                 {!gameIsActive && <UnplayableOverlay score={score} allowDisplayScore={allowDisplayScore} width={stageWidth} height={stageHeight} />}  
             </Stage>
         </>

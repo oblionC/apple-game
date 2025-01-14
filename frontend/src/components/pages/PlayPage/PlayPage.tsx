@@ -13,6 +13,7 @@ export default function PlayPage() {
     const rowsState = useState<number>(15)
     const colsState = useState<number>(15)
     const timeDurationState = useState<number>(30)
+    const targetSumState = useState<number>(10)
 
     const [gameStateValues, setGameStateValues] = useState(generateGameStateValues(rowsState[0], colsState[0]))
     const gameStateState = useState()
@@ -85,7 +86,7 @@ export default function PlayPage() {
     return (
         <div className="w-full grid grid-cols-12">
             <div ref={gameScreenRef} className="md:col-span-7 col-span-12">
-                <GameScreen gameStateValues={gameStateValues} width={width} height={height} score={score} setScore={setScore} gameIsActive={gameIsActive} rows={rowsState[0]} cols={colsState[0]} gameScreenRef={gameScreenRef} allowDisplayScore={allowDisplayScore} gameStateState={gameStateState}/>
+                <GameScreen gameStateValues={gameStateValues} width={width} height={height} score={score} setScore={setScore} gameIsActive={gameIsActive} rows={rowsState[0]} cols={colsState[0]} targetSum={targetSumState[0]} gameScreenRef={gameScreenRef} allowDisplayScore={allowDisplayScore} gameStateState={gameStateState}/>
             </div>
             <div className="md:col-span-5 col-span-12 grow flex flex-col items-center justify-evenly">
                 <div className="w-3/4 h-[800px] flex flex-col items-center bg-app-primary rounded-lg">
@@ -93,8 +94,8 @@ export default function PlayPage() {
                         <button className={`flex-grow border-${optionsTab === "Game"? "transparent": "white"}`} onClick={() => setOptionsTab("Game")}>Game</button>
                         <button className="flex-grow" onClick={() => setOptionsTab("Score")}>Scores</button>
                     </div>
-                    {optionsTab==="Game" && <GameTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeValueState={timeValueState} timeDurationState={timeDurationState} setGameIsActive={setGameIsActive} score={score} setAllowDisplayScore={setAllowDisplayScore} /> }
-                    {optionsTab==="Score" && <ScoreTab userInfo={userInfo} rowsState={rowsState} colsState={colsState} durationState={timeDurationState} />}
+                    {optionsTab==="Game" && <GameTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeValueState={timeValueState} targetSumState={targetSumState} timeDurationState={timeDurationState} setGameIsActive={setGameIsActive} score={score} setAllowDisplayScore={setAllowDisplayScore} /> }
+                    {optionsTab==="Score" && <ScoreTab userInfo={userInfo} rowsState={rowsState} colsState={colsState} durationState={timeDurationState} targetSumState={targetSumState} />}
                 </div>
             </div>
         </div>

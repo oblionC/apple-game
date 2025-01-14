@@ -2,8 +2,8 @@ import { Button } from "../Button"
 import { SlArrowDown } from "react-icons/sl";
 import { useState } from "react";
 import { RadioSelect } from "../RadioSelect";
-import { DURATION_OPTIONS, ROWS_OPTIONS, COLS_OPTIONS } from "../../constants/gameOptions"
-import { DURATION_UNIT, ROWS_UNIT, COLS_UNIT } from "../../constants/optionUnits";
+import { DURATION_OPTIONS, ROWS_OPTIONS, COLS_OPTIONS, TARGET_SUM_OPTIONS } from "../../constants/gameOptions"
+import { DURATION_UNIT, ROWS_UNIT, COLS_UNIT, TARGET_SUM_UNIT } from "../../constants/optionUnits";
 import { ScoreAndTimerTab } from "../ScoreAndTimerTab";
 
 function DropdownButton({ value, unit, children }: { value: number, unit: string, children: React.ReactNode }) {
@@ -21,7 +21,7 @@ function DropdownButton({ value, unit, children }: { value: number, unit: string
 }
 
 
-function GameSetting({ setGameIsActive, rowsState, colsState, timeDurationState, setAllowDisplayScore }: { setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], timeDurationState: [number, Function], setAllowDisplayScore: Function }) {
+function GameSetting({ setGameIsActive, rowsState, colsState, timeDurationState, targetSumState, setAllowDisplayScore }: { setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], timeDurationState: [number, Function], targetSumState: [number, Function], setAllowDisplayScore: Function }) {
     return(
         <div className="w-full flex flex-col items-center pt-10">
             <DropdownButton value={timeDurationState[0]} unit={DURATION_UNIT}>
@@ -33,6 +33,9 @@ function GameSetting({ setGameIsActive, rowsState, colsState, timeDurationState,
             <DropdownButton value={colsState[0]} unit={COLS_UNIT}>
                 <RadioSelect list={COLS_OPTIONS} valueState={colsState} unit={COLS_UNIT} />
             </DropdownButton>
+            <DropdownButton value={targetSumState[0]} unit={TARGET_SUM_UNIT}>
+                <RadioSelect list={TARGET_SUM_OPTIONS} valueState={targetSumState} unit={TARGET_SUM_UNIT} />
+            </DropdownButton>
             <Button intent="primary" size="large" onClick={() => {
                 setGameIsActive(true)
                 setAllowDisplayScore(true)
@@ -41,11 +44,11 @@ function GameSetting({ setGameIsActive, rowsState, colsState, timeDurationState,
     )
 }
 
-export default function GameTab({ gameIsActive, setGameIsActive, rowsState, colsState, timeValueState, timeDurationState, score, setAllowDisplayScore}: {gameIsActive: boolean, setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], timeValueState: [number, Function], timeDurationState: [number, Function], score: number, setAllowDisplayScore: Function}) {
+export default function GameTab({ gameIsActive, setGameIsActive, rowsState, colsState, timeValueState, timeDurationState, targetSumState, score, setAllowDisplayScore}: {gameIsActive: boolean, setGameIsActive: Function, rowsState: [number, Function], colsState: [number, Function], timeValueState: [number, Function], timeDurationState: [number, Function], targetSumState: [number, Function], score: number, setAllowDisplayScore: Function}) {
 
     return (
         <>
-            {!gameIsActive && <GameSetting setGameIsActive={setGameIsActive} rowsState={rowsState} colsState={colsState} timeDurationState={timeDurationState} setAllowDisplayScore={setAllowDisplayScore} />}
+            {!gameIsActive && <GameSetting setGameIsActive={setGameIsActive} rowsState={rowsState} colsState={colsState} timeDurationState={timeDurationState} targetSumState={targetSumState} setAllowDisplayScore={setAllowDisplayScore} />}
             {gameIsActive && <ScoreAndTimerTab timeValueState={timeValueState} score={score} />}
         </>
     )

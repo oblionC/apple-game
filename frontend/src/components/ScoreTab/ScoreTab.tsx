@@ -1,7 +1,7 @@
 import { ScoreCard } from "./ScoreCard"
 import { useEffect, useState } from "react"
-import { DURATION_OPTIONS, ROWS_OPTIONS, COLS_OPTIONS } from "../../constants/gameOptions"
-import { DURATION_UNIT, ROWS_UNIT, COLS_UNIT } from "../../constants/optionUnits"
+import { DURATION_OPTIONS, ROWS_OPTIONS, COLS_OPTIONS, TARGET_SUM_OPTIONS } from "../../constants/gameOptions"
+import { DURATION_UNIT, ROWS_UNIT, COLS_UNIT, TARGET_SUM_UNIT } from "../../constants/optionUnits"
 import { RadioSelect } from "../RadioSelect"
 import { ScoreCardContainer } from "./ScoreCardContainer"
 
@@ -15,7 +15,7 @@ function generateScoreCards(scores: any) {
     })
 }
 
-export default function ScoreTab({ userInfo, rowsState, colsState, durationState }: { userInfo: any, rowsState: [number, Function], colsState: [number, Function], durationState: [number, Function]}) {
+export default function ScoreTab({ userInfo, rowsState, colsState, durationState, targetSumState }: { userInfo: any, rowsState: [number, Function], colsState: [number, Function], durationState: [number, Function], targetSumState: [number, Function]}) {
     const [scores, setScores] = useState([])
 
     useEffect(function getScores() {
@@ -43,6 +43,7 @@ export default function ScoreTab({ userInfo, rowsState, colsState, durationState
                 <RadioSelect list={DURATION_OPTIONS} valueState={durationState} unit={DURATION_UNIT} /> 
                 <RadioSelect list={ROWS_OPTIONS} valueState={rowsState} unit={ROWS_UNIT} /> 
                 <RadioSelect list={COLS_OPTIONS} valueState={colsState} unit={COLS_UNIT} /> 
+                <RadioSelect list={TARGET_SUM_OPTIONS} valueState={targetSumState} unit={TARGET_SUM_UNIT} /> 
             </div>
             <div className="w-full flex flex-col items-center justify-center py-2">
                 <ScoreCardContainer>
