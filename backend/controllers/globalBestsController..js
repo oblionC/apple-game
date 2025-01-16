@@ -23,7 +23,8 @@ module.exports = {
             return {
                 score: score.score,
                 timeStamp: score.timeStamp,
-                userInfo: user,
+                userId: user.userId,
+                username: user.username,
             }
         }))
 
@@ -71,7 +72,8 @@ module.exports = {
             return {
                 ...score,
                 _id: undefined, 
-                userInfo: user,
+                userId: user._id,
+                username: user.username
             }
         }))
 

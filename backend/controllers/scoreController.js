@@ -6,16 +6,44 @@ function setGlobalBests() {
 
 }
 
+function validateGameStateAndScore(gameState, score) {
+    if(!gameState) return false
+    var count = 0
+    for(var row of gameState) {
+        for(var item of row) {
+            if(item === null) {
+                count += 1 
+            }
+        }
+    }
+    return count === score
+}
+
 module.exports = {
     newScore: async (req, res, next) => {
-        req.body.userId = mongoose.Types.ObjectId.createFromHexString(req.body.userId) 
-        console.log(req.body)
-        new Score({
-            ...req.body,
-            timeStamp: new Date(),
-        }).save()
+        try {
+            req.body.userId = mongoose.Types.ObjectId.createFromHexString(req.body.userId) 
+        }
+        catch {
+            return res.status(400).send({message: "Invalid userId"})
+        }
+        var score = req.body.score
+        var gameState = req.body.gameState
 
-        return res.send({message: "Score submitted successfully"})
+        var isValid = validateGameStateAndScore(gameState, score)
+
+        if(isValid) {
+            new Score({
+                ...req.body,
+                timeStamp: new Date(),
+            }).save()
+
+            return res.send({message: "Score submitted successfully"})
+        }
+        else {
+            return res.status(400).send({message: "Invalid score"})
+        }
+
     },
     userBests: async (req, res, next) => {
         try {
@@ -52,7 +80,6 @@ module.exports = {
             }
         }))
 
-        console.log(scores)
         return res.send({scores: scores})
     },
     getScore: (req, res, next) => {

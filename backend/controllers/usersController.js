@@ -2,6 +2,8 @@ const mongoose = require('mongoose')
 const passwordValidator = require('password-validator')
 const emailValidator = require('email-validator') 
 const User = require('../models/user')
+var jwt = require('jsonwebtoken')
+
 
 var passwordSchema = new passwordValidator()
 passwordSchema.is().min(8)
@@ -49,6 +51,8 @@ module.exports = {
             }
         }
 
+        var token = jwt.sign({username: username, userId: userId, createdAt: user.createdAt}, process.env.JWT_SECRET, {expiresIn: "2d"} )
+
         var response = {
             error: error,
             userId: userId,
@@ -56,7 +60,8 @@ module.exports = {
             createdAt: user.createdAt,
             email: email,
             emailError: emailError, 
-            passwordError: passwordError
+            passwordError: passwordError,
+            accessToken: token
         }
 
         return res.send(response)
