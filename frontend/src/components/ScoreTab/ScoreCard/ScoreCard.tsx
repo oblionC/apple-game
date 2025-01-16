@@ -2,21 +2,15 @@ import moment from "moment"
 import { AppAuth } from "../../../utils/AppAuth"
 
 export default function ScoreCard({ position, score }: { position: number, score: any }) {
-    const username = AppAuth.getUserInfo()?.username
+    console.log(score)
     return(
         <tr className="bg-app-tertiary h-20 rounded-lg border-1 overflow-hidden">
             <td className="first:rounded-l-lg overflow-hidden">
                 #{position}
             </td>
-            {score.userInfo?.username ? (
-                <td>
-                    {score.userInfo?.username}
-                </td>
-            ):(
-                <td>
-                    {username}
-                </td>
-            )}
+            <td>
+                {score.username}
+            </td>
             <td>
                 {score.score}
             </td>

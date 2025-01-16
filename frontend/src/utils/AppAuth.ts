@@ -9,14 +9,16 @@ export class AppAuth {
         return JSON.parse(userInfo)
     }
 
-    static loginUser(userId: String, username: String, email: String) {
+    static loginUser(userId: String, username: String, email: String, createdAt: String) {
+        console.log(createdAt)
         localStorage.setItem(AppAuth.userInfoKey, JSON.stringify({
             userId: userId,
             username: username,
-            email: email 
+            email: email,
+            createdAt: createdAt
         }))
     }
-    
+
     static logoutUser() {
         localStorage.removeItem(AppAuth.userInfoKey)
     }

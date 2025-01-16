@@ -30,7 +30,7 @@ export default function LoginPage() {
             setPasswordError(json.passwordError)
             
             if(!json.error) {
-                AppAuth.loginUser(json.userId, json.username, json.email)
+                AppAuth.loginUser(json.userId, json.username, json.email, json.createdAt)
                 navigate('/')
             }
         })

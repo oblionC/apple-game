@@ -34,7 +34,7 @@ module.exports = {
         var password = req.body.password
         var username = ""
 
-        var user = await User.findOne({email: email}, '_id username password').lean().exec()
+        var user = await User.findOne({email: email}, '_id username password createdAt').lean().exec()
 
         if(user === null) {
             emailError = 'Account with this email does not exist!'
@@ -53,6 +53,7 @@ module.exports = {
             error: error,
             userId: userId,
             username: username,
+            createdAt: user.createdAt,
             email: email,
             emailError: emailError, 
             passwordError: passwordError
@@ -94,16 +95,13 @@ module.exports = {
         }
 
         if(!error) {
-            userId = await new User({
+            var user = await new User({
                 username: req.body.username,
                 password: req.body.password,
                 email: req.body.email,
-                timeStamp: new Date()
+                createdAt: new Date(),
             }).save()
-            .then((user) => {
-                console.log(user._id.toString())
-                return user._id.toString()
-            })
+            userId = user.userId
         }
 
         var response = {
@@ -126,20 +124,21 @@ module.exports = {
                 userId = undefined
             }
             var username = req.query.username
-            console.log(userId, username)
 
-            var users
+            var user
 
             if(userId)
-                users = await User.findOne({_id: userId}).select('_id username timeStamp').exec()
+                user = await User.findOne({_id: userId}).select('_id username createdAt').exec()
 
             if(username) 
-                users = await User.findOne({username: username}).select('_id username timeStamp').exec()
-            
+                user = await User.findOne({username: username}).select('_id username createdAt').exec()
 
-            console.log(users)
 
-            return res.send(users)
+            return res.send({
+                userId: user._id,
+                username: user.username,
+                createdAt: user.createdAt,
+            })
         }
         catch {
             return res.sendStatus(400)

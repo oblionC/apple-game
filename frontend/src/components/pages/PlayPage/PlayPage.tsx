@@ -62,6 +62,7 @@ export default function PlayPage() {
                     cols: colsState[0], 
                     timeDuration: timeDurationState[0],
                     userId: userInfo?.userId, 
+                    username: userInfo?.username,
                 }) 
             }
             fetch(import.meta.env.VITE_BACKEND_URL + "/scores/new-score", requestOptions)
@@ -95,7 +96,7 @@ export default function PlayPage() {
                         <button className="flex-grow" onClick={() => setOptionsTab("Score")}>Scores</button>
                     </div>
                     {optionsTab==="Game" && <GameTab gameIsActive={gameIsActive} rowsState={rowsState} colsState={colsState} timeValueState={timeValueState} targetSumState={targetSumState} timeDurationState={timeDurationState} setGameIsActive={setGameIsActive} score={score} setAllowDisplayScore={setAllowDisplayScore} /> }
-                    {optionsTab==="Score" && <ScoreTab userInfo={userInfo} rowsState={rowsState} colsState={colsState} durationState={timeDurationState} targetSumState={targetSumState} />}
+                    {optionsTab==="Score" && <ScoreTab userInfo={userInfo} rowsState={rowsState} colsState={colsState} durationState={timeDurationState} />}
                 </div>
             </div>
         </div>

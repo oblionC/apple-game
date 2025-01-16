@@ -43,7 +43,7 @@ export default function SignupPage() {
 
             // if no errors navigate to home page
             if(!json.error) {
-                AppAuth.loginUser(json.userId, username, email)
+                AppAuth.loginUser(json.userId, username, email, json.createdAt)
                 navigate('/')
             }
         })

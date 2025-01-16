@@ -39,7 +39,7 @@ function RecentMatchHistory({userInfo}: {userInfo: any}) {
                 setMatches(json)
             })
         }
-    }, [])
+    }, [userInfo])
 
     return (
         <>
@@ -78,7 +78,7 @@ function CategorizedMatchHistory({ userInfo, rowsState, colsState, durationState
                 setMatches(json)
             })
         }
-    }, [rowsState[0], colsState[0], durationState[0]])
+    }, [rowsState[0], colsState[0], durationState[0], userInfo])
 
     return (
         <>

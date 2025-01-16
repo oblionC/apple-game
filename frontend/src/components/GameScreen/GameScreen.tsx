@@ -168,6 +168,7 @@ export default function GameScreen({
         cols = 15;
     }
 
+    const [isLoaded, setIsLoaded] = useState(false)
     const [gameState, setGameState] = gameStateState 
     const [stageWidth, setStageWidth] = useState(width)
     const [stageHeight, setStageHeight] = useState(height)
@@ -175,6 +176,11 @@ export default function GameScreen({
     const itemGap = stageWidth * ITEM_GAP_MULTIPLIER
     const [xOffset, yOffset] = useMemo(() => calculateCenterGroupPosition({stageWidth, stageHeight, rows, cols, itemGap}), [stageWidth, stageHeight, rows, cols])
     const itemRows = useMemo(() => generateItemRows(gameState, itemSize, rows), [stagingGameState, gameState, rows, cols])
+
+    useEffect(function fadeInOnLoad() {
+        setIsLoaded(true)
+        return () => setIsLoaded(false)
+    }, [])
 
     useEffect(function updateGameStatePositionInfo() {
         if(!stagingGameState) return
@@ -229,7 +235,7 @@ export default function GameScreen({
     }, [])
 
     return (
-        <>
+        <div className={`transition-opacity ease-in delay-100 duration-1000 ${isLoaded ? "opacity-100" : "opacity-0"}`}>
             <Stage 
             className='gameBoard' 
             width={stageWidth}
@@ -243,6 +249,6 @@ export default function GameScreen({
                 <SelectorRect width={stageWidth} height={stageHeight} gameState={gameState} setGameState={setGameState} targetSum={targetSum} setScore={setScore} />
                 {!gameIsActive && <UnplayableOverlay score={score} allowDisplayScore={allowDisplayScore} width={stageWidth} height={stageHeight} />}  
             </Stage>
-        </>
+        </div>
     );
 }

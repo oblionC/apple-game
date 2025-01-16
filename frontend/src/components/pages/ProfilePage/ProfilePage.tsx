@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { AppAuth } from '../../../utils/AppAuth';
 import { MatchHistoryTab } from '../../MatchHistoryTab';
 import { useNavigate, useParams } from 'react-router-dom';
+import moment from 'moment'
 
 export default function ProfilePage() {
     const navigate = useNavigate()
@@ -28,18 +29,29 @@ export default function ProfilePage() {
             fetch(url, requestOptions)
             .then(async res => {
                 if(res.status === 400) {
-                    navigate("/profile")
+                    var localUserInfo = AppAuth.getUserInfo()
+                    if(!localUserInfo) {
+                        navigate("/entry/login")
+                    }
+                    else {
+                        setUserInfo(localUserInfo)
+                        navigate("/profile")
+                    }
                 }
                 var json = await res.json()
-
-                console.log(json)
+                setUserInfo(json)
             })
         }
-        var localUserInfo = AppAuth.getUserInfo()
-        if(!localUserInfo) {
-            navigate("/entry/login")
+        else {
+            var localUserInfo = AppAuth.getUserInfo()
+            if(!localUserInfo) {
+                navigate("/entry/login")
+            }
+            else {
+                setUserInfo(localUserInfo)
+                navigate("/profile")
+            }
         }
-        setUserInfo(localUserInfo)
     }, [])
 
 
@@ -57,7 +69,7 @@ export default function ProfilePage() {
                                 <div className='w-full flex justify-center items-center my-2'>
                                     <FaRegCalendarPlus/>
                                 </div>
-                                2 Oct, 2023
+                                {moment(new Date(userInfo?.createdAt)).format("MMM Do YY")} 
                             </div>
                             <div className='w-1/2 flex flex-col justify-center items-center bg-app-quaternary rounded-lg'>
                                 <div className='w-full flex justify-center items-center my-2'>
