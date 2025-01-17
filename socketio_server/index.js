@@ -18,19 +18,16 @@ const io = new Server(server, {
   }
 });
 
+app.use("/", (req, res, next) => {
+  return res.sendStatus(200)
+})
+
 // var socketsInRoom = {}
 var socketsInRoom = new SocketsInRoom(redisClient);
 var waitingRooms = new WaitingRooms(redisClient);
 
 async function xd() {
   await redisClient.flushAll()
-  await socketsInRoom.resetGameIsFinishedCounter("123")
-
-  // await redisClient.hSet("socketsInRoom", {"xd": "true", "wow": "amazing"})
-  // await redisClient.hSet("socketsInRoom", {"wow": "xddd"})
-  
-  // console.log(JSON.stringify(await redisClient.hGetAll("socketsInRoom"), null, 2))
-  // console.log(await redisClient.hGet("socketsInRoom", "wow"))
 }
 
 xd()
