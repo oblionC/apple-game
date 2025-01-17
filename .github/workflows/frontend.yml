@@ -21,4 +21,4 @@ jobs:
       - name: Login to docker hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Upload image to dockerhub
-        run: docker push tanmaykule17/sumfight-frontend-server:latest
+        run: docker push tanmaykule17/sumfight-frontend:latest
