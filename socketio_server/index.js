@@ -28,6 +28,8 @@ var waitingRooms = new WaitingRooms(redisClient);
 
 async function xd() {
   await redisClient.flushAll()
+  await redisClient.set("hello", "bruh")
+  console.log(await redisClient.get("hello"))
 }
 
 xd()
