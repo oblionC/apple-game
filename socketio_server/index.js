@@ -30,6 +30,7 @@ async function xd() {
   await redisClient.flushAll()
   await redisClient.set("hello", "bruh")
   console.log(await redisClient.get("hello"))
+  console.log("awesomemm")
 }
 
 xd()
