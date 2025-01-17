@@ -1,10 +1,10 @@
 const { createClient } = require('redis')
 const redisClient = createClient({
-    url: process.env.REDIS_URL
+    url: process.env.REDIS_URL,
 });
 
 redisClient.on('error', err => console.log('Redis client error', err))
-redisClient.connect()
+redisClient.connect().then(() => console.log("connected to redis"))
 
 // const Redis = require('ioredis')
 

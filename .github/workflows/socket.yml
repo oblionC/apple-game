@@ -17,8 +17,8 @@ jobs:
       - name: Checkout branch
         uses: actions/checkout@v4
       - name: Build docker image
-        run: docker build -t tanmaykule17/sumfight-socketio-server .
+        run: docker build -t tanmaykule17/sumfight-socket .
       - name: Login to docker hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Upload image to dockerhub
-        run: docker push tanmaykule17/sumfight-socketio-server:latest
+        run: docker push tanmaykule17/sumfight-socket:latest
