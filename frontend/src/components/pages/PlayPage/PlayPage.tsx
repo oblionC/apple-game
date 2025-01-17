@@ -54,17 +54,22 @@ export default function PlayPage() {
         
         var userInfo = getLocalUserInfo()
         if(userInfo !== undefined) {
-            var requestOptions = { method: "POST",
-                headers: {"Content-Type": "application/json"}, 
+            const requestHeaders: HeadersInit = new Headers() 
+            requestHeaders.set("Content-Type", "application/json")
+            requestHeaders.set("X-Access-Token", AppAuth.getToken())
+            var requestOptions: RequestInit = { method: "POST",
+                headers: requestHeaders, 
                 body: JSON.stringify({
+                    gameState: gameStateState[0],
                     score: score,
                     rows: rowsState[0],
                     cols: colsState[0], 
                     timeDuration: timeDurationState[0],
                     userId: userInfo?.userId, 
                     username: userInfo?.username,
-                }) 
+                }),
             }
+            console.log(requestOptions)
             fetch(import.meta.env.VITE_BACKEND_URL + "/scores/new-score", requestOptions)
         } 
     }, [gameIsActive])

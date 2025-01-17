@@ -8,7 +8,6 @@ import { ScoreCardContainer } from "./ScoreCardContainer"
 function generateScoreCards(scores: any) {
     var position = 0
     return scores.map((score: number) => {
-        console.log(score)
         position += 1  
         return (
             <ScoreCard key={position} position={position} score={score} />

@@ -9,7 +9,6 @@ export default function SidebarProfile({ userInfo }: { userInfo: any }) {
     const buttonRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        console.log(buttonRef.current?.scrollHeight)
         setHeight(buttonRef.current?.scrollHeight)
     }, [isOpen])
 

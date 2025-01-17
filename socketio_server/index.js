@@ -6,7 +6,6 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const redisClient = require('./redis');
-const Mutex = require('redis-semaphore').Mutex
 const SocketsInRoom = require('./SocketsInRoom');
 const WaitingRooms = require('./WaitingRooms');
 

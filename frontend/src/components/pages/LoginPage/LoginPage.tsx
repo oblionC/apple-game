@@ -13,23 +13,23 @@ export default function LoginPage() {
     const [passwordError, setPasswordError] = useState("")
 
     function handleLogin() {
-        const requestOptions = {
+        const requestOptions: RequestInit = {
             method: 'POST', 
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 email: email, 
                 password: password
-            })
+            }),
         }
         fetch(import.meta.env.VITE_BACKEND_URL + '/users/login', requestOptions)
         .then(async (res) => {
-            // backend returns emailError and passwordError
             const json = await res.json()
                 
             setEmailError(json.emailError) 
             setPasswordError(json.passwordError)
             
             if(!json.error) {
+                AppAuth.storeToken(json.accessToken)
                 AppAuth.loginUser(json.userId, json.username, json.email, json.createdAt)
                 navigate('/')
             }

@@ -208,9 +208,11 @@ export default function GameScreen({
     }, [gameIsActive])
 
     useEffect(() => {
+        if(isNaN(width) || isNaN(height)) {
+            return 
+        }
         setStageWidth(width)
         setStageHeight(height)
-
     }, [width, height])
 
     useEffect(() => {
@@ -226,6 +228,9 @@ export default function GameScreen({
 
     useLayoutEffect(() => {
         function handleResize() {
+            if(isNaN(gameScreenRef?.current?.clientWidth) || isNaN(gameScreenRef?.current?.clientHeight)) {
+                return 
+            }
             setStageWidth(gameScreenRef?.current?.clientWidth)
             setStageHeight(gameScreenRef?.current?.clientHeight)
         }

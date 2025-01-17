@@ -83,13 +83,18 @@ module.exports = {
         return res.send({scores: scores})
     },
     getScore: (req, res, next) => {
-        var scoreId = mongoose.Types.ObjectId.createFromHexString(req.query.scoreId)
+        try {
+            var scoreId = mongoose.Types.ObjectId.createFromHexString(req.query.scoreId)
 
-        var result = Score.findOne({
-            _id: scoreId 
-        })
-        .exec()
+            var result = Score.findOne({
+                _id: scoreId 
+            })
+            .exec()
 
-        return result
+            return result
+        }
+        catch {
+            return res.status(400).send({message: "Invalid score id"})
+        }
     }
 }
