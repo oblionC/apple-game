@@ -189,6 +189,7 @@ async function submitMatchInfo(socket) {
 }
 
 io.on('connection', async (socket) => {
+  console.log("user connected")
   async function socketsAreReady(roomId) {
     var flag = true
     for(var socketid of io.sockets.adapter.rooms.get(roomId)) {
@@ -208,6 +209,7 @@ io.on('connection', async (socket) => {
   }
 
   socket.on('disconnect', async () => {
+    console.log("user disconnected")
     await leaveQueue(socket)
     await leaveRoom(socket)
   });
