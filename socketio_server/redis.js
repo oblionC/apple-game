@@ -4,7 +4,7 @@ const redisClient = createClient({
 });
 
 redisClient.on('error', err => console.log('Redis client error', err))
-redisClient.connect().then(() => console.log("connected to redis"))
+redisClient.connect()
 
 // const Redis = require('ioredis')
 
