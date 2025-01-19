@@ -326,6 +326,7 @@ io.on('connection', async (socket) => {
     // console.log(await socketsInRoom.getAllSocketInfos())
     console.log("player trying to join queue")
     var queueString = generateQueueString(rows, cols, duration)
+    console.log(queueString)
     if(await waitingRooms.isQueueEmpty(queueString)) {
       if(await socketsInRoom.isSocketInRoom(socket.id)) return 
       var queueString = generateQueueString(rows, cols, duration) 
@@ -368,5 +369,5 @@ io.on('connection', async (socket) => {
 
 const PORT = 4000;
 server.listen(PORT, () => {
-  console.log(`v1: Server running on port ${PORT}`);
+  console.log(`v2:: Server running on port ${PORT}`);
 });

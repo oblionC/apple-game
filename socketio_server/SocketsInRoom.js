@@ -15,6 +15,7 @@ class SocketsInRoom {
     }
 
     async isSocketInRoom(socketid) {
+        console.log(await redisClient.sIsMember(this.socketsInRoomKey, socketid))
         return await redisClient.sIsMember(this.socketsInRoomKey, socketid)
     }
 
