@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import generateGameStateValues from "../../../utils/generateGameStateValues";
 
 export default function LandingPage() {
+    console.log(import.meta.env.VITE_BACKEND_URL)
+    console.log(import.meta.env.VITE_SOCKET_URL)
+
     const navigate = useNavigate()
     const firstSectionRef: any = useRef(null)
     const gameStateValues = useRef(generateGameStateValues(15, 15))
