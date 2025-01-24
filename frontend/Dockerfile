@@ -1,4 +1,6 @@
 FROM node:alpine3.19 AS build-env
+ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
+ENV VITE_SOCKET_URL=${VITE_SOCKET_URL}
 WORKDIR /app
 COPY package.json .
 RUN npm install
