@@ -2,11 +2,7 @@ const { createClient } = require('redis')
 console.log(process.env.NODE_ENV)
 const redisClient = createClient({
     socket: {
-<<<<<<< HEAD
        tls: true,
-=======
-        tls: false,
->>>>>>> 8b5fc4e (Add match rooms)
     },
     url: process.env.REDIS_URL,
 });
