@@ -9,7 +9,6 @@ const { Server } = require('socket.io');
 const redisClient = require('./redis');
 const SocketsInRoom = require('./SocketsInRoom');
 const WaitingRooms = require('./WaitingRooms');
-const cors = require('cors');
 
 const app = express();
 app.use(cors());
