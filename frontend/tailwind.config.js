@@ -9,7 +9,8 @@ export default {
   theme: {
     extend: {
       transitionProperty: {
-        "height": "height"
+        "height": "height",
+        "bg-opacity": "background"
       },
       colors: {
           "app-primary": "#2D3250",
@@ -20,6 +21,9 @@ export default {
           // "app-tertiary": "#8E8FFA",
           // "app-secondary": "#7752FE",
           // "app-primary": "#190482"
+      },
+      animation: {
+        appear: "appear 0.5s ease-in-out"
       }
     },
   },

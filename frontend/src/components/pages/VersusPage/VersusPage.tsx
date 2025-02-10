@@ -6,13 +6,15 @@ import stopTimer from "../../../utils/stoptimer";
 import { socket } from "../../../socket";
 import generateGameStateValues from "../../../utils/generateGameStateValues";
 import { AppAuth } from "../../../utils/AppAuth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { VersusTab } from "../../VersusTab";
 import countGameStateScore from "../../../utils/countGameStateScore";
 import { MatchHistoryTab } from "../../MatchHistoryTab";
 
 export default function VersusPage() {
     const navigate = useNavigate()
+    const location = useLocation()
+    console.log(location.state)
     const rowsState = useState<number>(15)
     const colsState = useState<number>(15)
     const timeDurationState = useState<number>(30)
@@ -58,6 +60,10 @@ export default function VersusPage() {
             socket.disconnect()
         }
     }, [])
+
+    useEffect(function resetRouterState() {
+        return () => window.history.replaceState({}, '')
+    })
 
     useEffect(function updateOppGameStateInfo() {
         if(!stagingOppGameState) return

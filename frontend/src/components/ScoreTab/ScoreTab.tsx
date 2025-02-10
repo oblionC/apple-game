@@ -20,7 +20,6 @@ export default function ScoreTab({ userInfo, rowsState, colsState, durationState
 
     useEffect(function getScores() {
         var url = new URL(import.meta.env.VITE_BACKEND_URL + "/scores/user-bests")
-        console.log(userInfo)
         if(userInfo !== undefined) {
             url.searchParams.set('userId', userInfo.userId)
             url.searchParams.set('rows', String(rowsState[0]))

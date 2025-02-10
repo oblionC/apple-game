@@ -9,6 +9,7 @@ const { Server } = require('socket.io');
 const redisClient = require('./redis');
 const SocketsInRoom = require('./SocketsInRoom');
 const WaitingRooms = require('./WaitingRooms');
+const cors = require('cors');
 
 const app = express();
 app.use(cors());
@@ -20,6 +21,7 @@ const io = new Server(server, {
   }
 });
 
+app.use(cors())
 app.use("/", (req, res, next) => {
   return res.sendStatus(200)
 })
@@ -64,10 +66,9 @@ const generateVersusGameStateValues = async (rows, cols) => {
   return gameStateValues
 }
 
-async function addToSocketInRoom(socketId, roomId, userInfo, rows, cols, duration) {
+async function addToSocketInRoom(socketId, roomId, userInfo, rows, cols, duration, password="") {
   var oppIds = [...io.sockets.adapter.rooms.get(roomId)].filter(id => id !== socketId)
   var socketInfo  =  {
-    socketId: socketId,
     roomId: roomId,
     ready: "0",
     rows: rows.toString(),
@@ -81,6 +82,9 @@ async function addToSocketInRoom(socketId, roomId, userInfo, rows, cols, duratio
   await socketsInRoom.setSocketInfo(socketId, socketInfo)
   await socketsInRoom.setSocketOppIds(socketId, oppIds)
   await socketsInRoom.setSocketUserInfo(socketId, userInfo)
+  await socketsInRoom.setRoomInfo(roomId, rows, cols, duration, password)
+  console.log(await socketsInRoom.getRoomInfo(roomId))
+  await socketsInRoom.getAllRooms()
 
   await updateSocketOppIds(roomId)
 }
@@ -191,7 +195,6 @@ async function submitMatchInfo(socket) {
 }
 
 io.on('connection', async (socket) => {
-  console.log("user connected")
   async function socketsAreReady(roomId) {
     var flag = true
     for(var socketid of io.sockets.adapter.rooms.get(roomId)) {
@@ -326,9 +329,7 @@ io.on('connection', async (socket) => {
     // if(waitingRooms[queueString].length === 0) {
 
     // console.log(await socketsInRoom.getAllSocketInfos())
-    console.log("player trying to join queue")
     var queueString = generateQueueString(rows, cols, duration)
-    console.log(queueString)
     if(await waitingRooms.isQueueEmpty(queueString)) {
       if(await socketsInRoom.isSocketInRoom(socket.id)) return 
       var queueString = generateQueueString(rows, cols, duration) 
@@ -366,6 +367,12 @@ io.on('connection', async (socket) => {
 
       io.to(roomId).emit("joinedRoom")
     }
+  })
+
+  socket.on("createRoom", async (userInfo, rows, cols, duration, password) => {
+    var roomId = uuidv4()
+    socket.join(roomId)
+    await addToSocketInRoom(socket.id, roomId, )
   })
 });
 

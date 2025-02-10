@@ -9,6 +9,7 @@ import { LoginPage } from './components/pages/LoginPage'
 import { VersusPage } from './components/pages/VersusPage'
 import { ProfilePage } from './components/pages/ProfilePage'
 import { LeaderboardsPage } from './components/pages/LeaderboardsPage'
+import { MatchRoomsPage } from './components/pages/MatchRoomsPage'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="profile/:username" element={<ProfilePage />} />
           <Route path="versus" element={<VersusPage />} />
           <Route path="leaderboards" element={<LeaderboardsPage/>} />
+          <Route path="matchrooms" element={<MatchRoomsPage />} />
         </Route>
         <Route path="entry" element={<EntryPage />}>
           <Route path="signup" element={<SignupPage />} />

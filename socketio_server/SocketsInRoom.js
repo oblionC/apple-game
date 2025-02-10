@@ -9,8 +9,10 @@ class SocketsInRoom {
     constructor(redisClient) {
         this.socketsInRoomKey = "socketsInRoom"
         this.oppIdsKey = "oppIds"
+        this.roomUserIdsKey = "roomUserIds"
         this.gameIsFinishedKey = "gameIsFinished"
         this.userInfoKey = "userInfo"
+        this.roomInfoKey = "roomInfo"
         this.redisClient = redisClient
     }
 
@@ -86,6 +88,22 @@ class SocketsInRoom {
         await redisClient.hSet(this.socketsInRoomKey + ":" + socketid, {"ready": isReady})
     }
 
+    async setRoomInfo(roomId, rows, cols, duration, password) {
+        var roomInfo = {
+            roomId: roomId,
+            rows: rows,
+            cols: cols,
+            duration: duration,
+            password: password
+        }
+        await redisClient.sAdd(this.roomInfoKey + ":" + "public", roomId)
+        await redisClient.hSet(this.roomInfoKey + ":" + roomId, roomInfo)
+    }
+
+    async setRoomUsers(roomId, userIds) {
+        await redisClient.sAdd(this.roomUserIdsKey + ":" + roomId, userIds)
+    }
+
     async resetGameIsFinishedCounter(roomId) {
         await redisClient.set(this.gameIsFinishedKey + ":" + roomId, 0)
     }
@@ -101,8 +119,21 @@ class SocketsInRoom {
         await redisClient.hDel(this.userInfoKey + ":" + socketid, await redisClient.hKeys(this.userInfoKey + ":" + socketid))
     }
 
+    async remRoomInfo(roomId) {
+        await redisClient.sRem(this.roomInfoKey + ":" + "public", roomId)
+        await redisClient.hDel(this.roomInfoKey + ":" + roomId, await redisClient.hKeys(this.roomInfoKey + ":" + roomId))
+    }
+
     async getRoomId(socketid) {
         return await redisClient.hGet(this.socketsInRoomKey + ":" + socketid, "roomId")
+    }
+
+    async getRoomInfo(roomId) {
+        return await redisClient.hGetAll(this.roomInfoKey + ":" + roomId)
+    }
+
+    async getAllRooms() {
+        console.log(await redisClient.sUnion(this.roomInfoKey + ":" + "public"))
     }
 }
 
