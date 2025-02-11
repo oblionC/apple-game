@@ -31,7 +31,7 @@ export default function LoginPage() {
             setEmailError(json.emailError) 
             setPasswordError(json.passwordError)
             
-            if(!json.error) {
+            if(!json.error || json.status !== 400) {
                 AppAuth.storeToken(json.accessToken)
                 AppAuth.loginUser(json.userId, json.username, json.email, json.createdAt)
                 navigate('/')
