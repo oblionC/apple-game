@@ -32,6 +32,7 @@ module.exports = {
             var emailError = ''
             var passwordError= ''
             var userId = ''
+            var createdAt = ''
 
             var email = req.body.email
             var password = req.body.password
@@ -46,19 +47,20 @@ module.exports = {
             else{
                 username = user.username
                 userId = user._id
+                createdAt = user.createdAt
                 if(user.password !== password) {
                     passwordError = 'Incorrect password'
                     error = true
                 }
             }
 
-            var token = jwt.sign({username: username, userId: userId, createdAt: user.createdAt}, process.env.JWT_SECRET, {expiresIn: "2d"} )
+            var token = jwt.sign({username: username, userId: userId, createdAt: createdAt}, process.env.JWT_SECRET, {expiresIn: "2d"} )
 
             var response = {
                 error: error,
                 userId: userId,
                 username: username,
-                createdAt: user.createdAt,
+                createdAt: createdAt,
                 email: email,
                 emailError: emailError, 
                 passwordError: passwordError,
@@ -67,7 +69,8 @@ module.exports = {
 
             return res.send(response)
         }
-        catch {
+        catch (e) {
+            console.log(e)
             return res.status(400).send({message: "Bad request"})
         }
     },
@@ -131,7 +134,9 @@ module.exports = {
     },
     getUser: async (req, res, next) => {
         try {
-            var userId = mongoose.Types.ObjectId.createFromHexString(req.query.userId) 
+            var userId
+            if(req.query.userId)
+                userId = mongoose.Types.ObjectId.createFromHexString(req.query.userId) 
             var username = req.query.username
 
             var user
@@ -149,8 +154,17 @@ module.exports = {
                 createdAt: user.createdAt,
             })
         }
-        catch {
+        catch (e) {
+            console.log(e)
             return res.sendStatus(400)
         }
     },
+    // isValid: (req, res, next) => {
+    //     try {
+    //        req. 
+    //     }
+    //     catch {
+    //         return res.sendStatus(400)
+    //     }
+    // }
 }
