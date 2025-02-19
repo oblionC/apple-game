@@ -8,7 +8,7 @@ on:
       - socketio_server/**
 
 jobs:
-  Upload-Backend-Image-To-DockerHub:
+  Upload-Socket-Image-To-DockerHub:
     runs-on: ubuntu-latest
     defaults: 
       run:
