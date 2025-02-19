@@ -16,6 +16,11 @@ class SocketsInRoom {
         this.redisClient = redisClient
     }
 
+    async showRedisCache() {
+        console.log(this.getAllSocketInfos())
+        this.getAllRooms()
+    }
+
     async isSocketInRoom(socketid) {
         console.log(await redisClient.sIsMember(this.socketsInRoomKey, socketid))
         return await redisClient.sIsMember(this.socketsInRoomKey, socketid)
@@ -31,7 +36,6 @@ class SocketsInRoom {
 
     async getSocketsInRoom() {
         return await redisClient.sUnion(this.socketsInRoomKey)
-
     }
 
     async getAllSocketInfos() {
@@ -122,6 +126,7 @@ class SocketsInRoom {
     async remRoomInfo(roomId) {
         await redisClient.sRem(this.roomInfoKey + ":" + "public", roomId)
         await redisClient.hDel(this.roomInfoKey + ":" + roomId, await redisClient.hKeys(this.roomInfoKey + ":" + roomId))
+
     }
 
     async getRoomId(socketid) {

@@ -11,7 +11,7 @@ class WaitingRooms {
         for(var queueString of await redisClient.sUnion(this.waitingRoomsKey)) {
             res[queueString] = await redisClient.sUnion(this.waitingRoomsKey + ":" + queueString)
         }
-        return res
+        console.log(res)
     }
 
     async isQueueEmpty(queueString) {

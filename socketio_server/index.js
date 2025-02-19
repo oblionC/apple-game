@@ -43,6 +43,7 @@ const clearSocketInRooms = async (roomId) => {
     // delete socketsInRoom[socketid]
     await socketsInRoom.remSocketInfo(socketid)
   }
+  await socketsInRoom.remRoomInfo(roomId)
 }
 
 async function getRoomId(socket) {
@@ -82,7 +83,6 @@ async function addToSocketInRoom(socketId, roomId, userInfo, rows, cols, duratio
   await socketsInRoom.setSocketOppIds(socketId, oppIds)
   await socketsInRoom.setSocketUserInfo(socketId, userInfo)
   await socketsInRoom.setRoomInfo(roomId, rows, cols, duration, password)
-  console.log(await socketsInRoom.getRoomInfo(roomId))
   await socketsInRoom.getAllRooms()
 
   await updateSocketOppIds(roomId)
@@ -321,6 +321,8 @@ io.on('connection', async (socket) => {
   }) 
 
   socket.on('joinQueue', async (userInfo, rows, cols, duration) => {
+    await socketsInRoom.showRedisCache()
+    await waitingRooms.getWaitingRooms()
     // if(!waitingRooms[queueString]) {
     //   waitingRooms[queueString] = []
     // }

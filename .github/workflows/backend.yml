@@ -23,6 +23,18 @@ jobs:
       - name: Upload image to dockerhub
         run: docker push tanmaykule17/sumfight-backend:latest
     
+  # Create-Backend-Task-Revision:
+  #   runs-on: ubuntu-latest
+  #   needs: Upload-Backend-Image-To-DockerHub
+  #   steps:
+  #     - name: Configure aws cli
+  #       run: |
+  #         aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws configure set aws-secret_access_key ${{ secrets.AWS_SECRETS_ACCESS_KEY }}
+  #         aws configure set region ${{ secrets.AWS_REGION }}
+  #     - name: Create new task revision
+  #     - name: Update service
+        
   # Pull-And-Run-Docker-Image:
   #   needs: Upload-Backend-Image-To-DockerHub
   #   runs-on: self-hosted

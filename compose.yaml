@@ -3,13 +3,30 @@ services:
     build: ./backend
     ports:
       - "3000:3000"
+    environment:
+      MONGODB_URI : "mongodb://root:example@mongo:27017"
+      JWT_SECRET : "yourjwtsecret" 
   frontend:
-    build: ./frontend
+    build: 
+      context: ./frontend
+      args:
+        VITE_BACKEND_URL : http://localhost:3000
+        VITE_SOCKET_URL : http://localhost:4000 
     ports:
       - "8080:80"
   socketserver:
     build: ./socketio_server
     ports:
       - "4000:4000"
+    environment:
+      BACKEND_URL : "http://backend:3000"
+      REDIS_URL : "redis://redis:6379"
+      ENABLE_TLS: false
   redis:
     image: "redis:alpine"
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root

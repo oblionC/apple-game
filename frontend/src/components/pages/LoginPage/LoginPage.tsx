@@ -27,11 +27,12 @@ export default function LoginPage() {
         fetch(import.meta.env.VITE_BACKEND_URL + '/users/login', requestOptions)
         .then(async (res) => {
             const json = await res.json()
-                
+            console.log(json)
+
             setEmailError(json.emailError) 
             setPasswordError(json.passwordError)
             
-            if(!json.error || json.status !== 400) {
+            if(!json.error && res.status === 200) {
                 AppAuth.storeToken(json.accessToken)
                 AppAuth.loginUser(json.userId, json.username, json.email, json.createdAt)
                 navigate('/')

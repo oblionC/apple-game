@@ -28,7 +28,8 @@ export default function ProfilePage() {
 
             fetch(url, requestOptions)
             .then(async res => {
-                if(res.status === 400) {
+                console.log(res.status)
+                if(res.status !== 200) {
                     var localUserInfo = AppAuth.getUserInfo()
                     if(!localUserInfo) {
                         navigate("/entry/login")
