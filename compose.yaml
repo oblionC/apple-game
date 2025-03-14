@@ -4,7 +4,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      MONGODB_URI : "mongodb://root:example@mongo:27017"
+      MONGODB_URI : "mongodb://root:root@mongo:27017"
       JWT_SECRET : "yourjwtsecret" 
   frontend:
     build: 
