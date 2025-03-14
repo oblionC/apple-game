@@ -54,7 +54,7 @@ A real-time web based multiplayer game built on NodeJS using ReactJS, Express an
 - Run the app:
 ```
     npm run dev
-
+```
 ### Socket server:
 - Once cloned, change directory to socket server:
 ```
