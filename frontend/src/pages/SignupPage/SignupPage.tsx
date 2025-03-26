@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Button } from "../../components/Button";
 import { UserInput } from "../../components/UserInput"
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AppAuth } from "../../components/../utils/AppAuth";
+import RedirectState from "../../utils/RedirectState"
 
 
 export default function SignupPage() {
+    const location = useLocation()
+    const redirect = (location.state as RedirectState).redirect
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -47,7 +50,7 @@ export default function SignupPage() {
             // if no errors navigate to home page
             if(!json.error) {
                 AppAuth.loginUser(json.userId, username, email, json.createdAt)
-                navigate('/')
+                navigate(redirect ? `${redirect}` : '/')
             }
         })
     }

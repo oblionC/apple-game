@@ -3,10 +3,7 @@ import { Button } from "../../components/Button"
 import { useEffect, useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { AppAuth } from "../../components/../utils/AppAuth"
-
-interface RedirectState {
-    redirect: String;
-}
+import RedirectState from "../../utils/RedirectState"
 
 export default function LoginPage() {
     const navigate = useNavigate()

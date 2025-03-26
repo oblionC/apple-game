@@ -1,5 +1,5 @@
 import { Button } from "../Button"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { AppAuth } from "../../utils/AppAuth"
 import { SidebarLogo } from "../SidebarLogo"
@@ -8,6 +8,7 @@ import { SidebarProfile } from "../SidebarProfile"
 
 export default function Sidebar() {
     const navigate = useNavigate()
+    const location = useLocation()
     const [userInfo, setUserInfo] = useState<any>()
     const [userIsLoggedIn, setUserIsLoggedIn] = useState<boolean>(false)
 
@@ -30,8 +31,8 @@ export default function Sidebar() {
             <SidebarLogo /> 
             <div className="mt-auto mb-0">
                 {userIsLoggedIn && <SidebarProfile userInfo={userInfo} />}
-                {!userIsLoggedIn && <Button intent="primary" size="medium" onClick={() => navigate('entry/signup')}>Sign Up</Button>}
-                {!userIsLoggedIn && <Button intent="primary" size="medium" onClick={() => navigate('entry/login')} >Log In</Button>}
+                {!userIsLoggedIn && <Button intent="primary" size="medium" onClick={() => navigate('entry/signup', {state: {redirect: location.pathname}})}>Sign Up</Button>}
+                {!userIsLoggedIn && <Button intent="primary" size="medium" onClick={() => navigate('entry/login', {state: {redirect: location.pathname}})} >Log In</Button>}
                 <Button intent="primary" size="medium" onClick={() => navigate('play')} >Solo</Button>
                 {userIsLoggedIn && <Button intent="primary" size="medium" onClick={() => navigate('versus')} >Versus</Button>}
                 <Button intent="primary" size="medium" onClick={() => navigate('matchRooms')} >Rooms</Button>
