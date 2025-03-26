@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Button } from "../../Button";
-import { UserInput } from "../../UserInput"
+import { Button } from "../../components/Button";
+import { UserInput } from "../../components/UserInput"
 import { useNavigate } from "react-router-dom";
-import { AppAuth } from "../../../utils/AppAuth";
+import { AppAuth } from "../../components/../utils/AppAuth";
 
 
 export default function SignupPage() {

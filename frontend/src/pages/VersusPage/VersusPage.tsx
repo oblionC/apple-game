@@ -1,15 +1,15 @@
-import { GameScreen } from "../../GameScreen"
+import { GameScreen } from "../../components/GameScreen"
 import { useEffect, useRef, useState } from "react";
-import getLocalUserInfo from "../../../utils/getLocalUserInfo";
-import startTimer from "../../../utils/startTimer";
-import stopTimer from "../../../utils/stoptimer";
-import { socket } from "../../../socket";
-import generateGameStateValues from "../../../utils/generateGameStateValues";
-import { AppAuth } from "../../../utils/AppAuth";
+import getLocalUserInfo from "../../components/../utils/getLocalUserInfo";
+import startTimer from "../../components/../utils/startTimer";
+import stopTimer from "../../components/../utils/stoptimer";
+import { socket } from "../../components/../socket";
+import generateGameStateValues from "../../components/../utils/generateGameStateValues";
+import { AppAuth } from "../../components/../utils/AppAuth";
 import { useLocation, useNavigate } from "react-router-dom";
-import { VersusTab } from "../../VersusTab";
-import countGameStateScore from "../../../utils/countGameStateScore";
-import { MatchHistoryTab } from "../../MatchHistoryTab";
+import { VersusTab } from "../../components/VersusTab";
+import countGameStateScore from "../../components/../utils/countGameStateScore";
+import { MatchHistoryTab } from "../../components/MatchHistoryTab";
 
 export default function VersusPage() {
     const navigate = useNavigate()
@@ -73,7 +73,7 @@ export default function VersusPage() {
 
     useEffect(function sendToLoginPageIfNotLoggedIn() {
         if(AppAuth.getUserInfo() === undefined) {
-            navigate("/entry/login")
+            navigate("/entry/login", {state: { redirect: "/versus" }})
         }
     }, [])
 

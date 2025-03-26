@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Button } from "../../Button";
-import { DropdownButton } from "../../DropdownButton";
-import { RadioSelect } from "../../RadioSelect";
-import { ROWS_OPTIONS, COLS_OPTIONS, DURATION_OPTIONS } from "../../../constants/gameOptions";
-import { ROWS_UNIT, COLS_UNIT, DURATION_UNIT } from "../../../constants/optionUnits";
-import { UserInput } from "../../UserInput";
+import { Button } from "../../components/Button";
+import { DropdownButton } from "../../components/DropdownButton";
+import { RadioSelect } from "../../components/RadioSelect";
+import { ROWS_OPTIONS, COLS_OPTIONS, DURATION_OPTIONS } from "../../components/../constants/gameOptions";
+import { ROWS_UNIT, COLS_UNIT, DURATION_UNIT } from "../../components/../constants/optionUnits";
+import { UserInput } from "../../components/UserInput";
 import { useNavigate } from "react-router-dom";
 
 function useBufferedLoadOnComponent() {

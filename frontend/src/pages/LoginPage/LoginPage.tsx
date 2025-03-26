@@ -1,11 +1,16 @@
-import { UserInput } from "../../UserInput"
-import { Button } from "../../Button"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { AppAuth } from "../../../utils/AppAuth"
+import { UserInput } from "../../components/UserInput"
+import { Button } from "../../components/Button"
+import { useEffect, useState } from "react"
+import { useNavigate, useLocation } from "react-router-dom"
+import { AppAuth } from "../../components/../utils/AppAuth"
+
+interface RedirectState {
+    redirect: String;
+}
 
 export default function LoginPage() {
     const navigate = useNavigate()
+    const redirect = (useLocation().state as RedirectState)?.redirect
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     
@@ -27,7 +32,6 @@ export default function LoginPage() {
         fetch(import.meta.env.VITE_BACKEND_URL + '/users/login', requestOptions)
         .then(async (res) => {
             const json = await res.json()
-            console.log(json)
 
             setEmailError(json.emailError) 
             setPasswordError(json.passwordError)
@@ -35,7 +39,7 @@ export default function LoginPage() {
             if(!json.error && res.status === 200) {
                 AppAuth.storeToken(json.accessToken)
                 AppAuth.loginUser(json.userId, json.username, json.email, json.createdAt)
-                navigate('/')
+                navigate(redirect ? `${redirect}` : '/')
             }
         })
     }

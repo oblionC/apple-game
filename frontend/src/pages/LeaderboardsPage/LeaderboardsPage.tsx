@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { DropdownButton } from "../../DropdownButton";
-import { RadioSelect } from "../../RadioSelect";
-import { DURATION_OPTIONS, ROWS_OPTIONS, COLS_OPTIONS } from "../../../constants/gameOptions"; 
-import { DURATION_UNIT, ROWS_UNIT, COLS_UNIT } from "../../../constants/optionUnits";
-import { Button } from "../../Button";
-import { ScoreCard } from "../../ScoreTab/ScoreCard";
-import { ScoreCardContainer } from "../../ScoreTab/ScoreCardContainer";
+import { DropdownButton } from "../../components/DropdownButton";
+import { RadioSelect } from "../../components/RadioSelect";
+import { DURATION_OPTIONS, ROWS_OPTIONS, COLS_OPTIONS } from "../../components/../constants/gameOptions"; 
+import { DURATION_UNIT, ROWS_UNIT, COLS_UNIT } from "../../components/../constants/optionUnits";
+import { Button } from "../../components/Button";
+import { ScoreCard } from "../../components/ScoreTab/ScoreCard";
+import { ScoreCardContainer } from "../../components/ScoreTab/ScoreCardContainer";
 
 export default function LeaderboardsPage() {
     const rowsState = useState<number>(15)

@@ -1,10 +1,10 @@
-import userPlaceholder from '../../../assets/user_placeholder.jpg'
+import userPlaceholder from '../../assets/user_placeholder.jpg'
 import { HiOutlineStatusOnline } from "react-icons/hi";
 import { FaRegCalendarPlus } from "react-icons/fa";
-import { ScoreTab } from '../../ScoreTab';
+import { ScoreTab } from '../../components/ScoreTab';
 import { useEffect, useState } from 'react'
-import { AppAuth } from '../../../utils/AppAuth';
-import { MatchHistoryTab } from '../../MatchHistoryTab';
+import { AppAuth } from '../../components/../utils/AppAuth';
+import { MatchHistoryTab } from '../../components/MatchHistoryTab';
 import { useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment'
 

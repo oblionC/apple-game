@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import { GameScreen } from "../../GameScreen";
+import { GameScreen } from "../../components/GameScreen";
 import { useNavigate } from "react-router-dom";
-import generateGameStateValues from "../../../utils/generateGameStateValues";
+import generateGameStateValues from "../../components/../utils/generateGameStateValues";
 
 export default function LandingPage() {
 

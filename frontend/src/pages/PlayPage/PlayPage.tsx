@@ -1,12 +1,12 @@
-import { GameScreen } from "../../GameScreen"
+import { GameScreen } from "../../components/GameScreen"
 import { useEffect, useRef, useState } from "react";
-import { GameTab } from "../../GameTab";
-import { ScoreTab } from "../../ScoreTab";
-import getLocalUserInfo from "../../../utils/getLocalUserInfo";
-import startTimer from "../../../utils/startTimer";
-import stopTimer from "../../../utils/stoptimer";
-import generateGameStateValues from "../../../utils/generateGameStateValues";
-import { AppAuth } from "../../../utils/AppAuth";
+import { GameTab } from "../../components/GameTab";
+import { ScoreTab } from "../../components/ScoreTab";
+import getLocalUserInfo from "../../components/../utils/getLocalUserInfo";
+import startTimer from "../../components/../utils/startTimer";
+import stopTimer from "../../components/../utils/stoptimer";
+import generateGameStateValues from "../../components/../utils/generateGameStateValues";
+import { AppAuth } from "../../components/../utils/AppAuth";
 
 
 export default function PlayPage() {
